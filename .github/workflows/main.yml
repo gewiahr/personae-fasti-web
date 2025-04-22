@@ -43,11 +43,20 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         name: id_rsa
         known_hosts: unnecessary
+    
+    - name: Copy dist
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        port: 22
+        source: "./dist/"
+        target: "${{ vars.DEPLOY_PATH }}/"
 
-    - name: Copy dist/
-      run: rsync -avz --delete \
-          -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" \
-          dist/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ vars.DEPLOY_PATH }}/
+    # - name: Copy dist/
+    #   run: rsync -avz --delete \
+    #       -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" \
+    #       dist/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ vars.DEPLOY_PATH }}/
 
     # - name: Copy dist/
     #   uses: garygrossgarten/github-action-ssh@0.8.0
