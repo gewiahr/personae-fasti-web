@@ -53,8 +53,9 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
-        source: "dist/*"
-        target: "${{ vars.DEPLOY_PATH }}/*"
+        source: "dist/"
+        target: "${{ vars.DEPLOY_PATH }}"
+        strip_components: 1
       
 
 
