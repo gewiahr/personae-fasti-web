@@ -1,0 +1,56 @@
+name: "🚀 Build and Deploy"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: "📦 Build"
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build production app
+      run: npm run build
+
+    - name: Verify build output
+      run: |
+        ls -la dist/
+        [ -f dist/index.html ] || exit 1
+    
+    - name: Set Access
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        name: id_rsa
+        known_hosts: unnecessary
+
+  deploy:
+    name: "🎉 Deploy"
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Copy dist/
+      uses: garygrossgarten/github-action-ssh@0.8.0
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        command: rsync -avz --delete \
+          -e "ssh -o StrictHostKeyChecking=no" \
+          dist/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ env.DEPLOY_PATH }}/
+      
+
+
