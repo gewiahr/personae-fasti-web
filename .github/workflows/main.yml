@@ -43,11 +43,11 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         name: id_rsa
         known_hosts: unnecessary
-        
+
     - name: Copy dist/
       run: rsync -avz --delete \
           -e "ssh -o StrictHostKeyChecking=no" \
-          dist/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ env.DEPLOY_PATH }}/
+          dist/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ vars.DEPLOY_PATH }}/
 
     # - name: Copy dist/
     #   uses: garygrossgarten/github-action-ssh@0.8.0
