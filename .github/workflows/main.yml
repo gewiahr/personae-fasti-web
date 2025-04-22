@@ -6,8 +6,8 @@ on:
       - main
 
 jobs:
-  build:
-    name: "📦 Build"
+  build-and-deploy:
+    name: "📦 Build and Deploy"
     runs-on: ubuntu-latest
 
     steps:
@@ -31,12 +31,12 @@ jobs:
         ls -la dist/
         [ -f dist/index.html ] || exit 1
 
-    - name: Set Access
-      uses: shimataro/ssh-key-action@v2
-      with:
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        name: id_rsa
-        known_hosts: unnecessary
+    # - name: Set Access
+    #   uses: shimataro/ssh-key-action@v2
+    #   with:
+    #     key: ${{ secrets.SSH_PRIVATE_KEY }}
+    #     name: id_rsa
+    #     known_hosts: unnecessary
       
     - name: Copy dist
       uses: appleboy/scp-action@v0.1.7
@@ -45,45 +45,8 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
-        source: "./dist/"
+        source: "./dist/*"
         target: "${{ vars.DEPLOY_PATH }}/"
-
-  deploy:
-    name: "🎉 Deploy"
-    needs: [ build ]
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Set Access
-      uses: shimataro/ssh-key-action@v2
-      with:
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        name: id_rsa
-        known_hosts: unnecessary
-    
-    - name: Copy dist
-      uses: appleboy/scp-action@v0.1.7
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        port: 22
-        source: "./dist/"
-        target: "${{ vars.DEPLOY_PATH }}/"
-
-    # - name: Copy dist/
-    #   run: rsync -avz --delete \
-    #       -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" \
-    #       dist/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ vars.DEPLOY_PATH }}/
-
-    # - name: Copy dist/
-    #   uses: garygrossgarten/github-action-ssh@0.8.0
-    #   with:
-    #     host: ${{ secrets.SSH_HOST }}
-    #     username: ${{ secrets.SSH_USER }}
-    #     command: rsync -avz --delete \
-    #       -e "ssh -o StrictHostKeyChecking=no" \
-    #       dist/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ env.DEPLOY_PATH }}/
       
 
 
