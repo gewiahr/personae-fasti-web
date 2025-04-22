@@ -1,4 +1,4 @@
-import { forwardRef } from "react"
+import { forwardRef, useEffect } from "react"
 import { SuggestionData, SuggestionEntity, SuggestionTabPos } from "../types/suggestion";
 
 type SuggestionTabProps = {
@@ -11,8 +11,20 @@ type SuggestionTabProps = {
 export const SuggestionsTab = forwardRef<HTMLDivElement, SuggestionTabProps>(
     ({ tabPos, data, selectionIndex, insertMention }, ref) => {
 
+        useEffect(() => {
+
+        }, [selectionIndex])
+
         return (
-            <div ref={ref} className="absolute z-50 w-48 bg-gray-900 border border-gray-600 rounded-lg shadow-lg py-1" style={tabPos}>
+            // <div ref={ref} className="absolute z-50 w-48 bg-gray-900 border border-gray-600 rounded-lg shadow-lg py-1" style={tabPos}>
+            <div 
+                className={`absolute z-50 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-md overflow-y-auto max-h-60 w-48
+                    ${data ? 'block' : 'hidden'}`}
+                style={{
+                    width: '100%',
+                    transform: 'translateY(0.25rem)' // Small offset from cursor
+                }}
+            >
                 {data.entities.map((entity, index) => (
                     <button
                     key={entity.sid}
@@ -22,7 +34,7 @@ export const SuggestionsTab = forwardRef<HTMLDivElement, SuggestionTabProps>(
                     }`}
                     onClick={() => insertMention(entity)}
                     >
-                    {entity.name}
+                    {entity.ref}
                     </button>
                 ))}
             </div>

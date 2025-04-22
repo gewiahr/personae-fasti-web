@@ -2,7 +2,7 @@ import React, { useCallback, useState, useRef, KeyboardEvent, useEffect } from "
 import { SuggestionsTab } from "./SuggestionsTab";
 import { /*extractMentions, Mention,*/ MentionContext } from "../types/mention";
 import { SuggestionData, SuggestionEntity } from "../types/suggestion";
-import { EntityEdit } from "../types/entities";
+import { EntityEdit, formSuggestionRef } from "../types/entities";
 
 interface RichInputProps {
   label: string;
@@ -24,6 +24,12 @@ export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData
     const suggestionsRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        fullSuggestionData.entities.forEach((suggestion) => {
+            formSuggestionRef(suggestion);        
+        });
+    }, [])
+
+    useEffect(() => {
       entityEdit?.handleFieldChange(entityEdit?.fieldName || "", inputValue);
     }, [inputValue])
 
@@ -35,35 +41,40 @@ export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData
         //entityEdit?.handleOnChange(entityEdit?.fieldName || "", newValue);
 
         const context = getMentionContext(newValue, cursorPos);
+        
+        if (!context) {
+            setShowSuggestions(false);
+            setSelectedSuggestionIndex(0);
+            return;
+        };
 
-        if (context) {
-            setSuggestionDataFromContext(context);
+        const currentSuggestions = getFilteredSuggestions(context);
+        if (currentSuggestions && currentSuggestions.length) {
+            setSuggestionDataFromContext(currentSuggestions);
         } else {
             setShowSuggestions(false);
             setSelectedSuggestionIndex(0);
-        }
+        };
+
     }, []);
 
-    const setSuggestionDataFromContext = useCallback((
-        context: MentionContext,
-    ) => {
+    const getFilteredSuggestions = (context: MentionContext) => {
         const textarea = textareaRef.current;
         if (!textarea) return;
 
-        const filteredEntities = fullSuggestionData.entities.filter(entity => 
+        return fullSuggestionData.entities.filter(entity => 
             entity.name.toLowerCase().includes(context.query.toLowerCase())
         );
+    }
 
-        setSuggestionData({entities : filteredEntities});
+    const setSuggestionDataFromContext = useCallback((
+        currentSuggestions: SuggestionEntity[],
+    ) => {
+        if (selectedSuggestionIndex >= currentSuggestions.length) {
+            setSelectedSuggestionIndex(Math.max(0, currentSuggestions.length - 1));           
+        };
 
-        const textareaRect = textarea.getBoundingClientRect();
-        const lineHeight = parseInt(getComputedStyle(textarea).lineHeight);
-        const linesBefore = textarea.value.split('\n').length - 1;
-        
-        setSuggestionTabPos({
-            top: textareaRect.top + (linesBefore * lineHeight) + lineHeight,
-            left: textareaRect.left
-        });
+        setSuggestionData({entities : currentSuggestions});
 
         setShowSuggestions(true);
     }, [fullSuggestionData.entities]);
@@ -88,7 +99,7 @@ export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData
         switch (e.key) {
           case 'ArrowDown':
             e.preventDefault();
-            setSelectedSuggestionIndex(prev => Math.min(prev + 1, suggestionData.entities.length));
+            setSelectedSuggestionIndex(prev => Math.min(prev + 1, suggestionData.entities.length - 1));
             break;
           case 'ArrowUp':
             e.preventDefault();
