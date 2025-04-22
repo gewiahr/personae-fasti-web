@@ -31,6 +31,23 @@ jobs:
         ls -la dist/
         [ -f dist/index.html ] || exit 1
 
+    - name: Set Access
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        name: id_rsa
+        known_hosts: unnecessary
+      
+    - name: Copy dist
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 22
+        source: "./dist/"
+        target: "${{ vars.DEPLOY_PATH }}/"
+
   deploy:
     name: "🎉 Deploy"
     needs: [ build ]
