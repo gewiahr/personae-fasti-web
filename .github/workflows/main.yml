@@ -30,13 +30,6 @@ jobs:
       run: |
         ls -la dist/
         [ -f dist/index.html ] || exit 1
-    
-    - name: Set Access
-      uses: shimataro/ssh-key-action@v2
-      with:
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        name: id_rsa
-        known_hosts: unnecessary
 
   deploy:
     name: "🎉 Deploy"
@@ -44,6 +37,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Set Access
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        name: id_rsa
+        known_hosts: unnecessary
+        
     - name: Copy dist/
       run: rsync -avz --delete \
           -e "ssh -o StrictHostKeyChecking=no" \
