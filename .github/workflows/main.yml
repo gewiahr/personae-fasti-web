@@ -38,13 +38,13 @@ jobs:
     #     name: id_rsa
     #     known_hosts: unnecessary
 
-    - name: Clean up fasti-web directory
-      uses: garygrossgarten/github-action-ssh@0.8.0
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
-        privateKey: ${{ secrets.SSH_PRIVATE_KEY }}
-        command: rm -rf /apps/fasti-web/*
+    # - name: Clean up fasti-web directory
+    #   uses: garygrossgarten/github-action-ssh@0.8.0
+    #   with:
+    #     host: ${{ secrets.SSH_HOST }}
+    #     username: ${{ secrets.SSH_USER }}
+    #     privateKey: ${{ secrets.SSH_PRIVATE_KEY }}
+    #     command: rm -rf /apps/fasti-web/*
 
     - name: Copy dist
       uses: appleboy/scp-action@v0.1.7
