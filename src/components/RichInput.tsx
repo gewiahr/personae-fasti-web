@@ -51,7 +51,7 @@ export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData
         if (!textarea) return;
 
         const filteredEntities = fullSuggestionData.entities.filter(entity => 
-            entity.ref.toLowerCase().includes(context.query.toLowerCase())
+            entity.name.toLowerCase().includes(context.query.toLowerCase())
         );
 
         setSuggestionData({entities : filteredEntities});

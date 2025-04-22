@@ -18,7 +18,7 @@ export const CharPage = () => {
   
   const { accessKey } = useAuth();
   const { data, loading, error, refetch } = useApi.get<CharPageData>(`/char/${id}`, accessKey, [], newChar);
-
+  const { data : suggestionData } = useApi.get<SuggestionData>(`/suggestions`, accessKey);
 
   useEffect(() => {
     if (data) {
@@ -52,47 +52,10 @@ export const CharPage = () => {
     }
   };
 
-  const mockSuggestionData : SuggestionData = {
-		entities: [
-			{ 
-				id: 1,
-				sid: "p:1",
-				type: "p",
-				typeName: "person",
-				ref: "AkodoToturi",
-				name: "Akodo Toturi"
-			},
-			{ 
-				id: 2,
-				sid: "p:2",
-				type: "p",
-				typeName: "person",
-				ref: "DojiHotaru",
-				name: "Doji Hotaru"
-			},
-			{ 
-				id: 3,
-				sid: "p:3",
-				type: "p",
-				typeName: "person",
-				ref: "IsawaKaede",
-				name: "Isawa Kaede"
-			},
-			{ 
-				id: 4,
-				sid: "p:4",
-				type: "p",
-				typeName: "person",
-				ref: "MirumotoDaini",
-				name: "Mirumoto Daini"
-			},
-		]
-	}
-
   if (newChar) {
     //setChar();
     return (
-      <CharPageEdit char={{} as Char} onSubmit={saveEdited} suggestionData={mockSuggestionData} />
+      <CharPageEdit char={{} as Char} onSubmit={saveEdited} suggestionData={suggestionData || {} as SuggestionData} />
     );
   }; 
 
@@ -105,7 +68,7 @@ export const CharPage = () => {
         
           // Edit Form
         ) : editing && char ? (
-          <CharPageEdit char={char} onSubmit={saveEdited} suggestionData={mockSuggestionData} />          
+          <CharPageEdit char={char} onSubmit={saveEdited} suggestionData={suggestionData || {} as SuggestionData} />          
 
           // View Form
         ) : (
