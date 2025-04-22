@@ -54,7 +54,7 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
         source: "dist/*"
-        target: "${{ vars.DEPLOY_PATH }}"
+        target: "${{ vars.DEPLOY_PATH }}/"
       
 
 
