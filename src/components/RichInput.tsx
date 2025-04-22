@@ -8,30 +8,38 @@ interface RichInputProps {
   label: string;
   setValue?: string;
   entityEdit?: EntityEdit;
-  fullSuggestionData: SuggestionData;
+  fullSuggestionData?: SuggestionData | null;
 };
 
-export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData } : RichInputProps) => {
+export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData = null } : RichInputProps) => {
     const [isFocused, setIsFocused] = useState(false);
     const [inputValue, setInputValue] = useState(setValue);
     //const [mentions, setMentions] = useState<Mention[]>([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
-    const [suggestionData, setSuggestionData] = useState<SuggestionData>(fullSuggestionData);
+    const [suggestionData, setSuggestionData] = useState<SuggestionData>();
     const [suggestionTabPos, setSuggestionTabPos] = useState({ top: 0, left: 0});
     const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(0);
 
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const suggestionsRef = useRef<HTMLDivElement>(null);
 
+    useEffect(() => { 
+        if (fullSuggestionData) {
+            fullSuggestionData?.entities?.forEach((suggestion) => {
+                formSuggestionRef(suggestion);        
+            });
+            setSuggestionData(fullSuggestionData);
+        }      
+        console.log(fullSuggestionData);    
+    }, [fullSuggestionData]);
+
     useEffect(() => {
-        fullSuggestionData.entities.forEach((suggestion) => {
-            formSuggestionRef(suggestion);        
-        });
-    }, [])
+        setInputValue(setValue);
+      }, [setValue]);
 
     useEffect(() => {
       entityEdit?.handleFieldChange(entityEdit?.fieldName || "", inputValue);
-    }, [inputValue])
+    }, [inputValue]);
 
     const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const newValue = e.target.value;
@@ -47,9 +55,9 @@ export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData
             setSelectedSuggestionIndex(0);
             return;
         };
-
+        
         const currentSuggestions = getFilteredSuggestions(context);
-        if (currentSuggestions && currentSuggestions.length) {
+        if (currentSuggestions && currentSuggestions.length) {           
             setSuggestionDataFromContext(currentSuggestions);
         } else {
             setShowSuggestions(false);
@@ -61,8 +69,8 @@ export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData
     const getFilteredSuggestions = (context: MentionContext) => {
         const textarea = textareaRef.current;
         if (!textarea) return;
-
-        return fullSuggestionData.entities.filter(entity => 
+        console.log(fullSuggestionData);
+        return fullSuggestionData?.entities.filter(entity => 
             entity.name.toLowerCase().includes(context.query.toLowerCase())
         );
     }
@@ -77,7 +85,7 @@ export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData
         setSuggestionData({entities : currentSuggestions});
 
         setShowSuggestions(true);
-    }, [fullSuggestionData.entities]);
+    }, [fullSuggestionData?.entities]);
 
     const getMentionContext = useCallback((text: string, cursorPos: number) : MentionContext | null => {
         const textBeforeCursor = text.substring(0, cursorPos);
@@ -94,7 +102,7 @@ export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData
 
     // Keyboard navigation for suggestions
     const handleKeyDown = useCallback((e: KeyboardEvent) => {
-        if (!showSuggestions) return;
+        if (!showSuggestions || !suggestionData) return;
     
         switch (e.key) {
           case 'ArrowDown':
@@ -119,7 +127,7 @@ export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData
             setShowSuggestions(false);
             break;
         }
-    }, [showSuggestions, suggestionData.entities, selectedSuggestionIndex]);
+    }, [showSuggestions, suggestionData?.entities, selectedSuggestionIndex]);
 
     const insertMention = useCallback((entity: SuggestionEntity) => {
         const text = inputValue;
@@ -187,7 +195,7 @@ export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData
                 {label}
             </label>
 
-            {showSuggestions &&
+            {showSuggestions && //suggestionData &&
                 <SuggestionsTab 
                     tabPos={suggestionTabPos} 
                     data={suggestionData} 

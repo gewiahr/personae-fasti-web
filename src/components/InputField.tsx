@@ -15,7 +15,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
 
     useEffect(() => {
       //setHasValue(!!initValue);
-    });
+    }, []);
 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

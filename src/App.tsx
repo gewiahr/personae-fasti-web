@@ -60,6 +60,7 @@ import { Layout } from './components/Layout';
 import { RecordPage } from './pages/RecordPage';
 import { CharsList } from './pages/CharsList';
 import { CharPage } from './pages/CharPage';
+import CharEditPage from './pages/CharEditPage';
 //import { PlacesList } from './pages/PlacesList';
 //import { PlacePage } from './pages/PlacePage';
 
@@ -72,7 +73,8 @@ export const App = () => {
             <Route path="/" element={<RecordPage />} />
             <Route path="/chars" element={<CharsList />} />
             <Route path="/char/:id" element={<CharPage />} />
-            <Route path="/char/new" element={<CharPage />} />
+            <Route path="/char/new" element={<CharEditPage />} />
+            <Route path="/char/:id/edit" element={<CharEditPage />} />
             {/*<Route path="/npcs" element={<NPCsList />} />
             <Route path="/npcs/:id" element={<NPCPage />} />*/}
             {/*<Route path="/locations" element={<LocationsList />} />
