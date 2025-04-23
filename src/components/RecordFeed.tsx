@@ -1,17 +1,20 @@
 // components/EventFeed.tsx
 import { PlayerInfo, Record } from '../types/request';
 import { useAuth } from '../hooks/useAuth';
+import { SuggestionData } from '../types/suggestion';
+import RichText from './RichText';
 
 type RecordFeedProps = {
   records: Record[];
-  players: PlayerInfo[]
+  players: PlayerInfo[];
+  suggestionData?: SuggestionData | null;
 };
 
-export const RecordFeed = ({ records, players }: RecordFeedProps) => {
+export const RecordFeed = ({ records, players, suggestionData = null }: RecordFeedProps) => {
   const { player } = useAuth();
 
 
-  return (records.length === 0 ?
+  return (records.length === 0 || suggestionData == null ?
     // No Records
     <div className="text-center py-8 text-gray-400">
       No events yet. Add the first one!
@@ -28,7 +31,8 @@ export const RecordFeed = ({ records, players }: RecordFeedProps) => {
             }`}
         >
           <div className="flex justify-between items-start">
-            <p className="text-white">{record.text}</p>
+            {/* <p className="text-white">{record.text}</p> */}
+            <RichText text={record.text} key={record.id} suggestionData={suggestionData}/>
             <span
               className={`text-xs px-2 py-1 rounded ${record.playerID === player.id
                 ? 'bg-blue-900 text-blue-200'

@@ -1,22 +1,37 @@
-// components/EventInput.tsx
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { RichInput } from './RichInput';
+import { SuggestionData } from '../types/suggestion';
+import { enrichMentionInput } from '../types/mention';
 
 type RecordInputProps = {
   onSubmit: (content: string) => void;
+  suggestionData?: SuggestionData | null;
 };
 
-export const RecordInput = ({ onSubmit }: RecordInputProps) => {
+export const RecordInput = ({ onSubmit, suggestionData = null }: RecordInputProps) => {
   const [input, setInput] = useState('');
+  const [richInputKey, setRichInputKey] = useState(0); // Add key for reset
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    
+  }, [suggestionData]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (input.trim() === '') return;
+    if (input.trim() === '' || !suggestionData) return;
     
     setIsSubmitting(true);
-    onSubmit(input);
+    const enrichedText = enrichMentionInput(input, suggestionData?.entities)
+    onSubmit(enrichedText);
     setInput('');
+    setRichInputKey(prev => prev + 1);
     setIsSubmitting(false);
+  };
+
+  const handleFieldChange = (value: string) => {
+    console.log(value);
+    setInput(value);
   };
 
   return (
@@ -25,14 +40,15 @@ export const RecordInput = ({ onSubmit }: RecordInputProps) => {
         {/*<label htmlFor="event-input" className="text-sm font-medium">
           New Game Event
         </label>*/}
-        <textarea
+        {/* <textarea
           id="event-input"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           className="border border-gray-600 rounded-md p-3 bg-gray-800 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           placeholder="Опишите текущие события"
           rows={3}
-        />
+        /> */}
+        <RichInput key={richInputKey} label='' setValue={input} entityEdit={{ handleFieldChange }} fullSuggestionData={suggestionData} />
       </div>
       <button
         type="submit"

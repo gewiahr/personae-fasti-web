@@ -1,4 +1,4 @@
-import { Char, CharMetaData } from '../types/entities'
+import { Char } from '../types/entities'
 import { RichInput } from '../components/RichInput'
 import { SuggestionData } from '../types/suggestion';
 import { useEffect, useState } from 'react';
@@ -6,7 +6,7 @@ import { InputField } from '../components/InputField';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CharPageData } from '../types/request';
 import { useApi } from '../hooks/useApi';
-import { enrichMentionInput, simplifyMentionInput } from '../types/mention';
+import { simplerCharFieldsMentions } from '../types/mention';
 import { api } from '../utils/api';
 import { useAuth } from '../hooks/useAuth';
 
@@ -26,8 +26,6 @@ const CharEditPage = () => {
   const { data: apiData } = useApi.get<CharPageData>(`/char/${id}`, accessKey, [], newChar);
   const { data: suggestionData } = useApi.get<SuggestionData>(`/suggestions`, accessKey);
 
-
-
   // Sync data to state
   useEffect(() => {
     if (apiData?.char && suggestionData) {
@@ -35,44 +33,15 @@ const CharEditPage = () => {
     }
   }, [apiData, suggestionData]);
 
-  const simplerCharFieldsMentions = (char : Char, suggestions : SuggestionData) : Char => {
-    let newChar : Char = char
-    // Simplify fields with rich input
-    CharMetaData.RichInputFields.forEach((field) => {
-      if (newChar?.[field as keyof typeof newChar]) {
-        newChar = {
-          ...newChar,
-          [field]: simplifyMentionInput(`${newChar?.[field as keyof typeof newChar]}`, suggestions?.entities || [])
-        };
-      };
-    });
-
-    return newChar;
-  }
-
-  const enrichCharFieldsMentions = (editedChar : Char, suggestions : SuggestionData) : Char => {
-    // Enrich fields with rich input
-    CharMetaData.RichInputFields.forEach((field) => {
-      if (editedChar?.[field as keyof typeof editedChar]) {
-        editedChar = {
-          ...editedChar,
-          [field]: enrichMentionInput(`${editedChar?.[field as keyof typeof editedChar]}`, suggestions?.entities || [])
-        };
-      };
-    });
-
-    return editedChar;
-  }
-
-  const handleFieldChange = (field: string, value: string) => {
-    console.log(char);
+  const handleFieldChange = (value: string, field?: string) => {
+    if (!field) return
     setChar(prev => prev ? { ...prev, [field]: value } : null);
   };
 
   const saveEdited = async (editedChar: Char | null) => {
     if (!editedChar || !suggestionData) return;
 
-    const enrichedChar = enrichCharFieldsMentions(editedChar, suggestionData);
+    const enrichedChar = simplerCharFieldsMentions(editedChar, suggestionData);
     
     const endpoint = '/char';//newChar ? '/char' : `/char/${id}`;
     const method = newChar ? api.post : api.put;

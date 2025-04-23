@@ -19,7 +19,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      entityEdit?.handleFieldChange(entityEdit?.fieldName || "", e.target.value);
+      entityEdit?.handleFieldChange(e.target.value, entityEdit?.fieldName || "");
     };
 
     return (

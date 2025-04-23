@@ -45,7 +45,7 @@ const RichText = ({ text, suggestionData }: RichTextProps) => {
         <a 
           key={`${type}-${id}-${match.index}`}
           href={`/${type}/${id}`}
-          className="mention-link text-blue-500 hover:underline"
+          className="text-sans mention-link text-blue-500 hover:underline"
           onClick={(e) => {
             e.preventDefault();
             // Optional: Add navigation logic here
@@ -68,9 +68,12 @@ const RichText = ({ text, suggestionData }: RichTextProps) => {
   };
 
   return (
-    <div className="text-m mt-4">
+    // <div className="text-m mt-4">
+    //   {suggestionData ? formMentionRichText(text) : text}
+    // </div>
+    <>
       {suggestionData ? formMentionRichText(text) : text}
-    </div>
+    </>
   );
 };
 

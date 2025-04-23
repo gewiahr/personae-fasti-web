@@ -1,0 +1,12 @@
+:root {
+    --font-stetica: 'Stetica', system-ui, sans-serif;
+    --font-mono: ui-monospace, monospace;
+  }
+  
+  @layer base {
+    html, :host {
+      font-family: var(--font-stetica);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+  }

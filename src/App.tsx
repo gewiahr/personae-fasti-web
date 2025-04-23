@@ -82,7 +82,7 @@ export const App = () => {
           </Routes>
         </Layout>
       </AuthGate>
-    </Router>
+    </Router> 
   );
 };
 

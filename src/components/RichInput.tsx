@@ -17,7 +17,7 @@ export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData
     //const [mentions, setMentions] = useState<Mention[]>([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [suggestionData, setSuggestionData] = useState<SuggestionData>();
-    const [suggestionTabPos, setSuggestionTabPos] = useState({ top: 0, left: 0});
+    const [suggestionTabPos, /*setSuggestionTabPos*/] = useState({ top: 0, left: 0});
     const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(0);
 
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -33,12 +33,12 @@ export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData
         console.log(fullSuggestionData);    
     }, [fullSuggestionData]);
 
-    useEffect(() => {
-        setInputValue(setValue);
-      }, [setValue]);
+    // useEffect(() => {
+    //     if (setValue === '') setInputValue(setValue);
+    // }, [setValue]);
 
     useEffect(() => {
-      entityEdit?.handleFieldChange(entityEdit?.fieldName || "", inputValue);
+      entityEdit?.handleFieldChange(inputValue, entityEdit?.fieldName || "");
     }, [inputValue]);
 
     const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {

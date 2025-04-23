@@ -9,7 +9,7 @@ type SuggestionTabProps = {
 }
 
 export const SuggestionsTab = forwardRef<HTMLDivElement, SuggestionTabProps>(
-    ({ tabPos, data, selectionIndex, insertMention }, ref) => {
+    ({ /*tabPos,*/ data, selectionIndex, insertMention }, /*ref*/) => {
 
         useEffect(() => {
 
@@ -19,7 +19,7 @@ export const SuggestionsTab = forwardRef<HTMLDivElement, SuggestionTabProps>(
             // <div ref={ref} className="absolute z-50 w-48 bg-gray-900 border border-gray-600 rounded-lg shadow-lg py-1" style={tabPos}>
             <>
                 {data && <div 
-                    className={`absolute z-50 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-md overflow-y-auto max-h-60 w-48
+                    className={`absolute z-50 bg-gray-800 border border-gray-700 shadow-lg rounded-md overflow-y-auto max-h-60 w-48
                         ${data ? 'block' : 'hidden'}`}
                     style={{
                         width: '100%',

@@ -1,6 +1,11 @@
 module.exports = {
     // ...
     theme: {
+      fontFamily: {
+        sans: ['Stetica', 'system-ui', 'sans-serif'], // Default font
+        mono: ['"Courier New"', 'monospace'],
+        serif: ['Georgia', 'serif'],
+      },
       extend: {
         colors: {
           blue: {
@@ -14,7 +19,10 @@ module.exports = {
             200: '#bbf7d0',
             600: '#16a34a',
             800: '#166534',
-          }
+          }, 
+          fontFamily: {
+            stetica: ['var(--font-stetica)'], // Optional: add as custom utility
+          },       
         }
       }
     }
