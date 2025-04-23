@@ -9,7 +9,7 @@ type SuggestionTabProps = {
 }
 
 export const SuggestionsTab = forwardRef<HTMLDivElement, SuggestionTabProps>(
-    ({ tabPos, data, selectionIndex, insertMention }, ref) => {
+    ({ /*tabPos,*/ data, selectionIndex, insertMention }, /*ref*/) => {
 
         useEffect(() => {
 
