@@ -18,13 +18,13 @@ export const RecordPage = () => {
   const { data: suggestionData, loading: suggestionLoading } = useApi.get<SuggestionData>(`/suggestions`, accessKey);
 
   if (loading && records.length === 0) {
-    return <div className="text-center py-8">Loading events...</div>;
+    return <div className="text-center py-8">Загрузка событий...</div>;
   }
 
   if (error) {
     return (
       <div className="text-center py-8 text-red-500">
-        Error loading events: {error.message}
+        Ошибка загрузки данных: {error.message}
       </div>
     );
   }

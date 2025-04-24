@@ -61,6 +61,10 @@ import { RecordPage } from './pages/RecordPage';
 import { CharsList } from './pages/CharsList';
 import { CharPage } from './pages/CharPage';
 import CharEditPage from './pages/CharEditPage';
+import EntityPage from './pages/EntityPage';
+import { EntitiesList } from './pages/EntitiesList';
+import { NPCMetaData } from './types/entities';
+import EntityEditPage from './pages/EntityEditPage';
 //import { PlacesList } from './pages/PlacesList';
 //import { PlacePage } from './pages/PlacePage';
 
@@ -71,12 +75,17 @@ export const App = () => {
         <Layout>
           <Routes>
             <Route path="/" element={<RecordPage />} />
+
             <Route path="/chars" element={<CharsList />} />
             <Route path="/char/:id" element={<CharPage />} />
             <Route path="/char/new" element={<CharEditPage />} />
             <Route path="/char/:id/edit" element={<CharEditPage />} />
-            {/*<Route path="/npcs" element={<NPCsList />} />
-            <Route path="/npcs/:id" element={<NPCPage />} />*/}
+
+            <Route path="/npcs" element={<EntitiesList key={20} metaData={NPCMetaData} />} />
+            <Route path="/npc/:id" element={<EntityPage key={21} metaData={NPCMetaData} />} />
+            <Route path="/npc/new" element={<EntityEditPage key={22} metaData={NPCMetaData} />} />
+            <Route path="/npc/:id/edit" element={<EntityEditPage key={23} metaData={NPCMetaData} />} />
+            
             {/*<Route path="/locations" element={<LocationsList />} />
             <Route path="/locations/:id" element={<LocationPage />} />*/}
           </Routes>

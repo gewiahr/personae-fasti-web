@@ -15,11 +15,16 @@ export type GameEvent = {
 export interface Entity {
   id: number;
   name: string;
+  title: string;
   description: string;
   gameID: number;
 };
 
-type EntityMetaData = {
+export type EntityMetaData = {
+  EntityName: string;
+  EntityNamePl: string;
+  EntityType: string;
+  EntityTypePl: string;
   SuggestionTypeStatus: string;
   RichInputFields: string[];
 }
@@ -31,10 +36,10 @@ export const formSuggestionRef = (suggestion: SuggestionEntity) => {
       suggestion.ref = `${CharMetaData.SuggestionTypeStatus} ${suggestion.name}`;
       break;
     case 'npc':
-      suggestion.ref = `🎎 ${suggestion.name}`;
+      suggestion.ref = `${NPCMetaData.SuggestionTypeStatus} ${suggestion.name}`;
       break;
     case 'location':
-      suggestion.ref = `🏔️ ${suggestion.name}`;
+      suggestion.ref = `${LocationMetaData.SuggestionTypeStatus} ${suggestion.name}`;
       break;
   }
 }
@@ -45,14 +50,36 @@ export interface Char extends Entity {
 };
 
 export const CharMetaData: EntityMetaData = {
+  EntityName: "Герой",
+  EntityNamePl: "Герои",
+  EntityType: 'char',
+  EntityTypePl: 'chars',
   SuggestionTypeStatus: "🎭",
   RichInputFields: ["description"]
-}
+};
 
 export interface NPC extends Entity {
   title: string;
 };
 
+export const NPCMetaData: EntityMetaData = {
+  EntityName: "Персонаж",
+  EntityNamePl: "Персонажи",
+  EntityType: 'npc',
+  EntityTypePl: 'npcs',
+  SuggestionTypeStatus: "🎎",
+  RichInputFields: ["description"]
+};
+
 export interface Location extends Entity {
   pid: number;
+};
+
+export const LocationMetaData: EntityMetaData = {
+  EntityName: "Место",
+  EntityNamePl: "Места",
+  EntityType: 'location',
+  EntityTypePl: 'locations',
+  SuggestionTypeStatus: "🏔️",
+  RichInputFields: ["description"]
 };

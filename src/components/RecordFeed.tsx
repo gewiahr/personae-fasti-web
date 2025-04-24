@@ -17,9 +17,9 @@ export const RecordFeed = ({ records, players, suggestionData = null }: RecordFe
   return (records.length === 0 || suggestionData == null ?
     // No Records
     <div className="text-center py-8 text-gray-400">
-      No events yet. Add the first one!
+      Пока что нет ни одного события. Пора добавить несколько штрихов!
     </div> :
-    // Full Records
+    // Some Records
     <div className="space-y-4">
       {records.sort((a, b) => b.id - a.id)
               .map((record) => (

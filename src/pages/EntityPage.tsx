@@ -1,46 +1,49 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { Char } from '../types/entities';
+import { Entity, EntityMetaData } from '../types/entities';
 import { useApi } from '../hooks/useApi';
 import { useAuth } from '../hooks/useAuth';
-import { CharPageData } from '../types/request';
+//import { CharPageData, EntityPageData } from '../types/request';
 import { useEffect, useState } from 'react';
 import { SuggestionData } from '../types/suggestion';
 import RichText from '../components/RichText';
 
-export const CharPage = () => {
+interface EntityPageProp {
+  metaData: EntityMetaData;
+}
+
+export const EntityPage = <T extends Entity>({ metaData } : EntityPageProp) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [newChar] = useState<boolean>(id ? false : true);
+  const newEntity = id ? false : true;
 
-  const [char, setChar] = useState<Char>({} as Char);
+  const [entity, setEntity] = useState<T>({} as T);
 
   const { accessKey } = useAuth();
-  const { data, loading, error } = useApi.get<CharPageData>(`/char/${id}`, accessKey, [], newChar);
+  const { data, loading, error } = useApi.get(`/${metaData.EntityType}/${id}`, accessKey, [], newEntity);
   const { data: suggestionData } = useApi.get<SuggestionData>(`/suggestions`, accessKey);
 
   useEffect(() => {
     if (data) {
-      console.log(data);
-      setChar(data.char);
+      setEntity(data[metaData.EntityType]);
     };
   }, [data]);
 
   const openEditing = () => {
-    navigate(`/char/${id}/edit`);
+    navigate(`/${metaData.EntityType}/${id}/edit`);
   };
 
   return (
     <div className="max-w-2xl mx-auto p-4">
       {loading ? (
         <p>Данные загружаются...</p>
-      ) : error || !char ? (
+      ) : error || !entity ? (
         <p>Данные недоступны</p>
       ) : (
         <>
           <div className='flex justify-between items-center'>
             <div>
-              <h1 className="text-2xl font-bold">{char.name}</h1>
-              <h3 className="text-m text-gray-400 mb-4">{char.title}</h3>
+              <h1 className="text-2xl font-bold">{entity.name}</h1>
+              <h3 className="text-m text-gray-400 mb-4">{entity?.title}</h3>
             </div>
             <button
               className="bg-blue-600 hover:bg-blue-700 text-white mb-6 py-2 px-4 w-[25%] rounded"
@@ -49,9 +52,11 @@ export const CharPage = () => {
               {"Изменить"}
             </button>
           </div>
-          <RichText text={char.description || ""} suggestionData={suggestionData || {} as SuggestionData}/>
+          <RichText text={entity.description || ""} suggestionData={suggestionData || {} as SuggestionData}/>
         </>)
       }
     </div>
   );
 };
+
+export default EntityPage;

@@ -1,17 +1,16 @@
 // components/EntityCard.tsx
 import { Link } from 'react-router-dom';
-import { NPC, Location } from '../types/entities';
-import { useEffect, useState } from 'react';
-import { CharInfo } from '../types/request';
+import { EntityMetaData } from '../types/entities';
+import { EntityInfo } from '../types/request';
 
 type EntityCardProps = {
-  entity: CharInfo | NPC | Location ;
-  entityType: 'char' | 'npc' | 'location';
-  playerName: string;
+  entity: EntityInfo;
+  metaData: EntityMetaData;
+  labelText?: string;
 };
 
-export const EntityCard = ({ entity, entityType, playerName }: EntityCardProps) => {
-  const [ labelText, setLabelText ] = useState<string>();
+export const EntityCard = ({ entity, metaData, labelText }: EntityCardProps) => {
+  //const [ labelText, setLabelText ] = useState<string>();
 
   // Helper function to truncate long descriptions
   const truncateDescription = (text: string, maxLength: number = 100) => {
@@ -19,28 +18,27 @@ export const EntityCard = ({ entity, entityType, playerName }: EntityCardProps) 
     return text.substring(0, maxLength) + '...';
   };
 
-  useEffect(() => {
-    // Set label text
-    switch (entityType) {
-      case 'char':
-        setLabelText(playerName);
-      //case 'npc':
-      //case 'location':
-    };
-
-  });
+  // useEffect(() => {
+  //   // Set label text
+  //   switch (entityType) {
+  //     case 'char':
+  //       setLabelText(labelText);
+  //     //case 'npc':
+  //     //case 'location':
+  //   };
+  // });
 
   return (
     <Link
-      to={`/${entityType}/${entity.id}`}
+      to={`/${metaData.EntityType}/${entity.id}`}
       className="block border border-gray-700 rounded-lg overflow-hidden hover:border-blue-500 transition-colors duration-200 bg-gray-800 hover:bg-gray-750"
     >
       <div className="p-4">
         <h3 className="text-lg font-semibold text-white mb-2">{entity.name}</h3>
         
-        {'description' in entity && (
+        {entity.title && ( /*title in entity && (*/
           <p className="text-gray-300 text-sm mb-3">
-            {truncateDescription(entity.description)}
+            {truncateDescription(entity.title)}
           </p>
         )}
 

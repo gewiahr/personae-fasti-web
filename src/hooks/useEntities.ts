@@ -3,6 +3,7 @@ import { useApi } from './useApi';
 import { useAuth } from './useAuth';
 import { api } from '../utils/api'; 
 import { NewEntity } from '../types/request';
+import { EntityMetaData } from '../types/entities';
 
 type UseRecordsProps = {
   entityName: string,
@@ -68,6 +69,10 @@ const useEntitiesCore = <T>({ entityName, entityNamePl }: UseRecordsProps) => {
 
 
 export const useEntities = {
+  fetch: (
+    entityMeta : EntityMetaData
+  ) => useEntitiesCore({ entityName: entityMeta.EntityType, entityNamePl: entityMeta.EntityTypePl }),
+  
   chars: <Character>(
     // entityName: string,
     // entityNamePl: string = `${entityName}s`,

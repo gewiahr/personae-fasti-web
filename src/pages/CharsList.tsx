@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { EntityCard } from '../components/EntityCard';
 import { useEntities } from '../hooks/useEntities';
 import { GameChars } from '../types/request';
+import { CharMetaData } from '../types/entities';
 
 export const CharsList = () => {
   const { data } = useEntities.chars<GameChars>();
@@ -24,8 +25,8 @@ export const CharsList = () => {
           <EntityCard
             key={char.id}
             entity={char}
-            entityType='char'
-            playerName={data.players.find((player) => (player.id === char.playerID))?.username || ""}
+            metaData={CharMetaData}
+            labelText={data.players.find((player) => (player.id === char.playerID))?.username || ""}
           />
         ))}
       </div>

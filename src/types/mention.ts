@@ -1,4 +1,4 @@
-import { Char, CharMetaData } from "./entities";
+import { Char, CharMetaData, Entity, EntityMetaData } from "./entities";
 import { SuggestionData, SuggestionEntity } from "./suggestion";
 
 export type MentionContext = {
@@ -27,6 +27,20 @@ export const enrichCharFieldsMentions = (editedChar: Char, suggestions: Suggesti
   return editedChar;
 }
 
+export const enrichEntityFieldsMentions = <T extends Entity>(editedEntity: T, metaData: EntityMetaData, suggestions: SuggestionData): T => {
+  // Enrich fields with rich input
+  metaData.RichInputFields.forEach((field) => {
+    if (editedEntity?.[field as keyof typeof editedEntity]) {
+      editedEntity = {
+        ...editedEntity,
+        [field]: enrichMentionInput(`${editedEntity?.[field as keyof typeof editedEntity]}`, suggestions?.entities || [])
+      };
+    };
+  });
+
+  return editedEntity;
+}
+
 export const enrichMentionInput = (textInput: string, suggestions: SuggestionEntity[]) => {
   const suggestionMap = new Map(
     suggestions.map(item => [item.name.toLowerCase(), item])
@@ -51,6 +65,22 @@ export const simplerCharFieldsMentions = (char: Char, suggestions: SuggestionDat
   });
 
   return newChar;
+}
+
+
+export const simplerEntityFieldsMentions = <T extends Entity>(entity: T, metaData: EntityMetaData, suggestions: SuggestionData): T => {
+  let newEntity: T = entity
+  // Simplify fields with rich input
+  metaData.RichInputFields.forEach((field) => {
+    if (newEntity?.[field as keyof typeof newEntity]) {
+      newEntity = {
+        ...newEntity,
+        [field]: simplifyMentionInput(`${newEntity?.[field as keyof typeof newEntity]}`, suggestions?.entities || [])
+      };
+    };
+  });
+
+  return newEntity;
 }
 
 export const simplifyMentionInput = (textInput: string, suggestions: SuggestionEntity[]) => {

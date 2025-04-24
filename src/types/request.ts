@@ -38,22 +38,44 @@ export type GameInfo = {
   title: string;
 };
 
-export type CharInfo = {
+export interface EntityInfo {
   id: number;
   name: string;
   title: string;
 
+  gameID: number;  
+}
+
+export interface CharInfo extends EntityInfo {
   playerID: number;
-  gameID: number;
 };
 
-export type GameChars = {
+export interface NPCInfo extends EntityInfo {
+  playerID: number;
+};
+
+export interface GameEntities {
+  currentGame: GameInfo;
+}
+
+export interface GameChars extends GameEntities {
   chars: CharInfo[];
   players: PlayerInfo[];
-  currentGame: GameInfo;
 };
 
-export type CharPageData = {
+export interface GameNPCs extends GameEntities {
+  npcs: NPCInfo[];
+};
+
+export interface EntityPageData {
+
+}
+
+export interface CharPageData extends EntityPageData {
+  char: Char;
+};
+
+export interface NPCPageData extends EntityPageData {
   char: Char;
 };
 
