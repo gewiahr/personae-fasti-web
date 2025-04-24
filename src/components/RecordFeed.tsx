@@ -32,7 +32,9 @@ export const RecordFeed = ({ records, players, suggestionData = null }: RecordFe
         >
           <div className="flex justify-between items-start">
             {/* <p className="text-white">{record.text}</p> */}
-            <RichText text={record.text} key={record.id} suggestionData={suggestionData}/>
+            <div>
+              <RichText text={record.text} key={record.id} suggestionData={suggestionData}/>
+            </div>          
             <span
               className={`text-xs px-2 py-1 rounded ${record.playerID === player.id
                 ? 'bg-blue-900 text-blue-200'
