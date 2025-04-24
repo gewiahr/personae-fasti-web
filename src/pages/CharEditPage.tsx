@@ -6,7 +6,7 @@ import { InputField } from '../components/InputField';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CharPageData } from '../types/request';
 import { useApi } from '../hooks/useApi';
-import { simplerCharFieldsMentions } from '../types/mention';
+import { enrichCharFieldsMentions, simplerCharFieldsMentions } from '../types/mention';
 import { api } from '../utils/api';
 import { useAuth } from '../hooks/useAuth';
 
@@ -41,7 +41,7 @@ const CharEditPage = () => {
   const saveEdited = async (editedChar: Char | null) => {
     if (!editedChar || !suggestionData) return;
 
-    const enrichedChar = simplerCharFieldsMentions(editedChar, suggestionData);
+    const enrichedChar = enrichCharFieldsMentions(editedChar, suggestionData);
     
     const endpoint = '/char';//newChar ? '/char' : `/char/${id}`;
     const method = newChar ? api.post : api.put;
