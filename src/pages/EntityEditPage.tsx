@@ -52,12 +52,30 @@ const EntityEditPage = <T extends Entity>({ metaData }: EntityEditPageProps) => 
   };
 
   if (!newEntity && !entity || !suggestionData) {
-    return <div>Загрузка...</div>; // Or skeleton UI
+    return <div>Загрузка...</div>;
   }
 
   return (
     <div className='flex flex-col'>
-      <InputField 
+      { entity && metaData.Fields.map((field) => {
+        if (field.EditType == 'input') {
+            return (<InputField 
+                      className="mb-4" 
+                      label={field.FieldLabel} 
+                      setValue={entity[field.FieldName as keyof typeof entity] as string} 
+                      entityEdit={{ fieldName: field.FieldName, handleFieldChange }}
+                    />);
+        } else if (field.EditType == 'richInput') {
+            return (<RichInput 
+                      label='Описание' 
+                      setValue={entity[field.FieldName as keyof typeof entity] as string} 
+                      entityEdit={{ fieldName: field.FieldName, handleFieldChange }} 
+                      fullSuggestionData={suggestionData}
+                    />);
+        }
+      })}
+
+      {/* <InputField 
         className="mb-4" 
         label='Имя' 
         setValue={entity?.name} 
@@ -74,7 +92,7 @@ const EntityEditPage = <T extends Entity>({ metaData }: EntityEditPageProps) => 
         setValue={entity?.description} 
         entityEdit={{ fieldName: 'description', handleFieldChange }} 
         fullSuggestionData={suggestionData}
-      />
+      /> */}
       <button
         className="bg-blue-600 hover:bg-blue-700 text-white mt-6 py-2 px-4 rounded"
         onClick={() => saveEdited(entity)}

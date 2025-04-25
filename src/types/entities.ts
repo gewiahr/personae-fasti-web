@@ -27,6 +27,14 @@ export type EntityMetaData = {
   EntityTypePl: string;
   SuggestionTypeStatus: string;
   RichInputFields: string[];
+  Fields: EntityFieldMetaData[];
+}
+
+export type EntityFieldMetaData = {
+  FieldName: string;
+  FieldLabel: string;
+  Type: 'label' | 'richText';
+  EditType: 'input' | 'richInput' | null;
 }
 
 export const formSuggestionRef = (suggestion: SuggestionEntity) => {
@@ -55,7 +63,27 @@ export const CharMetaData: EntityMetaData = {
   EntityType: 'char',
   EntityTypePl: 'chars',
   SuggestionTypeStatus: "🎭",
-  RichInputFields: ["description"]
+  RichInputFields: ["description"],
+  Fields: [
+    {
+      FieldName: 'name',
+      FieldLabel: 'Имя',
+      Type: 'label',
+      EditType: 'input',
+    },
+    {
+      FieldName: 'title',
+      FieldLabel: 'Титул',
+      Type: 'label',
+      EditType: 'input',
+    },
+    {
+      FieldName: 'description',
+      FieldLabel: 'Описание',
+      Type: 'richText',
+      EditType: 'richInput',
+    }
+  ]
 };
 
 export interface NPC extends Entity {
@@ -68,7 +96,27 @@ export const NPCMetaData: EntityMetaData = {
   EntityType: 'npc',
   EntityTypePl: 'npcs',
   SuggestionTypeStatus: "🎎",
-  RichInputFields: ["description"]
+  RichInputFields: ["description"],
+  Fields: [
+    {
+      FieldName: 'name',
+      FieldLabel: 'Имя',
+      Type: 'label',
+      EditType: 'input',
+    },
+    {
+      FieldName: 'title',
+      FieldLabel: 'Титул',
+      Type: 'label',
+      EditType: 'input',
+    },
+    {
+      FieldName: 'description',
+      FieldLabel: 'Описание',
+      Type: 'richText',
+      EditType: 'richInput',
+    }
+  ]
 };
 
 export interface Location extends Entity {
@@ -81,5 +129,25 @@ export const LocationMetaData: EntityMetaData = {
   EntityType: 'location',
   EntityTypePl: 'locations',
   SuggestionTypeStatus: "🏔️",
-  RichInputFields: ["description"]
+  RichInputFields: ["description"],
+  Fields: [
+    {
+      FieldName: 'name',
+      FieldLabel: 'Название',
+      Type: 'label',
+      EditType: 'input',
+    },
+    {
+      FieldName: 'title',
+      FieldLabel: 'Заглавие ',
+      Type: 'label',
+      EditType: 'input',
+    },
+    {
+      FieldName: 'description',
+      FieldLabel: 'Описание',
+      Type: 'richText',
+      EditType: 'richInput',
+    }
+  ]
 };

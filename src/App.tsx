@@ -63,7 +63,7 @@ import { CharPage } from './pages/CharPage';
 import CharEditPage from './pages/CharEditPage';
 import EntityPage from './pages/EntityPage';
 import { EntitiesList } from './pages/EntitiesList';
-import { NPCMetaData } from './types/entities';
+import { LocationMetaData, NPCMetaData } from './types/entities';
 import EntityEditPage from './pages/EntityEditPage';
 //import { PlacesList } from './pages/PlacesList';
 //import { PlacePage } from './pages/PlacePage';
@@ -76,18 +76,20 @@ export const App = () => {
           <Routes>
             <Route path="/" element={<RecordPage />} />
 
-            <Route path="/chars" element={<CharsList />} />
-            <Route path="/char/:id" element={<CharPage />} />
-            <Route path="/char/new" element={<CharEditPage />} />
-            <Route path="/char/:id/edit" element={<CharEditPage />} />
+            <Route path="/chars" element={<CharsList />} key={10} />
+            <Route path="/char/:id" element={<CharPage />} key={11} />
+            <Route path="/char/new" element={<CharEditPage key={12} />} />
+            <Route path="/char/:id/edit" element={<CharEditPage key={13} />} />
 
             <Route path="/npcs" element={<EntitiesList key={20} metaData={NPCMetaData} />} />
             <Route path="/npc/:id" element={<EntityPage key={21} metaData={NPCMetaData} />} />
             <Route path="/npc/new" element={<EntityEditPage key={22} metaData={NPCMetaData} />} />
             <Route path="/npc/:id/edit" element={<EntityEditPage key={23} metaData={NPCMetaData} />} />
             
-            {/*<Route path="/locations" element={<LocationsList />} />
-            <Route path="/locations/:id" element={<LocationPage />} />*/}
+            <Route path="/locations" element={<EntitiesList key={30} metaData={LocationMetaData} />} />
+            <Route path="/location/:id" element={<EntityPage key={31} metaData={LocationMetaData} />} />
+            <Route path="/location/new" element={<EntityEditPage key={32} metaData={LocationMetaData} />} />
+            <Route path="/location/:id/edit" element={<EntityEditPage key={33} metaData={LocationMetaData} />} />
           </Routes>
         </Layout>
       </AuthGate>
