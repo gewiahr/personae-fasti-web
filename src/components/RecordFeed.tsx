@@ -48,8 +48,8 @@ export const RecordFeed = ({ records, players, suggestionData = null }: RecordFe
             {new Date(record.created).toLocaleString()}
           </div> */}
           <div className="flex justify-between items-end text-xs text-gray-400">
-          <span>Обновлено: {new Date().toLocaleDateString()}</span>
-          <span
+            <span>Обновлено: {new Date().toLocaleDateString()}</span>
+            <span
               className={`text-xs px-2 py-1 rounded ${record.playerID === player.id
                 ? 'bg-blue-900 text-blue-200'
                 : 'bg-gray-700 text-gray-300'

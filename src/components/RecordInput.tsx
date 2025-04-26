@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { RichInput } from './RichInput';
 import { SuggestionData } from '../types/suggestion';
 import { enrichMentionInput } from '../types/mention';
+import { ToggleSwitch } from './ToggleSwitch';
 
 type RecordInputProps = {
   onSubmit: (content: string) => void;
@@ -48,19 +49,28 @@ export const RecordInput = ({ onSubmit, suggestionData = null }: RecordInputProp
           placeholder="Опишите текущие события"
           rows={3}
         /> */}
-        <RichInput key={richInputKey} label='' setValue={input} entityEdit={{ handleFieldChange }} fullSuggestionData={suggestionData} />
+        <RichInput 
+          key={richInputKey} 
+          label='' 
+          setValue={input} 
+          entityEdit={{ handleFieldChange }} 
+          fullSuggestionData={suggestionData} 
+        />
       </div>
-      <button
-        type="submit"
-        disabled={isSubmitting || input.trim() === ''}
-        className={`mt-2 px-4 py-2 rounded-md text-white ${
-          isSubmitting || input.trim() === ''
-            ? 'bg-gray-600 cursor-not-allowed'
-            : 'bg-blue-600 hover:bg-blue-700'
-        }`}
-      >
-        {isSubmitting ? 'Публикуется...' : 'Опубликовать'}
-      </button>
+      <div className="flex justify-between items-center mt-2"> 
+        <button
+          type="submit"
+          disabled={isSubmitting || input.trim() === ''}
+          className={`px-4 py-2 rounded-md text-white ${
+            isSubmitting || input.trim() === ''
+              ? 'bg-gray-600 cursor-not-allowed'
+              : 'bg-blue-600 hover:bg-blue-700'
+          }`}
+        >
+          {isSubmitting ? 'Публикуется...' : 'Опубликовать'}
+        </button>
+        {/* <ToggleSwitch key={100} label='Скрыто от игроков' labelPosition='left' entityEdit={{}} setValue={isSubmitting} /> */}
+      </div>
     </form>
   );
 };
