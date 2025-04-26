@@ -139,7 +139,7 @@ export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData
         const newText = 
             text.slice(0, context.position) + 
             "@`" + entity.name + "`" +
-            text.slice(context.position + context.query.length + 1) + " ";
+            text.slice(context.position + context.query.length + 1);
 
         
         setInputValue(newText);

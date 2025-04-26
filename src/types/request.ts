@@ -1,4 +1,4 @@
-import { Char } from "./entities";
+import { Char, NPC, Location } from "./entities";
 
 export type LoginInfo = {
   accesskey: string;
@@ -68,7 +68,7 @@ export interface GameNPCs extends GameEntities {
 };
 
 export interface EntityPageData {
-
+  records: Record[]
 }
 
 export interface CharPageData extends EntityPageData {
@@ -76,7 +76,11 @@ export interface CharPageData extends EntityPageData {
 };
 
 export interface NPCPageData extends EntityPageData {
-  char: Char;
+  npc: NPC;
+};
+
+export interface LocationPageData extends EntityPageData {
+  Location: Location;
 };
 
 export type NewEntity = {

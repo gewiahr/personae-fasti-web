@@ -6,6 +6,8 @@ import { CharPageData } from '../types/request';
 import { useEffect, useState } from 'react';
 import { SuggestionData } from '../types/suggestion';
 import RichText from '../components/RichText';
+import { RecordFeed } from '../components/RecordFeed';
+import { useRecords } from '../hooks/useRecords';
 
 export const CharPage = () => {
   const { id } = useParams();
@@ -17,6 +19,9 @@ export const CharPage = () => {
   const { accessKey } = useAuth();
   const { data, loading, error } = useApi.get<CharPageData>(`/char/${id}`, accessKey, [], newChar);
   const { data: suggestionData } = useApi.get<SuggestionData>(`/suggestions`, accessKey);
+
+  // ** change to valid player request ** //
+  const { players } = useRecords();
 
   useEffect(() => {
     if (data) {
@@ -50,6 +55,12 @@ export const CharPage = () => {
             </button>
           </div>
           <RichText text={char.description || ""} suggestionData={suggestionData || {} as SuggestionData}/>
+
+          {/* ++ Change to universal feed ++ */}
+          {data && data.records && <div className=''>
+            <h2 className='text-right text-xl text-bold pt-8 pb-2'>Упоминания</h2>
+            <RecordFeed key={1000} players={players} records={data.records} suggestionData={suggestionData} />
+          </div>}
         </>)
       }
     </div>
