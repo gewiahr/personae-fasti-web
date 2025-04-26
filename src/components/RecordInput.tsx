@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { RichInput } from './RichInput';
 import { SuggestionData } from '../types/suggestion';
 import { enrichMentionInput } from '../types/mention';
-import { ToggleSwitch } from './ToggleSwitch';
+//import { ToggleSwitch } from './ToggleSwitch';
 
 type RecordInputProps = {
   onSubmit: (content: string) => void;

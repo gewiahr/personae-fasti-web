@@ -74,7 +74,7 @@ export const App = () => {
       <AuthGate>
         <Layout>
           <Routes>
-            <Route path="/" element={<RecordPage />} />
+            <Route path="/" element={<RecordPage />} key={1} />
 
             <Route path="/chars" element={<CharsList />} key={10} />
             <Route path="/char/:id" element={<CharPage />} key={11} />
