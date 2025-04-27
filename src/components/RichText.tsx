@@ -1,31 +1,12 @@
-// import { SuggestionData } from "../types/suggestion";
-
-// type RichTextProps = {
-//   text: string;
-//   suggestionData?: SuggestionData;
-// };
-
-// const RichText = ({ text, suggestionData } : RichTextProps) => {
-//   return (
-//     <div>
-//       {suggestionData ? 
-//         <p className="text-m mt-4">{richText}</p>
-//       : <p className="text-m mt-4">{text}</p>}
-//     </div>
-//   )
-// }
-
-// export default RichText
-
 import React from 'react';
-import { SuggestionData } from "../types/suggestion";
+//import { SuggestionData } from "../types/suggestion";
 
 type RichTextProps = {
   text: string;
-  suggestionData?: SuggestionData; // Made optional
+  //suggestionData?: SuggestionData; // Made optional
 };
 
-const RichText = ({ text, suggestionData }: RichTextProps) => {
+const RichText = ({ text }: RichTextProps) => {
   const formMentionRichText = (content: string): React.ReactNode[] => {
     const mentionRegex = /@(\w+):(\w+)`([^`]+)`/g;
     const elements: React.ReactNode[] = [];
@@ -72,7 +53,8 @@ const RichText = ({ text, suggestionData }: RichTextProps) => {
     //   {suggestionData ? formMentionRichText(text) : text}
     // </div>
     <>
-      {suggestionData ? formMentionRichText(text) : text}
+      {/* suggestionData ? formMentionRichText(text) : text */}
+      {formMentionRichText(text)}
     </>
   );
 };

@@ -31,8 +31,8 @@ export const RecordPage = () => {
 
   return (
     <div className="max-w-2xl mx-auto p-4">
-      <RecordInput key={Number(suggestionLoading)} onSubmit={handleNewRecord} suggestionData={suggestionData} />
-      <RecordFeed records={records} players={players} suggestionData={suggestionData} />
+      <RecordInput key={1000 * Number(suggestionLoading)} onSubmit={handleNewRecord} suggestionData={suggestionData} />
+      <RecordFeed records={records} players={players} suggestionData={suggestionData} editable={true} />
     </div>
   );
 };
