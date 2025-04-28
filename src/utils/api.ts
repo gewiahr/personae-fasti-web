@@ -28,6 +28,14 @@ export const api = {
     return makeRequest<T>(endpoint, 'PUT', accessKey, body);
   },
 
+  patch: async <T = any>(
+    endpoint: string,
+    accessKey: string,
+    body: any
+  ): Promise<ApiResponse<T>> => {
+    return makeRequest<T>(endpoint, 'PATCH', accessKey, body);
+  },
+
   delete: async (
     endpoint: string,
     accessKey: string

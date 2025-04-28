@@ -54,7 +54,7 @@ export const CharPage = () => {
               {"Изменить"}
             </button>
           </div>
-          <RichText text={char.description || ""} suggestionData={suggestionData || {} as SuggestionData}/>
+          <RichText text={char.description || ""}/>
 
           {/* ++ Change to universal feed ++ */}
           {data && data.records && <div className=''>

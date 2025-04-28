@@ -12,7 +12,8 @@ export const RecordPage = () => {
     players,
     loading,
     error,
-    handleNewRecord
+    handleNewRecord,
+    refresh
   } = useRecords();
   const { accessKey }  = useAuth();
   const { data: suggestionData, loading: suggestionLoading } = useApi.get<SuggestionData>(`/suggestions`, accessKey);
@@ -32,7 +33,7 @@ export const RecordPage = () => {
   return (
     <div className="max-w-2xl mx-auto p-4">
       <RecordInput key={1000 * Number(suggestionLoading)} onSubmit={handleNewRecord} suggestionData={suggestionData} />
-      <RecordFeed records={records} players={players} suggestionData={suggestionData} editable={true} />
+      <RecordFeed records={records} players={players} suggestionData={suggestionData} editable={true} onEdit={() => refresh()} />
     </div>
   );
 };

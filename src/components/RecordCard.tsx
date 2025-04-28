@@ -1,4 +1,4 @@
-import { PlayerInfo, Record } from '../types/request';
+import { /*PlayerInfo,*/ Record } from '../types/request';
 import RichText from './RichText';
 
 interface RecordCardProps {
@@ -6,9 +6,10 @@ interface RecordCardProps {
   label?: string;
   accented?: boolean;
   editable?: boolean;
+  onEdit?: (record : Record) => void;
 };
 
-const RecordCard = ({ record, label="", accented=false, editable=false } : RecordCardProps) => {
+const RecordCard = ({ record, label="", accented=false, editable=false, onEdit } : RecordCardProps) => {
 
 
   return (
@@ -27,7 +28,7 @@ const RecordCard = ({ record, label="", accented=false, editable=false } : Recor
       <div className="flex justify-between items-end text-xs text-gray-400">
         <span>Обновлено: {new Date().toLocaleDateString()}</span>
         <div className="flex items-end">
-          {editable && <button className='px-4'>
+          {editable && onEdit && <button className='px-4' onClick={() => onEdit(record)}>
             ...
           </button>}
           {label !== "" && <span
@@ -42,7 +43,7 @@ const RecordCard = ({ record, label="", accented=false, editable=false } : Recor
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default RecordCard
+export default RecordCard;

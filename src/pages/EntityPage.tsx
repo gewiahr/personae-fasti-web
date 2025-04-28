@@ -57,7 +57,7 @@ export const EntityPage = <T extends Entity>({ metaData } : EntityPageProp) => {
               {"Изменить"}
             </button>
           </div>
-          <RichText text={entity.description || ""} suggestionData={suggestionData || {} as SuggestionData}/>
+          <RichText text={entity.description || ""}/>
 
           {/* ++ Change to universal feed ++ */}
           {data.records && <div className=''>
