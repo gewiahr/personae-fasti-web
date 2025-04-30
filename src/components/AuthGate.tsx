@@ -3,11 +3,15 @@ import { useAuth } from '../hooks/useAuth';
 
 export const AuthGate = ({ children }: { children: ReactNode }) => {
   const { isAuthenticated, login, attempts } = useAuth();
-  const [ input, setInput ] = useState('');
+  const [input, setInput] = useState<string>('');
+  // ++ Implement correct server error ++ //
+  //const [warning, setWarning] = useState<string>();
 
   const loginOnClick = () => {
-    login(input);
-    setInput("");
+    if (input) {
+      login(input);
+      setInput("");
+    }
   }
 
   const falseAttemptInput = () => {
@@ -15,11 +19,11 @@ export const AuthGate = ({ children }: { children: ReactNode }) => {
   }
 
   if (isAuthenticated) return <>{children}</>;
-  
+
   return (
     <div className="flex items-center justify-center h-screen bg-gray-800">
-      <div className="bg-gray-900 p-6 rounded-lg shadow-lg">
-        <h2 className="text-xl font-bold mb-4 text-white">Введите ключ</h2>
+      <div className="p-6 bg-gray-900 rounded-lg shadow-lg">
+        <h2 className="mb-4 text-xl font-bold text-white">Введите ключ</h2>
         <input
           type="text"
           value={input}
@@ -28,14 +32,9 @@ export const AuthGate = ({ children }: { children: ReactNode }) => {
           maxLength={10}
           placeholder={falseAttemptInput() ? "Ключ неверен" : ""}
         />
-        {/*Boolean(attempts) && !input && 
-        <p className='pb-2 mb-4 w-full text-red-600'>
-          Ключ неверен
-        </p>
-        */}
         <button
           onClick={loginOnClick}
-          className="bg-blue-800 hover:bg-blue-700 text-white py-2 px-4 rounded w-full"
+          className="w-full px-4 py-2 text-white bg-blue-800 rounded hover:bg-blue-700"
         >
           Войти
         </button>

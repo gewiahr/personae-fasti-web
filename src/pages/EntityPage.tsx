@@ -2,7 +2,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Entity, EntityMetaData } from '../types/entities';
 import { useApi } from '../hooks/useApi';
 import { useAuth } from '../hooks/useAuth';
-//import { CharPageData, EntityPageData } from '../types/request';
 import { useEffect, useState } from 'react';
 import { SuggestionData } from '../types/suggestion';
 import RichText from '../components/RichText';

@@ -26,7 +26,7 @@ const RecordCard = ({ record, label="", accented=false, editable=false, onEdit }
         </div>
       </div>
       <div className="flex justify-between items-end text-xs text-gray-400">
-        <span>Обновлено: {new Date().toLocaleDateString()}</span>
+        <span>Обновлено: {new Date(record.updated).toLocaleDateString()}</span>
         <div className="flex items-end">
           {editable && onEdit && <button className='px-4' onClick={() => onEdit(record)}>
             ...
