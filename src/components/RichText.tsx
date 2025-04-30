@@ -22,17 +22,16 @@ const RichText = ({ text }: RichTextProps) => {
       const [fullMatch, type, id, mentionText] = match;
 
       // ** temporaty color picker ** //
-      console.log(type)
-      var typeColor = "blue";
+      let typeColor = "";
       switch (type) {
         case "char":
-          typeColor = "blue";
+          typeColor = "text-blue-500";
           break;
         case "npc":
-          typeColor = "yellow";
+          typeColor = "text-yellow-500";
           break;
         case "location":
-          typeColor = "green";
+          typeColor = "text-green-500";
           break;
       }
       
@@ -43,7 +42,7 @@ const RichText = ({ text }: RichTextProps) => {
           href={`/${type}/${id}`}
           //className="text-blue-500 text-sans mention-link hover:underline"
           //className={`bg-${typeColor}-800 rounded px-1 py-0.5`}
-          className={`text-${typeColor}-500 text-sans mention-link hover:underline`}
+          className={`${typeColor} text-sans mention-link hover:underline`}
           onClick={(e) => {
             e.preventDefault();
             // Optional: Add navigation logic here
