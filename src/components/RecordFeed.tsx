@@ -47,7 +47,7 @@ export const RecordFeed = ({ records, players, suggestionData = null, editable =
         ))}
       </div>
       {editing && 
-        <RecordEdit key={990} record={editing} closeModal={onModalClose} fullSuggestionData={suggestionData}/>
+        <RecordEdit key={990} record={editing} onClose={onModalClose} fullSuggestionData={suggestionData}/>
       }
     </>   
   );
