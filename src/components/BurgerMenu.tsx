@@ -12,6 +12,7 @@ export const BurgerMenu = () => {
     { name: 'Герои', path: '/chars' },
     { name: 'Персонажи', path: '/npcs' },
     { name: 'Локации', path: '/locations' },
+    // { name: 'Настройки', path: '/settings' },
     // Add more categories as needed
   ];
 

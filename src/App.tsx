@@ -65,6 +65,7 @@ import EntityPage from './pages/EntityPage';
 import { EntitiesList } from './pages/EntitiesList';
 import { LocationMetaData, NPCMetaData } from './types/entities';
 import EntityEditPage from './pages/EntityEditPage';
+import SettingsPage from './pages/SettingsPage';
 //import { PlacesList } from './pages/PlacesList';
 //import { PlacePage } from './pages/PlacePage';
 
@@ -90,6 +91,8 @@ export const App = () => {
             <Route path="/location/:id" element={<EntityPage key={31} metaData={LocationMetaData} />} />
             <Route path="/location/new" element={<EntityEditPage key={32} metaData={LocationMetaData} />} />
             <Route path="/location/:id/edit" element={<EntityEditPage key={33} metaData={LocationMetaData} />} />
+
+            <Route path="settings" element={<SettingsPage key={999}/>} />
           </Routes>
         </Layout>
       </AuthGate>

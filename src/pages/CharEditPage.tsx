@@ -9,7 +9,7 @@ import { useApi } from '../hooks/useApi';
 import { enrichCharFieldsMentions, simplerCharFieldsMentions } from '../types/mention';
 import { api } from '../utils/api';
 import { useAuth } from '../hooks/useAuth';
-import { SelectInput } from '../components/SelectInput';
+//import { SelectInput } from '../components/SelectInput';
 
 
 const CharEditPage = () => {
@@ -77,13 +77,13 @@ const CharEditPage = () => {
         entityEdit={{ fieldName: 'description', handleFieldChange }} 
         fullSuggestionData={suggestionData}
       />
-      <SelectInput
+      {/* <SelectInput
         label='Выбор'
         entityEdit={{ fieldName: 'title', handleFieldChange }}
         options={["1", "2", "3"]}
         value={char?.title}
         key={123123}
-      />
+      /> */}
       <button
         className="bg-blue-600 hover:bg-blue-700 text-white mt-6 py-2 px-4 rounded"
         onClick={() => saveEdited(char)}
