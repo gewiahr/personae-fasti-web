@@ -1,8 +1,9 @@
-import { useState, useId, forwardRef } from 'react';
+import { useState, forwardRef } from 'react';
 import { EntityEdit } from '../types/entities';
+import { SelectKeyValue } from '../types/utils';
 
 type SelectInputProps = {
-  options: string[];
+  options: SelectKeyValue[];
   value?: string;
   label?: string;
   entityEdit?: EntityEdit; 
@@ -14,7 +15,6 @@ export const SelectInput = forwardRef<HTMLDivElement, SelectInputProps>(
   ({ label, value, options, entityEdit, className = '', error }, ref) => {
     const [isFocused, setIsFocused] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
-    const id = useId();
 
     const handleChange = (value: string) => {
       entityEdit?.handleFieldChange(value, entityEdit?.fieldName || "");
@@ -44,7 +44,6 @@ export const SelectInput = forwardRef<HTMLDivElement, SelectInputProps>(
 
         {/* Floating label */}
         <label
-          htmlFor={id}
           className={`
             absolute left-4 px-1
             transition-all duration-200 ease-in-out
@@ -62,15 +61,15 @@ export const SelectInput = forwardRef<HTMLDivElement, SelectInputProps>(
 
         {/* Dropdown options */}
         {isOpen && (
-          <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg">
+          <div className="absolute z-10 mt-1 w-full bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
             {options.map((option) => (
               <div
-                key={option}
-                className={`px-4 py-2 hover:bg-blue-50 cursor-pointer ${value === option ? 'bg-blue-100' : ''
+                key={option.key}
+                className={`px-4 py-2 hover:bg-blue-700 cursor-pointer ${value === option.value ? 'bg-blue-800' : ''
                   }`}
-                onClick={() => handleChange(option)}
+                onClick={() => handleChange(option.key)}
               >
-                {option}
+                {option.value}
               </div>
             ))}
           </div>

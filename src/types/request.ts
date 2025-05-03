@@ -33,6 +33,11 @@ export type PlayerInfo = {
   username: string;
 };
 
+export type PlayerSettings = {
+  currentGame: GameInfo;
+  playerGames: GameInfo[];
+}
+
 export type GameInfo = {
   id: number;
   title: string;
