@@ -7,6 +7,7 @@ import { GameRecords, NewRecord } from '../types/request';
 export const useRecords = () => {
   const { accessKey, player, game } = useAuth();
   const [ records, setRecords ] = useState<GameRecords['records']>([]);
+  const [ sessions, setSessions ] = useState<GameRecords['sessions']>([]);
   const [ players, setPlayers ] = useState<GameRecords['players']>([]);
   
   // Get initial records
@@ -21,6 +22,7 @@ export const useRecords = () => {
   useEffect(() => {
     if (initialData) {
       setRecords(initialData.records);
+      setSessions(initialData.sessions);
       setPlayers(initialData.players);
     }
   }, [initialData]);
@@ -45,6 +47,7 @@ export const useRecords = () => {
       if (error) throw error;
       if (data) {
         setRecords(data.records);
+        setSessions(data.sessions);
         setPlayers(data.players);
       }
     } catch (err) {
@@ -55,6 +58,7 @@ export const useRecords = () => {
 
   return {
     records,
+    sessions,
     players,
     loading,
     error,

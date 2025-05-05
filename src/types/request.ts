@@ -8,6 +8,7 @@ export type LoginInfo = {
 
 export type GameRecords = {
   records: Record[];
+  sessions: Session[];
   players: PlayerInfo[];
   currentGame: GameInfo;
 };
@@ -27,6 +28,13 @@ export type NewRecord = {
   gameID: number;
   created: string;
 };
+
+export type Session = {
+  id: number;
+  number: number;
+  name: string;
+  endTime: string;
+}
 
 export type PlayerInfo = {
   id: number;
