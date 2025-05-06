@@ -14,11 +14,11 @@ export const ToggleSwitch = ({
   setValue = false,
   entityEdit
 }: ToggleSwitchProps) => {
-  const [isFocused, setIsFocused] = useState(false);
+  //const [isFocused, setIsFocused] = useState(false);
   const [toggleValue, switchToggleValue] = useState<boolean>(setValue);
 
   const handleInputChange = () => {
-    entityEdit?.handleFieldChange(String(!toggleValue));
+    entityEdit?.handleFieldChange(!toggleValue);
     switchToggleValue(!toggleValue)
   };
 
@@ -26,7 +26,7 @@ export const ToggleSwitch = ({
     <div className="flex items-center gap-3">
       {/* Left label */}
       {labelPosition === 'left' && (
-        <label className={`text-sm ${isFocused ? 'text-blue-500' : 'text-gray-600'}`}>
+        <label className={`text-sm ${toggleValue ? 'text-blue-500' : 'text-gray-500'}`}>
           {label}
         </label>
       )}
@@ -35,8 +35,8 @@ export const ToggleSwitch = ({
       <button
         type="button"
         onClick={handleInputChange}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        // onFocus={() => setIsFocused(true)}
+        // onBlur={() => setIsFocused(false)}
         className={`
           relative w-12 h-6 rounded-md transition-colors duration-200
           focus:outline-none focus:ring-2 focus:ring-blue-200
@@ -55,7 +55,7 @@ export const ToggleSwitch = ({
 
       {/* Right label */}
       {labelPosition === 'right' && (
-        <label className={`text-sm ${isFocused ? 'text-blue-500' : 'text-gray-600'}`}>
+        <label className={`text-sm ${toggleValue ? 'text-blue-500' : 'text-gray-500'}`}>
           {label}
         </label>
       )}

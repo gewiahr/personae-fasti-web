@@ -9,6 +9,7 @@ export const useRecords = () => {
   const [ records, setRecords ] = useState<GameRecords['records']>([]);
   const [ sessions, setSessions ] = useState<GameRecords['sessions']>([]);
   const [ players, setPlayers ] = useState<GameRecords['players']>([]);
+  const [ currentGame, setCurrentGame ] = useState<GameRecords['currentGame']>();
   
   // Get initial records
   const { 
@@ -24,16 +25,17 @@ export const useRecords = () => {
       setRecords(initialData.records);
       setSessions(initialData.sessions);
       setPlayers(initialData.players);
+      setCurrentGame(initialData.currentGame);
     }
   }, [initialData]);
 
   // Handle new record submission
-  const handleNewRecord = useCallback(async (content: string) => {
+  const handleNewRecord = useCallback(async (content: string, hidden: boolean = false) => {
     const newRecord: NewRecord = {
       text: content,
       playerID: player.id,
       gameID: game.id,
-      created: new Date().toISOString(),
+      hidden
     };
 
     try {
@@ -49,6 +51,7 @@ export const useRecords = () => {
         setRecords(data.records);
         setSessions(data.sessions);
         setPlayers(data.players);
+        setCurrentGame(data.currentGame);
       }
     } catch (err) {
       fetchRecords(); // Re-fetch original data on error
@@ -60,6 +63,7 @@ export const useRecords = () => {
     records,
     sessions,
     players,
+    currentGame,
     loading,
     error,
     handleNewRecord,

@@ -1,4 +1,4 @@
-import { PlayerInfo, Record, Session } from '../types/request';
+import { GameInfo, PlayerInfo, Record, Session } from '../types/request';
 import { useAuth } from '../hooks/useAuth';
 import { SuggestionData } from '../types/suggestion';
 import RecordCard from './RecordCard';
@@ -21,7 +21,7 @@ type RecordSession = {
 }
 
 export const RecordFeed = ({ records, players, sessions, suggestionData = null, editable = false, onEdit = () => {} }: RecordFeedProps) => {
-  const { player } = useAuth();
+  const { player, game } = useAuth();
   const [ editing, setEditing ] = useState<Record | null>(null);
   const [ orderedRecords, setOrderedRecords ] = useState<RecordSession[] | null>();
 
@@ -163,7 +163,14 @@ export const RecordFeed = ({ records, players, sessions, suggestionData = null, 
       </div>}
 
       {editing && 
-        <RecordEdit key={990} record={editing} onClose={onModalClose} fullSuggestionData={suggestionData}/>
+        <RecordEdit 
+          key={990} 
+          record={editing}
+          currentPlayer={player}
+          currentGame={game} 
+          onClose={onModalClose} 
+          fullSuggestionData={suggestionData}
+        />
       }
     </>   
   );

@@ -65,7 +65,7 @@ export const SelectInput = forwardRef<HTMLDivElement, SelectInputProps>(
             {options.map((option) => (
               <div
                 key={option.key}
-                className={`px-4 py-2 hover:bg-blue-700 cursor-pointer ${value === option.value ? 'bg-blue-800' : ''
+                className={`px-4 py-2 hover:bg-blue-700 rounded-lg cursor-pointer ${value === option.value ? 'bg-blue-800' : ''
                   }`}
                 onClick={() => handleChange(option.key)}
               >

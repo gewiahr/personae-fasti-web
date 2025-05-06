@@ -2,15 +2,20 @@ import { useEffect, useState } from 'react';
 import { RichInput } from './RichInput';
 import { SuggestionData } from '../types/suggestion';
 import { enrichMentionInput } from '../types/mention';
+import { ToggleSwitch } from './ToggleSwitch';
+import { GameInfo, PlayerInfo } from '../types/request';
 //import { ToggleSwitch } from './ToggleSwitch';
 
 type RecordInputProps = {
-  onSubmit: (content: string) => void;
+  currentPlayer: PlayerInfo;
+  currentGame: GameInfo;
+  onSubmit: (content: string, hidden: boolean) => void;
   suggestionData?: SuggestionData | null;
 };
 
-export const RecordInput = ({ onSubmit, suggestionData = null }: RecordInputProps) => {
+export const RecordInput = ({ currentPlayer, currentGame, onSubmit, suggestionData = null }: RecordInputProps) => {
   const [input, setInput] = useState('');
+  const [postHidden, setPostHidden] = useState(false);
   const [richInputKey, setRichInputKey] = useState(0); // Add key for reset
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -24,7 +29,7 @@ export const RecordInput = ({ onSubmit, suggestionData = null }: RecordInputProp
     
     setIsSubmitting(true);
     const enrichedText = enrichMentionInput(input, suggestionData?.entities)
-    onSubmit(enrichedText);
+    onSubmit(enrichedText, postHidden);
     setInput('');
     setRichInputKey(prev => prev + 1);
     setIsSubmitting(false);
@@ -69,7 +74,13 @@ export const RecordInput = ({ onSubmit, suggestionData = null }: RecordInputProp
         >
           {isSubmitting ? 'Публикуется...' : 'Опубликовать'}
         </button>
-        {/* <ToggleSwitch key={100} label='Скрыто от игроков' labelPosition='left' entityEdit={{}} setValue={isSubmitting} /> */}
+        {currentPlayer.id == currentGame.gmID && <ToggleSwitch 
+          key={100} 
+          label='Скрыть пост' 
+          labelPosition='left' 
+          entityEdit={{ handleFieldChange : (value) => setPostHidden(value) }} 
+          setValue={postHidden} 
+        />}
       </div>
     </form>
   );

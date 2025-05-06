@@ -20,13 +20,14 @@ export type Record = {
   gameID: number;
   created: string;
   updated: string;
+  hiddenBy: number;
 };
 
 export type NewRecord = {
   text: string;
   playerID: number;
   gameID: number;
-  created: string;
+  hidden: boolean;
 };
 
 export type Session = {
@@ -49,6 +50,7 @@ export type PlayerSettings = {
 export type GameInfo = {
   id: number;
   title: string;
+  gmID: number;
 };
 
 export interface EntityInfo {

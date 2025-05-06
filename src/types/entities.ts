@@ -2,7 +2,7 @@ import { SuggestionEntity } from "./suggestion";
 
 export interface EntityEdit {
   fieldName?: string;
-  handleFieldChange: (value: string, field?: string) => void;
+  handleFieldChange: (value: any, field?: string) => void;
 }
 
 export type GameEvent = {

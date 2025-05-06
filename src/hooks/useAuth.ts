@@ -28,5 +28,5 @@ export const useAuth = () => {
     window.location.href = '/';
   };
 
-  return { isAuthenticated, login, logout, accessKey: loginInfo?.accesskey || "", player: loginInfo?.player || { id: 0, username: "" }, game: loginInfo?.currentGame || { id: 0, title: "" }, attempts };
+  return { isAuthenticated, login, logout, accessKey: loginInfo?.accesskey || "", player: loginInfo?.player || { id: 0, username: "" }, game: loginInfo?.currentGame || { id: 0, title: "", gmID: 0 }, attempts };
 };
