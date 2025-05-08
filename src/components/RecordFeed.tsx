@@ -1,4 +1,4 @@
-import { GameInfo, PlayerInfo, Record, Session } from '../types/request';
+import { PlayerInfo, Record, Session } from '../types/request';
 import { useAuth } from '../hooks/useAuth';
 import { SuggestionData } from '../types/suggestion';
 import RecordCard from './RecordCard';
