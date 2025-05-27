@@ -58,7 +58,8 @@ export interface EntityInfo {
   name: string;
   title: string;
 
-  gameID: number;  
+  gameID: number;
+  hiddenBy: number;  
 }
 
 export interface CharInfo extends EntityInfo {
@@ -104,4 +105,5 @@ export type NewEntity = {
   playerID: number;
   gameID: number;
   created: string;
+  hidden: boolean;
 };

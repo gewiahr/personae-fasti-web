@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom';
 import { EntityMetaData } from '../types/entities';
 import { EntityInfo } from '../types/request';
+import Icon from './icons/Icon';
 
 type EntityCardProps = {
   entity: EntityInfo;
@@ -63,11 +64,17 @@ export const EntityCard = ({ entity, metaData, labelText }: EntityCardProps) => 
           </div>
         )*/}
 
-        <div className="flex justify-between items-center text-xs text-gray-400">
+        <div className="flex justify-between items-end text-xs text-gray-400">
           <span>Обновлено: {new Date().toLocaleDateString()}</span>
-          {labelText && <span className="bg-gray-700 px-2 py-1 rounded">
-            {labelText}
-          </span>}
+          <div className="flex items-center">
+            {entity.hiddenBy > 0 && <Icon 
+              key={`icon_hidden_${entity.id}`} 
+              name='hidden'/>
+            }
+            {labelText && <span className="bg-gray-700 px-2 py-1 rounded">
+              {labelText}
+            </span>}
+          </div>
         </div>
       </div>
     </Link>

@@ -1,4 +1,4 @@
-import { Entity, EntityMetaData } from '../types/entities'
+import { EntityCreateUpdate, EntityMetaData } from '../types/entities'
 import { RichInput } from '../components/RichInput'
 import { SuggestionData } from '../types/suggestion';
 import { useEffect, useState } from 'react';
@@ -8,27 +8,32 @@ import { useApi } from '../hooks/useApi';
 import { enrichEntityFieldsMentions, simplerEntityFieldsMentions } from '../types/mention';
 import { api } from '../utils/api';
 import { useAuth } from '../hooks/useAuth';
+import { ToggleSwitch } from '../components/ToggleSwitch';
 
 
 interface EntityEditPageProps {
   metaData: EntityMetaData;
 };
 
-const EntityEditPage = <T extends Entity>({ metaData }: EntityEditPageProps) => {
+const EntityEditPage = <T extends EntityCreateUpdate>({ metaData }: EntityEditPageProps) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { accessKey } = useAuth();
+  const { player, game, accessKey } = useAuth();
 
   const newEntity = !id;
+
+  //const { handleNewEntity } = useEntities.fetch(metaData)
   
   const [entity, setEntity] = useState<T | null>(newEntity ? {} as T : null);
   const { data: pageData } = useApi.get(`/${metaData.EntityType}/${id}`, accessKey, [], newEntity);
   const { data: suggestionData } = useApi.get<SuggestionData>(`/suggestions`, accessKey);
+  const [hidden, setHidden] = useState<boolean>(entity && entity?.hidden || false);
 
   // Sync data to state
   useEffect(() => {
     if (pageData && pageData[metaData.EntityType] && suggestionData) {
       setEntity(simplerEntityFieldsMentions(pageData[metaData.EntityType], metaData, suggestionData));
+      setHidden(pageData[metaData.EntityType].hiddenBy > 0)
     }
   }, [pageData, suggestionData]);
 
@@ -40,8 +45,9 @@ const EntityEditPage = <T extends Entity>({ metaData }: EntityEditPageProps) => 
   const saveEdited = async (editedEntity: T | null) => {
     if (!editedEntity || !suggestionData) return;
 
-    const enrichedEntity = enrichEntityFieldsMentions(editedEntity, metaData, suggestionData);
-    
+    var enrichedEntity = enrichEntityFieldsMentions(editedEntity, metaData, suggestionData);
+    enrichedEntity.hidden = hidden 
+
     const endpoint = `/${metaData.EntityType}`;
     const method = newEntity ? api.post : api.put;
 
@@ -74,6 +80,16 @@ const EntityEditPage = <T extends Entity>({ metaData }: EntityEditPageProps) => 
                     />);
         }
       })}
+
+      {/* // ** Change game proof by request instead of local storage ** // */}
+      {player.id === game.gmID && <ToggleSwitch 
+        key={`toggle_sectert_post_${player.id}`}
+        label='Скрытное создание'
+        labelPosition='left'
+        setValue={hidden}
+        entityEdit={{ handleFieldChange : (value) => setHidden(value)} }
+        />
+      }
 
       {/* <InputField 
         className="mb-4" 

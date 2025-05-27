@@ -18,14 +18,24 @@ export interface Entity {
   title: string;
   description: string;
   gameID: number;
+  hiddenBy: number;
 };
+
+export interface EntityCreateUpdate {
+  id: number;
+  name: string;
+  title: string;
+  description: string;
+  gameID: number;
+  hidden: boolean;  
+}
 
 export type EntityMetaData = {
   EntityName: string;
   EntityNamePl: string;
   EntityType: string;
   EntityTypePl: string;
-  SuggestionTypeStatus: string;
+  Icon: string;
   RichInputFields: string[];
   Fields: EntityFieldMetaData[];
 }
@@ -41,28 +51,31 @@ export const formSuggestionRef = (suggestion: SuggestionEntity) => {
   // Transfer to game settings on backend
   switch (suggestion.type) {
     case 'char':
-      suggestion.ref = `${CharMetaData.SuggestionTypeStatus} ${suggestion.name}`;
+      suggestion.ref = `${CharMetaData.Icon} ${suggestion.name}`;
       break;
     case 'npc':
-      suggestion.ref = `${NPCMetaData.SuggestionTypeStatus} ${suggestion.name}`;
+      suggestion.ref = `${NPCMetaData.Icon} ${suggestion.name}`;
       break;
     case 'location':
-      suggestion.ref = `${LocationMetaData.SuggestionTypeStatus} ${suggestion.name}`;
+      suggestion.ref = `${LocationMetaData.Icon} ${suggestion.name}`;
       break;
   }
 }
 
 export interface Char extends Entity {
-  title: string;
   playerID: number;
 };
+
+export interface CharCreateUpdate extends EntityCreateUpdate {
+
+}
 
 export const CharMetaData: EntityMetaData = {
   EntityName: "Герой",
   EntityNamePl: "Герои",
   EntityType: 'char',
   EntityTypePl: 'chars',
-  SuggestionTypeStatus: "🎭",
+  Icon: "🎭",
   RichInputFields: ["description"],
   Fields: [
     {
@@ -87,15 +100,19 @@ export const CharMetaData: EntityMetaData = {
 };
 
 export interface NPC extends Entity {
-  title: string;
+
 };
+
+export interface NPCCreateUpdate extends EntityCreateUpdate {
+  
+}
 
 export const NPCMetaData: EntityMetaData = {
   EntityName: "Персонаж",
   EntityNamePl: "Персонажи",
   EntityType: 'npc',
   EntityTypePl: 'npcs',
-  SuggestionTypeStatus: "🎎",
+  Icon: "🎎",
   RichInputFields: ["description"],
   Fields: [
     {
@@ -123,12 +140,16 @@ export interface Location extends Entity {
   pid: number;
 };
 
+export interface LocationCreateUpdate extends EntityCreateUpdate {
+  pid: number;
+}
+
 export const LocationMetaData: EntityMetaData = {
   EntityName: "Место",
   EntityNamePl: "Места",
   EntityType: 'location',
   EntityTypePl: 'locations',
-  SuggestionTypeStatus: "🏔️",
+  Icon: "🏔️",
   RichInputFields: ["description"],
   Fields: [
     {

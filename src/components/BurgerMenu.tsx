@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { CharMetaData, LocationMetaData, NPCMetaData } from '../types/entities';
 
 export const BurgerMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,9 +10,9 @@ export const BurgerMenu = () => {
 
   const menuItems = [
     { name: 'События', path: '/' },
-    { name: 'Герои', path: '/chars' },
-    { name: 'Персонажи', path: '/npcs' },
-    { name: 'Локации', path: '/locations' },
+    { name: `${CharMetaData.Icon} Герои`, path: '/chars' },
+    { name: `${NPCMetaData.Icon} Персонажи`, path: '/npcs' },
+    { name: `${LocationMetaData.Icon} Локации`, path: '/locations' },
     { name: 'Настройки', path: '/settings' },
     // Add more categories as needed
   ];

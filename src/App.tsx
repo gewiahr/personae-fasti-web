@@ -66,8 +66,7 @@ import { EntitiesList } from './pages/EntitiesList';
 import { LocationMetaData, NPCMetaData } from './types/entities';
 import EntityEditPage from './pages/EntityEditPage';
 import SettingsPage from './pages/SettingsPage';
-//import { PlacesList } from './pages/PlacesList';
-//import { PlacePage } from './pages/PlacePage';
+
 
 export const App = () => {
   return (

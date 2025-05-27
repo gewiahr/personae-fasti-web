@@ -30,13 +30,14 @@ const useEntitiesCore = <T>({ entityName, entityNamePl }: UseRecordsProps) => {
   // }, [data]);
 
   // Handle new entity submission
-  const handleNewRecord = useCallback(async (name: string, description: string) => {
+  const handleNewEntity = useCallback(async (name: string, description: string, hidden: boolean = false) => {
     const newEntity: NewEntity = {
       name,
       description,
       playerID: player.id,
       gameID: game.id,
       created: new Date().toISOString(),
+      hidden
     };
 
     try {
@@ -62,7 +63,7 @@ const useEntitiesCore = <T>({ entityName, entityNamePl }: UseRecordsProps) => {
     //entities,
     loading,
     error,
-    handleNewRecord,
+    handleNewEntity,
     refresh: refetch
   };
 };

@@ -1,8 +1,5 @@
-// utils/api.ts
 import { config } from '../utils/config';
 import { ApiResponse, ApiError } from '../types/api';
-
-
 
 export const api = {
   get: async <T = any>(

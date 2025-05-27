@@ -1,4 +1,4 @@
-import { Char, CharMetaData, Entity, EntityMetaData } from "./entities";
+import { Char, CharMetaData, Entity, EntityCreateUpdate, EntityMetaData } from "./entities";
 import { SuggestionData, SuggestionEntity } from "./suggestion";
 
 export type MentionContext = {
@@ -27,7 +27,7 @@ export const enrichCharFieldsMentions = (editedChar: Char, suggestions: Suggesti
   return editedChar;
 }
 
-export const enrichEntityFieldsMentions = <T extends Entity>(editedEntity: T, metaData: EntityMetaData, suggestions: SuggestionData): T => {
+export const enrichEntityFieldsMentions = <T extends EntityCreateUpdate>(editedEntity: T, metaData: EntityMetaData, suggestions: SuggestionData): T => {
   // Enrich fields with rich input
   metaData.RichInputFields.forEach((field) => {
     if (editedEntity?.[field as keyof typeof editedEntity]) {

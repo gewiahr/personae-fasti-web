@@ -59,7 +59,7 @@ export const EntityPage = <T extends Entity>({ metaData } : EntityPageProp) => {
           <RichText text={entity.description || ""}/>
 
           {/* ++ Change to universal feed ++ */}
-          {data.records && <div className=''>
+          {data.records && data.records.length > 0 && <div className=''>
             <h2 className='text-right text-xl text-bold pt-8 pb-2'>Упоминания</h2>
             <RecordFeed key={1000} players={players} records={data.records} suggestionData={suggestionData} />
           </div>}         
