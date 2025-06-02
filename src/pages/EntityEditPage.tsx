@@ -82,14 +82,15 @@ const EntityEditPage = <T extends EntityCreateUpdate>({ metaData }: EntityEditPa
       })}
 
       {/* // ** Change game proof by request instead of local storage ** // */}
-      {player.id === game.gmID && <ToggleSwitch 
-        key={`toggle_sectert_post_${player.id}`}
-        label='Скрытное создание'
-        labelPosition='left'
-        setValue={hidden}
-        entityEdit={{ handleFieldChange : (value) => setHidden(value)} }
+      {player.id === game.gmID && <div className='py-2'>
+        <ToggleSwitch 
+          key={`toggle_sectert_post_${player.id}`}
+          label='Скрыть'
+          labelPosition='right'
+          setValue={hidden}
+          entityEdit={{ handleFieldChange : (value) => setHidden(value)} }
         />
-      }
+      </div>}
 
       {/* <InputField 
         className="mb-4" 
