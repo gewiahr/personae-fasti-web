@@ -49,11 +49,11 @@ export const SelectInput = forwardRef<HTMLDivElement, SelectInputProps>(
             transition-all duration-200 ease-in-out
             pointer-events-none
             ${isFocused || value ?
-              '-top-2.5 text-xs' :
+              '-top-2 text-xs' :
               'top-3.5 text-gray-500'}
             ${error && (isFocused || value) ? 'text-red-600' : ''}
-            peer-focus:-top-2.5 peer-focus:text-xs 
-            ${(isFocused || value) ? "bg-[#242424]" : ""}
+            peer-focus:-top-2 peer-focus:text-xs 
+            ${(isFocused || value) ? "bg-gray-900" : ""}
           `}
         >
           {label}

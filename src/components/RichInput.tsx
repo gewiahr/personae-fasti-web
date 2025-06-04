@@ -174,7 +174,7 @@ export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
                 //className="w-full min-h-[100px] p-3 border rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500"
-                className={`w-full min-h-[100px] px-4 py-3 border rounded-lg
+                className={`w-full min-h-[100px] max-h-[40vh] field-sizing-content px-4 py-3 border rounded-lg
                     focus:outline-none focus:ring-2
                     peer
                     'border-gray-300 focus:ring-blue-200 focus:border-blue-500'
@@ -186,9 +186,9 @@ export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData
                     transition-all duration-200 ease-in-out
                     pointer-events-none
                     ${isFocused || !!inputValue ? 
-                    '-top-2.5 text-xs' : 
+                    '-top-2 text-xs' : 
                     'top-3.5 text-gray-500'}
-                    peer-focus:-top-2.5 peer-focus:text-xs ${isFocused || !!inputValue ? "bg-[#242424]" : ""}
+                    peer-focus:-top-2 peer-focus:text-xs ${isFocused || !!inputValue ? "bg-gray-900" : ""}
 
                 `}
                 >

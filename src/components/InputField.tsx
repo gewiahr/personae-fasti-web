@@ -48,10 +48,10 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
             transition-all duration-200 ease-in-out
             pointer-events-none
             ${isFocused || setValue.length ? 
-              '-top-2.5 text-xs' : 
+              '-top-2 text-xs' : 
               'top-3.5 text-gray-500'}
             ${error && (isFocused || setValue.length) ? 'text-red-600' : ''}
-            peer-focus:-top-2.5 peer-focus:text-xs ${isFocused || setValue.length ? "bg-[#242424]" : ""}
+            peer-focus:-top-2 peer-focus:text-xs ${isFocused || setValue.length ? "bg-gray-900" : ""}
 
           `}
         >

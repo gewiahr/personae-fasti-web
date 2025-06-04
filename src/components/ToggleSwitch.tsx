@@ -26,7 +26,7 @@ export const ToggleSwitch = ({
     <div className="flex items-center gap-3">
       {/* Left label */}
       {labelPosition === 'left' && (
-        <label className={`text-sm ${toggleValue ? 'text-blue-500' : 'text-gray-500'}`}>
+        <label className={`text-md ${toggleValue ? 'text-blue-500' : 'text-gray-500'}`}>
           {label}
         </label>
       )}
@@ -55,7 +55,7 @@ export const ToggleSwitch = ({
 
       {/* Right label */}
       {labelPosition === 'right' && (
-        <label className={`text-sm ${toggleValue ? 'text-blue-500' : 'text-gray-500'}`}>
+        <label className={`text-md ${toggleValue ? 'text-blue-500' : 'text-gray-500'}`}>
           {label}
         </label>
       )}
