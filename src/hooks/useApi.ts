@@ -7,6 +7,7 @@ type UseApiResponse<T> = {
   data: T | null;
   loading: boolean;
   error: ApiError | null;
+  status: number;
   //refetch: (newConfig?: Partial<ApiConfig>) => void;
   refetch: (newConfig? : Partial<ApiRequest>) => void;
 };
@@ -27,6 +28,7 @@ function useApiCore<T = any>(
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<ApiError | null>(null);
+  const [status, setStatus] = useState<number>(0);
 
   const fetchData = useCallback(async (overrideConfig?: Partial<ApiRequest>) => {
     const mergedConfig = { ...config, ...overrideConfig };
@@ -37,12 +39,14 @@ function useApiCore<T = any>(
     setError(null);
     
     try {
-      const { data, error } = await api.fetch<T>(mergedConfig.method || "GET", mergedConfig.endpoint || "/", mergedConfig.accessKey, mergedConfig.body);
+      const { data, status, error } = await api.fetch<T>(mergedConfig.method || "GET", mergedConfig.endpoint || "/", mergedConfig.accessKey, mergedConfig.body);
       
       if (error) {
         setError(error);
+        setStatus(status);
       } else {
         setData(data || null);
+        setStatus(status);
       }
     } catch (err) {
       setError({
@@ -62,7 +66,7 @@ function useApiCore<T = any>(
     fetchData(newConfig);
   }, [fetchData]);
 
-  return { data, loading, error, refetch };
+  return { data, loading, error, status, refetch };
 }
 
 export const useApi = {

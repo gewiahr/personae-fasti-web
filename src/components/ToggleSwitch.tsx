@@ -38,7 +38,7 @@ export const ToggleSwitch = ({
         // onFocus={() => setIsFocused(true)}
         // onBlur={() => setIsFocused(false)}
         className={`
-          relative w-12 h-6 rounded-md transition-colors duration-200
+          relative w-12 h-6 rounded-md transition-colors duration-200 cursor-pointer
           focus:outline-none focus:ring-2 focus:ring-blue-200
           ${toggleValue ? 'bg-blue-500' : 'bg-gray-300'}
         `}

@@ -25,7 +25,6 @@ export const CharPage = () => {
 
   useEffect(() => {
     if (data) {
-      console.log(data);
       setChar(data.char);
     };
   }, [data]);

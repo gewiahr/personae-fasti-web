@@ -5,6 +5,8 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 import { LoginInfo } from '../types/request';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { NotificationProvider } from '../context/NotificationContext';
+import NotificationPopup from './NotificationPopup';
 
 export const Layout = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
@@ -30,8 +32,12 @@ export const Layout = ({ children }: { children: ReactNode }) => {
 
       {/* Main content area */}
       {/* <main className="container mx-auto p-4"> */}
-      <main className="flex-grow p-4">       
-        {children}
+      <main className="flex-grow p-4"> 
+        <NotificationProvider>
+          {children}
+          <NotificationPopup />
+        </NotificationProvider>      
+        
       </main>
 
       {/* Optional footer */}

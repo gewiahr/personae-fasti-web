@@ -59,11 +59,11 @@ import { AuthGate } from './components/AuthGate';
 import { Layout } from './components/Layout';
 import { RecordPage } from './pages/RecordPage';
 import { CharsList } from './pages/CharsList';
-import { CharPage } from './pages/CharPage';
-import CharEditPage from './pages/CharEditPage';
+// import { CharPage } from './pages/CharPage';
+// import CharEditPage from './pages/CharEditPage';
 import EntityPage from './pages/EntityPage';
 import { EntitiesList } from './pages/EntitiesList';
-import { LocationMetaData, NPCMetaData } from './types/entities';
+import { CharMetaData, LocationMetaData, NPCMetaData } from './types/entities';
 import EntityEditPage from './pages/EntityEditPage';
 import SettingsPage from './pages/SettingsPage';
 
@@ -74,12 +74,12 @@ export const App = () => {
       <AuthGate>
         <Layout>
           <Routes>
-            <Route path="/" element={<RecordPage />} key={1} />
+            <Route path="/" element={<RecordPage key={1} />} />
 
-            <Route path="/chars" element={<CharsList />} key={10} />
-            <Route path="/char/:id" element={<CharPage />} key={11} />
-            <Route path="/char/new" element={<CharEditPage key={12} />} />
-            <Route path="/char/:id/edit" element={<CharEditPage key={13} />} />
+            <Route path="/chars" element={<CharsList key={10} />} />
+            <Route path="/char/:id" element={<EntityPage key={11} metaData={CharMetaData} />} />
+            <Route path="/char/new" element={<EntityEditPage key={12} metaData={CharMetaData} />} />
+            <Route path="/char/:id/edit" element={<EntityEditPage key={13} metaData={CharMetaData} />} />
 
             <Route path="/npcs" element={<EntitiesList key={20} metaData={NPCMetaData} />} />
             <Route path="/npc/:id" element={<EntityPage key={21} metaData={NPCMetaData} />} />

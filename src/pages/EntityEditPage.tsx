@@ -9,6 +9,8 @@ import { enrichEntityFieldsMentions, simplerEntityFieldsMentions } from '../type
 import { api } from '../utils/api';
 import { useAuth } from '../hooks/useAuth';
 import { ToggleSwitch } from '../components/ToggleSwitch';
+import ImageUpload from '../components/ImageUpload';
+import FoldableCategory from '../components/FoldableCategory';
 
 
 interface EntityEditPageProps {
@@ -80,6 +82,8 @@ const EntityEditPage = <T extends EntityCreateUpdate>({ metaData }: EntityEditPa
                     />);
         }
       })}
+      {id && <FoldableCategory title='Изображение' children={<ImageUpload entityType={metaData.EntityType} entityID={id} />} />}
+      
 
       {/* // ** Change game proof by request instead of local storage ** // */}
       {player.id === game.gmID && <div className='py-2'>
@@ -92,26 +96,8 @@ const EntityEditPage = <T extends EntityCreateUpdate>({ metaData }: EntityEditPa
         />
       </div>}
 
-      {/* <InputField 
-        className="mb-4" 
-        label='Имя' 
-        setValue={entity?.name} 
-        entityEdit={{ fieldName: 'name', handleFieldChange }}
-      />
-      <InputField 
-        className="mb-4" 
-        label='Титул' 
-        setValue={entity?.title} 
-        entityEdit={{ fieldName: 'title', handleFieldChange }}
-      />
-      <RichInput 
-        label='Описание' 
-        setValue={entity?.description} 
-        entityEdit={{ fieldName: 'description', handleFieldChange }} 
-        fullSuggestionData={suggestionData}
-      /> */}
       <button
-        className="bg-blue-600 hover:bg-blue-700 text-white mt-6 py-2 px-4 rounded"
+        className="bg-blue-600 hover:bg-blue-700 text-white mt-6 py-2 px-4 rounded cursor-pointer"
         onClick={() => saveEdited(entity)}
       >
         {entity?.id ? "Применить" : "Создать"}

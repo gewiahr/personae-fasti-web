@@ -60,7 +60,6 @@ const RichText = ({ text }: RichTextProps) => {
     if (lastIndex < content.length) {
       elements.push(content.substring(lastIndex));
     }
-    console.log(elements)
     return elements;
   };
 

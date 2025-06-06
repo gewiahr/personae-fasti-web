@@ -37,7 +37,6 @@ export const RecordFeed = ({ records, players, sessions, suggestionData = null, 
   useEffect(() => {
     if (records) {
       let or = orderRecords();
-      console.log(or);
       setOrderedRecords(or);
     }; 
   }, [records, sessions]);

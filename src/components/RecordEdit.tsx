@@ -8,6 +8,7 @@ import { GameInfo, PlayerInfo, Record } from "../types/request";
 import { api } from '../utils/api';
 import { useAuth } from '../hooks/useAuth';
 import { ToggleSwitch } from './ToggleSwitch';
+import { useNotifications } from '../context/NotificationContext';
 
 interface RecordEditProps {
   record: Record;
@@ -28,6 +29,8 @@ export const RecordEdit = ({
   const [postHidden, setPostHidden] = useState<boolean>(record.hiddenBy !== 0);
   const [editedText, setEditedText] = useState<string>();
 
+  const { addNotification } = useNotifications();
+
   const onInputChange = (value : string) => {
     setEditedText(value);
   };
@@ -40,7 +43,7 @@ export const RecordEdit = ({
     const { data, error } = await api.put(`/record`, accessKey, { id: record.id, text: enrichedText, hidden: postHidden });
     
     if (error) {
-      console.log(error);
+      addNotification(error.message, 'error');
     } else if (data) {
       onClose();
     }

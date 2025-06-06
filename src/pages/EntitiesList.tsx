@@ -5,6 +5,7 @@ import { useEntities } from '../hooks/useEntities';
 import { EntityMetaData } from '../types/entities';
 import { useEffect, useState } from 'react';
 import { EntityInfo } from '../types/request';
+//import { useRecords } from '../hooks/useRecords';
 
 interface EntitiesListProp {
   metaData: EntityMetaData;
@@ -17,6 +18,7 @@ interface EntityApiResponse<T> {
 export const EntitiesList = ({ metaData } : EntitiesListProp) => {
   const { data } = useEntities.fetch(metaData);
   const [entities, setEntities] = useState<EntityInfo[]>();
+  //const { players } = useRecords();
 
   useEffect(() => {
     if (data && typeof data === 'object' && data !== null) { // metaData.EntityTypePl in data) {
@@ -47,6 +49,7 @@ export const EntitiesList = ({ metaData } : EntitiesListProp) => {
             metaData={metaData}
             // Player Labels
             // playerName={data?.players.find((player) => (player.id === char.playerID))?.username || ""}
+            //labelText={players.find((player) => (player.id === entity.playerID))?.username || ""}
           />
         ))}
       </div>

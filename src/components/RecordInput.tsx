@@ -36,7 +36,6 @@ export const RecordInput = ({ currentPlayer, currentGame, onSubmit, suggestionDa
   };
 
   const handleFieldChange = (value: string) => {
-    console.log(value);
     setInput(value);
   };
 

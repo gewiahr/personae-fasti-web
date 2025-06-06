@@ -7,6 +7,7 @@ export type ApiRequest = {
 
 export type ApiResponse<T> = {
   data?: T;
+  status: number;
   error?: ApiError;
 };
 

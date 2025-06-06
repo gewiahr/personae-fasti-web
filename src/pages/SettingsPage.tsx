@@ -6,6 +6,7 @@ import { useApi } from '../hooks/useApi';
 import { api } from '../utils/api';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useNavigate } from 'react-router-dom';
+import { useNotifications } from '../context/NotificationContext';
 
 const SettingsPage = () => {
   const navigate = useNavigate();
@@ -14,6 +15,8 @@ const SettingsPage = () => {
   const { data : settingsData } = useApi.get<PlayerSettings>("/player/settings", accessKey);
   const [ playerGames, setPlayerGames ] = useState<GameInfo[]>([]);
   const [ currentGame, setCurrentGame ] = useState<GameInfo>(); 
+
+  const { addNotification } = useNotifications();
 
   useEffect(() => {
     if (settingsData) {
@@ -25,10 +28,9 @@ const SettingsPage = () => {
   const handleChangeCurrentGame = async (value : string) => {
     const { data, error } = await api.put<GameInfo>("/player/game", accessKey, { gameID: Number(value) });
     if (error) {
-      console.log(error);
+      addNotification(error.message, 'error')
       return;
     } else if (data) {
-      console.log(data);
       setCurrentGame(data);
       setLoginInfo({ ...loginInfo!, currentGame: data });
       navigate(0);

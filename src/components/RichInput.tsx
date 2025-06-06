@@ -29,8 +29,7 @@ export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData
                 formSuggestionRef(suggestion);        
             });
             setSuggestionData(fullSuggestionData);
-        }      
-        console.log(fullSuggestionData);    
+        }         
     }, [fullSuggestionData]);
 
     // useEffect(() => {
@@ -69,7 +68,6 @@ export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData
     const getFilteredSuggestions = (context: MentionContext) => {
         const textarea = textareaRef.current;
         if (!textarea) return;
-        console.log(fullSuggestionData);
         return fullSuggestionData?.entities.filter(entity => 
             entity.name.toLowerCase().includes(context.query.toLowerCase())
         );
@@ -154,15 +152,7 @@ export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData
                 textareaRef.current.selectionEnd = context.position + entity.name.length + 4;
             }
         }, 0);
-
-        //console.log(mentions);
-
     }, [inputValue]);
-
-    // const collectMentions = () => {
-    //     setMentions(extractMentions(inputValue, suggestionData));
-    //     console.log(mentions);
-    // }
 
     return (
         <div className="relative w-full">
