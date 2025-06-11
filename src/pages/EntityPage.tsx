@@ -61,12 +61,14 @@ export const EntityPage = <T extends Entity>({ metaData } : EntityPageProp) => {
               <h1 className="text-2xl font-bold">{entity.name}</h1>
               <h3 className="text-m text-gray-400 mb-4">{entity?.title}</h3>           
             </div>}
-            <button
-              className={`bg-blue-600 hover:bg-blue-700 text-white mb-6 py-2 px-4 ${(image && ratio > 1 || !image) ? "w-[30%]" : "w-[100%]"} rounded`}
-              onClick={openEditing}
-            >
-              {"Изменить"}
-            </button>
+            <div className={`mb-6 ${(image && ratio > 1 || !image) ? "w-[30%]" : "w-[100%]"}`}>
+              <button
+                className={`bg-blue-600 hover:bg-blue-700 text-white  py-2 px-4  rounded`}
+                onClick={openEditing}
+              >
+                {"Изменить"}
+              </button>
+            </div>           
           </div>
           <RichText text={entity.description || ""}/>        
 
