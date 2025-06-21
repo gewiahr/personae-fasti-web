@@ -39,7 +39,7 @@ export const EntityCard = ({ entity, metaData, labelText }: EntityCardProps) => 
           <h3 className="text-lg font-semibold text-white mb-1">{entity.name}</h3>
           
           {entity.title && ( /*title in entity && (*/
-            <p className="text-gray-300 text-sm mb-3">
+            <p className="text-gray-300 text-sm">
               {truncateDescription(entity.title)}
             </p>
           )}
@@ -66,20 +66,24 @@ export const EntityCard = ({ entity, metaData, labelText }: EntityCardProps) => 
           </div>
         )*/}
 
-        <div className='flex-grow'></div>
+        {labelText && <>
+          <div className='flex-grow mt-3'></div>
 
-        <div className="flex justify-between items-end text-xs text-gray-400">
-          <span>Обновлено: {new Date().toLocaleDateString()}</span>
-          <div className="flex items-center">
-            {entity.hiddenBy > 0 && <Icon 
-              key={`icon_hidden_${entity.id}`} 
-              name='hidden'/>
-            }
-            {labelText && <span className="bg-gray-700 px-2 py-1 rounded">
-              {labelText}
-            </span>}
+          <div className="flex justify-between items-end text-xs text-gray-400">
+            {/* <div className='flex-grow'></div> */}
+            <span>Обновлено: {new Date().toLocaleDateString()}</span>
+            {/* <span>Обновлено: {entity.updated}</span> */}
+            <div className="flex items-center">
+              {entity.hiddenBy > 0 && <Icon 
+                key={`icon_hidden_${entity.id}`} 
+                name='hidden'/>
+              }
+              {labelText && <span className="bg-gray-700 px-2 py-1 rounded">
+                {labelText}
+              </span>}
+            </div>
           </div>
-        </div>
+        </>}
       </div>
     </Link>
   );
