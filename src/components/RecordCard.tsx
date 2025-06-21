@@ -29,13 +29,13 @@ const RecordCard = ({ record, label="", accented=false, editable=false, onEdit }
       <div className="flex justify-between items-end text-xs text-gray-400 pt-2">
         <span>Обновлено: {new Date(record.updated).toLocaleDateString()}</span>
         <div className="flex items-center">
-          {record.hiddenBy > 0 && <div className=''>
+          {record.hiddenBy > 0 && <div className='pr-4'>
             <Icon 
               key={`icon_hidden_${record.id}`} 
               name='hidden'/>
           </div>
           }
-          {editable && onEdit && <button className='px-4' onClick={() => onEdit(record)}>
+          {editable && onEdit && <button className='pr-4' onClick={() => onEdit(record)}>
             <Icon 
               key={`icon_edit_${record.id}`} 
               name='edit'

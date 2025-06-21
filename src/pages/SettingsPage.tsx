@@ -38,20 +38,22 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className='flex flex-col gap-y-6'>
-      <h2 className='text-xl'>{player.username}</h2>
-      <div>
-        {currentGame && playerGames && 
-          <SelectInput 
-            key={playerGames.length} 
-            options={playerGames?.
-              filter((game) => game.id != currentGame.id).
-              map((game) => { return { key: game.id, value: game.title } }) || []} 
-            label='Текущая игра' 
-            value={currentGame?.title} 
-            entityEdit={{ handleFieldChange: handleChangeCurrentGame }} 
-          />
-        }
+    <div className='max-w-4xl mx-auto p-4'>
+      <div className='flex flex-col gap-y-6'>
+        <h2 className='text-xl'>{player.username}</h2>
+        <div>
+          {currentGame && playerGames && 
+            <SelectInput 
+              key={playerGames.length} 
+              options={playerGames?.
+                filter((game) => game.id != currentGame.id).
+                map((game) => { return { key: game.id, value: game.title } }) || []} 
+              label='Текущая игра' 
+              value={currentGame?.title} 
+              entityEdit={{ handleFieldChange: handleChangeCurrentGame }} 
+            />
+          }
+        </div>
       </div>
     </div>
   )

@@ -64,44 +64,46 @@ const EntityEditPage = <T extends EntityCreateUpdate>({ metaData }: EntityEditPa
   }
 
   return (
-    <div className='flex flex-col'>
-      { entity && metaData.Fields.map((field) => {
-        if (field.EditType == 'input') {
-            return (<InputField 
-                      className="mb-4" 
-                      label={field.FieldLabel} 
-                      setValue={entity[field.FieldName as keyof typeof entity] as string} 
-                      entityEdit={{ fieldName: field.FieldName, handleFieldChange }}
-                    />);
-        } else if (field.EditType == 'richInput') {
-            return (<RichInput 
-                      label='Описание' 
-                      setValue={entity[field.FieldName as keyof typeof entity] as string} 
-                      entityEdit={{ fieldName: field.FieldName, handleFieldChange }} 
-                      fullSuggestionData={suggestionData}
-                    />);
-        }
-      })}
-      {id && <FoldableCategory title='Изображение' children={<ImageUpload entityType={metaData.EntityType} entityID={id} />} />}
-      
+    <div className='max-w-4xl mx-auto p-4'>
+      <div className='flex flex-col'>
+        { entity && metaData.Fields.map((field) => {
+          if (field.EditType == 'input') {
+              return (<InputField 
+                        className="mb-4" 
+                        label={field.FieldLabel} 
+                        setValue={entity[field.FieldName as keyof typeof entity] as string} 
+                        entityEdit={{ fieldName: field.FieldName, handleFieldChange }}
+                      />);
+          } else if (field.EditType == 'richInput') {
+              return (<RichInput 
+                        label='Описание' 
+                        setValue={entity[field.FieldName as keyof typeof entity] as string} 
+                        entityEdit={{ fieldName: field.FieldName, handleFieldChange }} 
+                        fullSuggestionData={suggestionData}
+                      />);
+          }
+        })}
+        {id && <FoldableCategory title='Изображение' children={<ImageUpload entityType={metaData.EntityType} entityID={id} />} />}
+        
 
-      {/* // ** Change game proof by request instead of local storage ** // */}
-      {player.id === game.gmID && <div className='py-2'>
-        <ToggleSwitch 
-          key={`toggle_sectert_post_${player.id}`}
-          label='Скрыть'
-          labelPosition='right'
-          setValue={hidden}
-          entityEdit={{ handleFieldChange : (value) => setHidden(value)} }
-        />
-      </div>}
+        {/* // ** Change game proof by request instead of local storage ** // */}
+        {player.id === game.gmID && <div className='py-2'>
+          <ToggleSwitch 
+            key={`toggle_sectert_post_${player.id}`}
+            label='Скрыть'
+            labelPosition='right'
+            setValue={hidden}
+            entityEdit={{ handleFieldChange : (value) => setHidden(value)} }
+          />
+        </div>}
 
-      <button
-        className="bg-blue-600 hover:bg-blue-700 text-white mt-6 py-2 px-4 rounded cursor-pointer"
-        onClick={() => saveEdited(entity)}
-      >
-        {entity?.id ? "Применить" : "Создать"}
-      </button>
+        <button
+          className="bg-blue-600 hover:bg-blue-700 text-white mt-6 py-2 px-4 rounded cursor-pointer"
+          onClick={() => saveEdited(entity)}
+        >
+          {entity?.id ? "Применить" : "Создать"}
+        </button>
+      </div>
     </div>
   );
 };

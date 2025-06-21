@@ -34,14 +34,16 @@ export const EntityCard = ({ entity, metaData, labelText }: EntityCardProps) => 
       to={`/${metaData.EntityType}/${entity.id}`}
       className="block border border-gray-700 rounded-lg overflow-hidden hover:border-blue-500 transition-colors duration-200 bg-gray-800 hover:bg-gray-750"
     >
-      <div className="p-4">
-        <h3 className="text-lg font-semibold text-white mb-2">{entity.name}</h3>
-        
-        {entity.title && ( /*title in entity && (*/
-          <p className="text-gray-300 text-sm mb-3">
-            {truncateDescription(entity.title)}
-          </p>
-        )}
+      <div className="p-4 h-full flex flex-col">
+        <div className=''>
+          <h3 className="text-lg font-semibold text-white mb-1">{entity.name}</h3>
+          
+          {entity.title && ( /*title in entity && (*/
+            <p className="text-gray-300 text-sm mb-3">
+              {truncateDescription(entity.title)}
+            </p>
+          )}
+        </div>
 
         {/* Special fields for characters */}
         {/*'stats' in entity && entity?.stats && (
@@ -63,6 +65,8 @@ export const EntityCard = ({ entity, metaData, labelText }: EntityCardProps) => 
             Map: {entity.map}
           </div>
         )*/}
+
+        <div className='flex-grow'></div>
 
         <div className="flex justify-between items-end text-xs text-gray-400">
           <span>Обновлено: {new Date().toLocaleDateString()}</span>
