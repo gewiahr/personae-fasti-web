@@ -49,6 +49,16 @@ export const RecordEdit = ({
     }
   };
 
+  const handleDelete = async () => {
+    const { error } = await api.delete(`/record/${record.id}`, accessKey);
+    
+    if (error) {
+      addNotification(error.message, 'error');
+    } else {
+      onClose();
+    }
+  };
+
   useEffect(() => {
     if (fullSuggestionData?.entities) {
       setEditedText(simplifyMentionInput(record.text, fullSuggestionData.entities));
@@ -76,12 +86,22 @@ export const RecordEdit = ({
         </div>
       }
 
-      <button
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white mt-2 py-2 px-4 rounded"
-        onClick={handleSave}
-      >
-        {"Сохранить"}
-      </button>
+      <div className='flex justify-between items-center'>
+        <button
+          className="w-[30%] bg-red-600 hover:bg-red-700 text-white mt-2 py-2 px-4 rounded"
+          onClick={handleDelete}
+        >
+          {"Удалить"}
+        </button>
+
+        <button
+          className="w-[65%] bg-blue-600 hover:bg-blue-700 text-white mt-2 py-2 px-4 rounded"
+          onClick={handleSave}
+        >
+          {"Сохранить"}
+        </button>
+      </div>
+
     </Modal>
   );
 };
