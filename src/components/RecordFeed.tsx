@@ -152,7 +152,7 @@ export const RecordFeed = ({ records, players, sessions, suggestionData = null, 
                   record={record}
                   label={players.find(p => p.id === record.playerID)?.username}
                   accented={record.playerID === player.id}
-                  editable={editable && record.playerID == player.id}
+                  editable={editable && (record.playerID == player.id || game.gmID == player.id)}
                   onEdit={onRecordEdit}
                 />
               ))}
