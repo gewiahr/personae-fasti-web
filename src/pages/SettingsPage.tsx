@@ -11,7 +11,7 @@ import FoldableCategory from '../components/FoldableCategory';
 
 const SettingsPage = () => {
   const navigate = useNavigate();
-  const { accessKey, player } = useAuth();
+  const { accessKey, player, game } = useAuth();
   const [ loginInfo, setLoginInfo ] = useLocalStorage<LoginInfo | null>('playerInfo', null);
   const { data : settingsData } = useApi.get<PlayerSettings>("/player/settings", accessKey);
   const [ playerGames, setPlayerGames ] = useState<GameInfo[]>([]);
@@ -77,14 +77,16 @@ const SettingsPage = () => {
           }
         </div>
 
-        <FoldableCategory key="sessions_settings" title='Сессии' children={
-          <button
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white mt-2 py-2 px-4 rounded"
-            onClick={handleNewSession}
-          >
-            {"Начать новую сессию"}
-          </button>
-        }/>
+        {game.gmID === player.id &&
+          <FoldableCategory key="sessions_settings" title='Сессии' children={
+            <button
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white mt-2 py-2 px-4 rounded"
+              onClick={handleNewSession}
+            >
+              {"Начать новую сессию"}
+            </button>}
+          />
+        }
       </div>
     </div>
   )
