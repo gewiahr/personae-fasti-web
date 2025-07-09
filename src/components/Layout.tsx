@@ -1,5 +1,5 @@
 // components/Layout.tsx
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { BurgerMenu } from './BurgerMenu';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { LoginInfo } from '../types/request';
@@ -12,6 +12,11 @@ export const Layout = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
   const { player } = useAuth();
   const [ storedValue ] = useLocalStorage<LoginInfo | null>('playerInfo', null);
+  const [ isMenuOpen, setIsMenuOpen ] = useState(false);
+
+  const closeBurgerMenu = () => {
+    setIsMenuOpen(false);
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-900 text-gray-100">
@@ -27,12 +32,23 @@ export const Layout = ({ children }: { children: ReactNode }) => {
               { `${player.username}` }
           </p>
         </div>
-        <BurgerMenu />
+        <div className="relative">
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="p-2 focus:outline-none"
+          >
+            <div className={`w-6 h-0.5 bg-white my-1.5 transition-all ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></div>
+            <div className={`w-6 h-0.5 bg-white my-1.5 transition-all ${isMenuOpen ? 'opacity-0' : ''}`}></div>
+            <div className={`w-6 h-0.5 bg-white my-1.5 transition-all ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></div>
+          </button>
+        </div>
       </header>
+
+      <BurgerMenu isOpen={isMenuOpen} setClose={closeBurgerMenu}/>
 
       {/* Main content area */}
       {/* <main className="container mx-auto p-4"> */}
-      <main className="flex-grow p-4"> 
+      <main className={`flex-grow p-4 ${isMenuOpen ? 'blur-xs' : 'blur-none'} transition-all duration-200`}> 
         <NotificationProvider>
           {children}
           <NotificationPopup />

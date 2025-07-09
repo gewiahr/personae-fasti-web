@@ -1,89 +1,58 @@
 // components/BurgerMenu.tsx
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { CharMetaData, LocationMetaData, NPCMetaData } from '../types/entities';
 import { config } from '../utils/config';
 
-export const BurgerMenu = () => {
-  const [isOpen, setIsOpen] = useState(false);
+interface BurgerMunuProps {
+  isOpen: boolean,
+  setClose: () => void
+}
+
+export const BurgerMenu = ({ isOpen, setClose } : BurgerMunuProps) => {
+  
   const { logout } = useAuth();
 
   const compendiumPath = config.compendiumBaseUrl
 
   const menuItems = [
-    { name: 'События', path: '/' },
-    { name: `${CharMetaData.Icon} Герои`, path: '/chars' },
-    { name: `${NPCMetaData.Icon} Персонажи`, path: '/npcs' },
-    { name: `${LocationMetaData.Icon} Локации`, path: '/locations' },
-    { name: 'Настройки', path: '/settings' },
-    // Add more categories as needed
+    { name: 'События', path: '/', internal: true },
+    { name: `${CharMetaData.Icon} Герои`, path: '/chars', internal: true },
+    { name: `${NPCMetaData.Icon} Персонажи`, path: '/npcs', internal: true },
+    { name: `${LocationMetaData.Icon} Локации`, path: '/locations', internal: true },
+    { name: 'Настройки', path: '/settings', internal: true },
+    { name: `📜 Правила`, path: `${compendiumPath}/`, internal: false },
+    { name: `🔨 Предметы`, path: `${compendiumPath}/things`, internal: false },
   ];
 
   return (
-    <div className="relative">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="p-2 focus:outline-none"
-      >
-        <div className={`w-6 h-0.5 bg-white my-1.5 transition-all ${isOpen ? 'rotate-45 translate-y-2' : ''}`}></div>
-        <div className={`w-6 h-0.5 bg-white my-1.5 transition-all ${isOpen ? 'opacity-0' : ''}`}></div>
-        <div className={`w-6 h-0.5 bg-white my-1.5 transition-all ${isOpen ? '-rotate-45 -translate-y-2' : ''}`}></div>
-      </button>
-
-      {/* {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-10">
-          {menuItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className="block px-4 py-2 text-white hover:bg-gray-700"
-              onClick={() => setIsOpen(false)}
-            >
-              {item.name}
-            </Link>
-          ))}
-          <button
-            onClick={logout}
-            className="block w-full text-left px-4 py-2 text-white hover:bg-gray-700"
-          >
-            Выйти
-          </button>
-        </div>
-      )} */}
-
+    <div>
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-10">
-          {menuItems.map((item) => (
+        <div className="absolute max-sm:right-0 max-sm:w-full max-sm:text-lg max-sm:text-center sm:right-14 sm:top-8 sm:w-[200px] sm:rounded-md sm:shadow-lg sm:border sm:border-gray-700 focus:ring-blue-200 focus:border-blue-500 bg-gray-800  z-100">
+          {menuItems.map((item) => (item.internal ?
             <Link
               key={item.path}
               to={item.path}
-              className="block px-4 py-2 text-white hover:bg-gray-700"
-              onClick={() => setIsOpen(false)}
+              className="block px-4 max-sm:py-4 sm:py-2 text-white hover:bg-gray-700 rounded-md"
+              onClick={setClose}
             >
               {item.name}
-            </Link>
+            </Link> :
+            <button
+              onClick={() => window.location.href=`${item.path}`}
+              className="block cursor-pointer w-full px-4 max-sm:py-4 sm:py-2 text-white sm:text-left hover:bg-gray-700 rounded-md"
+            >
+              {item.name}
+            </button>
           ))}
           <button
-            onClick={() => window.location.href=`${compendiumPath}`}
-            className="block w-full text-left px-4 py-2 text-white hover:bg-gray-700"
-          >
-            📜 Правила
-          </button>
-          <button
-            onClick={() => window.location.href=`${compendiumPath}/things`}
-            className="block w-full text-left px-4 py-2 text-white hover:bg-gray-700"
-          >
-            🔨 Предметы
-          </button>
-          <button
             onClick={logout}
-            className="block w-full text-left px-4 py-2 text-white hover:bg-gray-700"
+            className="block cursor-pointer w-full px-4 max-sm:py-4 sm:py-2 text-white sm:text-left hover:bg-gray-700 rounded-md"
           >
             Выйти
           </button>
         </div>
       )}
-    </div>
+    </div> 
   );
 };
