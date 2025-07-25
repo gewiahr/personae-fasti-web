@@ -8,7 +8,7 @@ type NumericInputInlineProps = InputHTMLAttributes<HTMLInputElement> & {
 
 export const NumericInputInline = forwardRef<HTMLInputElement, NumericInputInlineProps>(
   ({ setValue = 0, entityEdit, className = '', ...props }, ref) => {
-    const [isFocused, setIsFocused] = useState(false);
+    const [_, setIsFocused] = useState(false);
     const id = useId();
 
     useEffect(() => {

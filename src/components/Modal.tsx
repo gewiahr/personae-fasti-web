@@ -30,7 +30,7 @@ export const Modal = ({
       onClick={onClose}
     >
       <div 
-        className={`p-4 rounded-lg border border-blue-500 bg-gray-800 rounded-lg relative max-w-2xl w-[90%] mx-4 animate-in fade-in zoom-in-95 duration-300 ease-out ${className}`}
+        className={`p-4 rounded-lg border border-blue-500 bg-gray-800 relative max-w-2xl w-[90%] mx-4 animate-in fade-in zoom-in-95 duration-300 ease-out ${className}`}
         onClick={(e) => e.stopPropagation()}
       >
 
