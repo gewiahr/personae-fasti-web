@@ -107,6 +107,7 @@ export const RecordEdit = ({
           label='Связанное задание' 
           setKey={editedRecord.questID} 
           entityEdit={{ handleFieldChange: handleQuestIDChange }} 
+          nullable={true}
         />
       </div>}
 
