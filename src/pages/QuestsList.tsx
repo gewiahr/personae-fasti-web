@@ -22,13 +22,16 @@ export const QuestsList = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {data && data.quests.map((char) => (
-          <QuestCard
-            key={char.id}
-            quest={char}
-            labelText={char.finished ? "Завершено" : "В процессе"}
-          />
-        ))}
+        {data && data.quests.length > 0 ? 
+          data.quests.map((char) => (
+            <QuestCard
+              key={char.id}
+              quest={char}
+              labelText={char.finished ? "Завершено" : "В процессе"}
+            />
+          )) :
+          <p>Создайте первые квесты и отправьтесь навстречу приключениям!</p>
+        }
       </div>
     </div>
   );
