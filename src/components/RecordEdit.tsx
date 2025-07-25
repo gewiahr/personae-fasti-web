@@ -100,7 +100,7 @@ export const RecordEdit = ({
 
       <h2 className='text-lg py-2'>Дополнительно</h2>
 
-      {questInfo && <div className='py-2'>
+      {questInfo && questInfo.length > 0 && <div className='py-2'>
         <SelectInput 
           key={"recordedit_questselect"}
           options={questInfo.map((quest) => { return { key: quest.id, value: quest.name } })} 
