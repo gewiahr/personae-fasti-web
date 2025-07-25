@@ -29,7 +29,6 @@ export const RecordEdit = ({
 }: RecordEditProps) => {
   const { accessKey } = useAuth();
   const [postHidden, setPostHidden] = useState<boolean>(record.hiddenBy !== 0);
-  //const [editedText, setEditedText] = useState<string>();
   const [editedRecord, setEditedRecord] = useState<Record>(record);
   const [questInfo, setQuestInfo] = useState<Quest[]>([]);
 
@@ -47,7 +46,6 @@ export const RecordEdit = ({
   };
 
   const onInputChange = (value: string) => {
-    //setEditedText(value);
     setEditedRecord({...editedRecord, text: value});
   };
 
@@ -55,8 +53,8 @@ export const RecordEdit = ({
     if (!editedRecord) {
       return
     }
+
     const enrichedText = enrichMentionInput(editedRecord.text, fullSuggestionData?.entities || []);
-    //const { data, error } = await api.put(`/record`, accessKey, { id: record.id, text: enrichedText, hidden: postHidden });
     const { data, error } = await api.put(`/record`, accessKey, {...editedRecord, text: enrichedText});
 
     if (error) {
@@ -82,11 +80,8 @@ export const RecordEdit = ({
 
   useEffect(() => {
     if (fullSuggestionData?.entities) {
-      //setEditedText(simplifyMentionInput(record.text, fullSuggestionData.entities));
-      //var simplifiedText = simplifyMentionInput(record.text, fullSuggestionData.entities)}; 
       setEditedRecord({...editedRecord, text: simplifyMentionInput(record.text, fullSuggestionData.entities)});
     }
-  //}, [fullSuggestionData, record.text]);
   }, [fullSuggestionData, editedRecord.text]);
 
   return (
@@ -95,7 +90,12 @@ export const RecordEdit = ({
       title="Редактирование записи"
     >
       {fullSuggestionData && <div className='py-4'>
-        <RichInput key={1000} label="" setValue={simplifyMentionInput(record.text, fullSuggestionData?.entities)} entityEdit={{ handleFieldChange: onInputChange }} fullSuggestionData={fullSuggestionData} />
+        <RichInput 
+          key={1000} 
+          label="" 
+          setValue={simplifyMentionInput(record.text, fullSuggestionData?.entities)} 
+          entityEdit={{ handleFieldChange: onInputChange }} 
+          fullSuggestionData={fullSuggestionData} />
       </div>}
 
       <h2 className='text-lg py-2'>Дополнительно</h2>

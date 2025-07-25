@@ -1,4 +1,4 @@
-import { useState, forwardRef } from 'react';
+import { useState, forwardRef, useEffect, useRef, useImperativeHandle } from 'react';
 import { EntityEdit } from '../types/entities';
 import { SelectKeyValue } from '../types/utils';
 import Icon from './icons/Icon';
@@ -16,9 +16,31 @@ type SelectInputProps = {
 };
 
 export const SelectInput = forwardRef<HTMLDivElement, SelectInputProps>(
-  ({ options, setKey, setValue, nullable=false, label, entityEdit, className = '', bgColor='bg-gray-800', error }, ref) => {
+  ({ options, setKey, setValue, nullable=false, label, entityEdit, className = '', bgColor='bg-gray-800', error }, outerRef) => {
     const [isFocused, setIsFocused] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+    const innerRef = useRef<HTMLDivElement>(null);
+
+    // Combine innerRef and outerRef
+    useImperativeHandle(outerRef, () => innerRef.current as HTMLDivElement);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (innerRef.current && !innerRef.current.contains(event.target as Node)) {
+          setIsOpen(false);
+          setIsFocused(false);
+        }
+      };
+
+      if (isOpen) {
+        document.addEventListener('mousedown', handleClickOutside);
+      }
+
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }, [isOpen]);
 
     if (setKey != null || setKey != undefined) {
       let foundOptionByKey = options.find((option) => (option.key == setKey));
@@ -36,7 +58,7 @@ export const SelectInput = forwardRef<HTMLDivElement, SelectInputProps>(
     }
 
     return (
-      <div className={`relative ${className}`} ref={ref}>
+      <div className={`relative ${className}`} ref={innerRef}>
         {/* Input-like trigger  min-h-12 */}
         <div className={`flex justify-between items-center
               w-full px-4 py-3 border rounded-lg
@@ -44,7 +66,10 @@ export const SelectInput = forwardRef<HTMLDivElement, SelectInputProps>(
               ${error ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:ring-blue-200 focus:border-blue-500'}
               bg-transparent
             `}
-            onClick={() => setIsOpen(!isOpen)}      
+            onClick={() => {
+              setIsOpen(!isOpen);
+              setIsFocused(true);
+            }}      
         >
           <div className='h-full' 
             onFocus={() => setIsFocused(true)}
@@ -88,7 +113,9 @@ export const SelectInput = forwardRef<HTMLDivElement, SelectInputProps>(
 
         {/* Dropdown options */}
         {isOpen && (
-          <div className="absolute z-10 mt-1 w-full bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
+          <div 
+            className="absolute z-10 mt-1 w-full bg-gray-800 border border-gray-700 rounded-lg shadow-lg"
+            onClick={(e) => e.stopPropagation()} >
             {options.map((option) => (
               <div
                 key={option.key}
