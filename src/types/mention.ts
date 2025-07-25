@@ -1,4 +1,5 @@
 import { Char, CharMetaData, Entity, EntityCreateUpdate, EntityMetaData } from "./entities";
+import { QuestMetaData, QuestTaskMetaData } from "./quest";
 import { SuggestionData, SuggestionEntity } from "./suggestion";
 
 export type MentionContext = {
@@ -41,6 +42,37 @@ export const enrichEntityFieldsMentions = <T extends EntityCreateUpdate>(editedE
   return editedEntity;
 }
 
+export const enrichQuestFieldsMentions = <Quest>(editedQuest: Quest, suggestions: SuggestionData): Quest => {
+  // Enrich fields with rich input
+  QuestMetaData.RichInputFields.forEach((field) => {
+    if (editedQuest?.[field as keyof typeof editedQuest]) {
+      editedQuest = {
+        ...editedQuest,
+        [field]: enrichMentionInput(`${editedQuest?.[field as keyof typeof editedQuest]}`, suggestions?.entities || [])
+      };
+    };
+  });
+
+  return editedQuest;
+}
+
+export const enrichQuestTaskFieldsMentions = <QuestTask>(editedTasks: QuestTask[], suggestions: SuggestionData): QuestTask[] => {
+  let newTasks: QuestTask[] = editedTasks;
+
+  QuestTaskMetaData.RichInputFields.forEach((field) => {
+    newTasks.forEach((task) => {
+      if (task[field as keyof QuestTask]) {
+        task = {
+          ...task,
+          [field]: enrichMentionInput(`${task[field as keyof QuestTask]}`, suggestions?.entities || [])
+        };
+      };
+    });   
+  });
+  console.log(newTasks)
+  return newTasks;
+}
+
 export const enrichMentionInput = (textInput: string, suggestions: SuggestionEntity[]) => {
   const suggestionMap = new Map(
     suggestions.map(item => [item.name.toLowerCase(), item])
@@ -81,6 +113,38 @@ export const simplerEntityFieldsMentions = <T extends Entity>(entity: T, metaDat
   });
 
   return newEntity;
+}
+
+export const simplerQuestFieldsMentions = <Quest>(quest: Quest, suggestions: SuggestionData): Quest => {
+  let newQuest: Quest = quest;
+  // Simplify fields with rich input
+  QuestMetaData.RichInputFields.forEach((field) => {
+    if (newQuest?.[field as keyof typeof newQuest]) {
+      newQuest = {
+        ...newQuest,
+        [field]: simplifyMentionInput(`${newQuest?.[field as keyof typeof newQuest]}`, suggestions?.entities || [])
+      };
+    };
+  });
+
+  return newQuest;
+}
+
+export const simplerQuestTaskFieldsMentions = <QuestTask>(tasks: QuestTask[], suggestions: SuggestionData): QuestTask[] => {
+  let newTasks: QuestTask[] = tasks;
+  // Simplify fields with rich input
+  QuestTaskMetaData.RichInputFields.forEach((field) => {
+    newTasks.forEach((task) => {
+      if (task[field as keyof QuestTask]) {
+        task = {
+          ...task,
+          [field]: simplifyMentionInput(`${task[field as keyof QuestTask]}`, suggestions?.entities || [])
+        };
+      };
+    })  
+  });
+
+  return newTasks;
 }
 
 export const simplifyMentionInput = (textInput: string, suggestions: SuggestionEntity[]) => {

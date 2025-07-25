@@ -1,4 +1,5 @@
 import { Char, NPC, Location } from "./entities";
+import { Quest, QuestTask } from "./quest";
 
 export type LoginInfo = {
   accesskey: string;
@@ -18,6 +19,8 @@ export type Record = {
   text: string;
   playerID: number;
   gameID: number;
+  questID: number;
+  quest: Quest;
   created: string;
   updated: string;
   hiddenBy: number;
@@ -98,6 +101,29 @@ export interface NPCPageData extends EntityPageData {
 export interface LocationPageData extends EntityPageData {
   Location: Location;
 };
+
+export interface QuestInfo {
+  id: number;
+  name: string;
+  title: string;
+  description: string;
+
+  gameID: number;
+  successful: boolean;	
+  hiddenBy: number; 
+  finished: boolean;
+}
+
+export interface GameQuests {
+  currentGame: GameInfo;
+  quests: QuestInfo[];
+}
+
+export interface QuestPageData {
+  quest: Quest;
+  tasks: QuestTask[];
+  records: Record[];
+}
 
 export type NewEntity = {
   name: string;

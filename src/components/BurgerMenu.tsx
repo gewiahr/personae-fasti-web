@@ -20,6 +20,7 @@ export const BurgerMenu = ({ isOpen, setClose } : BurgerMunuProps) => {
     { name: `${CharMetaData.Icon} Герои`, path: '/chars', internal: true },
     { name: `${NPCMetaData.Icon} Персонажи`, path: '/npcs', internal: true },
     { name: `${LocationMetaData.Icon} Локации`, path: '/locations', internal: true },
+    { name: `📜 Квесты`, path: '/quests', internal: true },
     { name: 'Настройки', path: '/settings', internal: true },
     { name: `📜 Правила`, path: `${compendiumPath}/`, internal: false },
     { name: `🔨 Предметы`, path: `${compendiumPath}/things`, internal: false },

@@ -9,6 +9,8 @@ import { api } from '../utils/api';
 import { useAuth } from '../hooks/useAuth';
 import { ToggleSwitch } from './ToggleSwitch';
 import { useNotifications } from '../context/NotificationContext';
+import { Quest } from '../types/quest';
+import { SelectInput } from './SelectInput';
 
 interface RecordEditProps {
   record: Record;
@@ -27,21 +29,36 @@ export const RecordEdit = ({
 }: RecordEditProps) => {
   const { accessKey } = useAuth();
   const [postHidden, setPostHidden] = useState<boolean>(record.hiddenBy !== 0);
-  const [editedText, setEditedText] = useState<string>();
+  //const [editedText, setEditedText] = useState<string>();
+  const [editedRecord, setEditedRecord] = useState<Record>(record);
+  const [questInfo, setQuestInfo] = useState<Quest[]>([]);
 
   const { addNotification } = useNotifications();
 
-  const onInputChange = (value : string) => {
-    setEditedText(value);
+  useEffect(() => {
+    getQuests();
+  }, []);
+
+  const getQuests = async () => {
+    const { data } = await api.get('/quests', accessKey);
+    if (data) {
+      setQuestInfo(data.quests);
+    };
+  };
+
+  const onInputChange = (value: string) => {
+    //setEditedText(value);
+    setEditedRecord({...editedRecord, text: value});
   };
 
   const handleSave = async () => {
-    if (!editedText) {
+    if (!editedRecord) {
       return
     }
-    const enrichedText = enrichMentionInput(editedText, fullSuggestionData?.entities || []);
-    const { data, error } = await api.put(`/record`, accessKey, { id: record.id, text: enrichedText, hidden: postHidden });
-    
+    const enrichedText = enrichMentionInput(editedRecord.text, fullSuggestionData?.entities || []);
+    //const { data, error } = await api.put(`/record`, accessKey, { id: record.id, text: enrichedText, hidden: postHidden });
+    const { data, error } = await api.put(`/record`, accessKey, {...editedRecord, text: enrichedText});
+
     if (error) {
       addNotification(error.message, 'error');
     } else if (data) {
@@ -51,7 +68,7 @@ export const RecordEdit = ({
 
   const handleDelete = async () => {
     const { error } = await api.delete(`/record/${record.id}`, accessKey);
-    
+
     if (error) {
       addNotification(error.message, 'error');
     } else {
@@ -59,22 +76,41 @@ export const RecordEdit = ({
     }
   };
 
+  const handleQuestIDChange = async (value : number) => {
+    setEditedRecord({...editedRecord, questID: value});
+  };
+
   useEffect(() => {
     if (fullSuggestionData?.entities) {
-      setEditedText(simplifyMentionInput(record.text, fullSuggestionData.entities));
+      //setEditedText(simplifyMentionInput(record.text, fullSuggestionData.entities));
+      //var simplifiedText = simplifyMentionInput(record.text, fullSuggestionData.entities)}; 
+      setEditedRecord({...editedRecord, text: simplifyMentionInput(record.text, fullSuggestionData.entities)});
     }
-  }, [fullSuggestionData, record.text]);
+  //}, [fullSuggestionData, record.text]);
+  }, [fullSuggestionData, editedRecord.text]);
 
   return (
-    <Modal 
+    <Modal
       onClose={onClose}
       title="Редактирование записи"
     >
-      {fullSuggestionData && <div className='pt-4'>
+      {fullSuggestionData && <div className='py-4'>
         <RichInput key={1000} label="" setValue={simplifyMentionInput(record.text, fullSuggestionData?.entities)} entityEdit={{ handleFieldChange: onInputChange }} fullSuggestionData={fullSuggestionData} />
       </div>}
 
-      {currentPlayer.id == currentGame.gmID && 
+      <h2 className='text-lg py-2'>Дополнительно</h2>
+
+      {questInfo && <div className='py-2'>
+        <SelectInput 
+          key={"recordedit_questselect"}
+          options={questInfo.map((quest) => { return { key: quest.id, value: quest.name } })} 
+          label='Связанное задание' 
+          setKey={editedRecord.questID} 
+          entityEdit={{ handleFieldChange: handleQuestIDChange }} 
+        />
+      </div>}
+
+      {currentPlayer.id == currentGame.gmID &&
         <div className='py-2'>
           <ToggleSwitch
             key={"recordedit_hiddenswitch"}

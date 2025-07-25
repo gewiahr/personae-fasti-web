@@ -65,8 +65,9 @@ const SettingsPage = () => {
                 options={playerGames?.
                   filter((game) => game.id != currentGame.id).
                   map((game) => { return { key: game.id, value: game.title } }) || []} 
-                label='Текущая игра' 
-                value={currentGame.title} 
+                label='Текущая игра'
+                bgColor='bg-gray-900' 
+                setValue={currentGame.title} 
                 entityEdit={{ handleFieldChange: handleChangeCurrentGame }} 
               /> : 
               <>

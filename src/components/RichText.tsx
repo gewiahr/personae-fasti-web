@@ -4,10 +4,11 @@ import React from 'react';
 type RichTextProps = {
   text: string;
   fullWidth?: boolean;
+  className?: string;
   //suggestionData?: SuggestionData; // Made optional
 };
 
-const RichText = ({ text, fullWidth = false }: RichTextProps) => {
+const RichText = ({ text, fullWidth = false, className='' }: RichTextProps) => {
   const formMentionRichText = (content: string): React.ReactNode[] => {
     const mentionRegex = /@(\w+):(\w+)`([^`]+)`/g;
     const elements: React.ReactNode[] = [];
@@ -65,12 +66,9 @@ const RichText = ({ text, fullWidth = false }: RichTextProps) => {
   };
 
   return (
-    // <div className="mt-4 text-m">
-    //   {suggestionData ? formMentionRichText(text) : text}
-    // </div>
     <>
       {/* suggestionData ? formMentionRichText(text) : text */}
-      <div className={`text-m ${fullWidth ? 'text-justify' : ''}`}>
+      <div className={`text-m ${fullWidth ? 'text-justify' : ''} ${className}`}>
         {formMentionRichText(text)}
       </div>     
     </>

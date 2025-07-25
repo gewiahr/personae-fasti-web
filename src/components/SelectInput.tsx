@@ -1,46 +1,73 @@
 import { useState, forwardRef } from 'react';
 import { EntityEdit } from '../types/entities';
 import { SelectKeyValue } from '../types/utils';
+import Icon from './icons/Icon';
 
 type SelectInputProps = {
   options: SelectKeyValue[];
-  value?: string;
+  setKey?: any;
+  setValue?: string;
+  nullable?: boolean;
   label?: string;
+  bgColor?: string;
   entityEdit?: EntityEdit; 
-  className?: string;
+  className?: string; 
   error?: string;
 };
 
 export const SelectInput = forwardRef<HTMLDivElement, SelectInputProps>(
-  ({ label, value, options, entityEdit, className = '', error }, ref) => {
+  ({ options, setKey, setValue, nullable=false, label, entityEdit, className = '', bgColor='bg-gray-800', error }, ref) => {
     const [isFocused, setIsFocused] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
-    const handleChange = (value: string) => {
-      entityEdit?.handleFieldChange(value, entityEdit?.fieldName || "");
+    if (setKey != null || setKey != undefined) {
+      let foundOptionByKey = options.find((option) => (option.key == setKey));
+      if (foundOptionByKey) setValue = foundOptionByKey.value;
+    };
+
+    const handleChange = (value: any) => {
+      entityEdit?.handleFieldChange(value, entityEdit?.fieldName || "", entityEdit.arrayIndex);
       setIsOpen(false);
     };
 
+    const handleClearSelect = () => {
+      handleChange(0);
+      //setIsOpen(false);
+    }
+
     return (
       <div className={`relative ${className}`} ref={ref}>
-        {/* Input-like trigger */}
-        <div
-          className={`
-            w-full px-4 py-3 border rounded-lg
-            focus:outline-none focus:ring-2 cursor-pointer
-            ${error ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:ring-blue-200 focus:border-blue-500'}
-            bg-transparent
-          `}
-          onClick={() => setIsOpen(!isOpen)}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => {
-            setIsFocused(false);
-            setTimeout(() => setIsOpen(false), 200);
-          }}
-          tabIndex={0}
+        {/* Input-like trigger  min-h-12 */}
+        <div className={`flex justify-between items-center
+              w-full px-4 py-3 border rounded-lg
+              focus:outline-none focus:ring-2 cursor-pointer
+              ${error ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:ring-blue-200 focus:border-blue-500'}
+              bg-transparent
+            `}
+            onClick={() => setIsOpen(!isOpen)}      
         >
-          {value}
+          <div className='h-full' 
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => {
+              setIsFocused(false);
+              setTimeout(() => setIsOpen(false), 200);
+            }}     
+            tabIndex={0}
+          >
+            {setValue || '\u00A0'} 
+          </div>
+          {/* <div className='relative'
+            onClick={(e) => { e.stopPropagation(); handleClearSelect(); }}
+          >
+            X
+          </div> */}
+          {nullable && setValue && <button onClick={(e) => { e.stopPropagation(); handleClearSelect(); setIsFocused(false); }} >
+            <Icon 
+              name='trash'
+              className='text-red-500 hover:fill-current hover:text-gray-400 cursor-pointer'/>
+          </button>}
         </div>
+        
 
         {/* Floating label */}
         <label
@@ -48,12 +75,12 @@ export const SelectInput = forwardRef<HTMLDivElement, SelectInputProps>(
             absolute left-4 px-1
             transition-all duration-200 ease-in-out
             pointer-events-none
-            ${isFocused || value ?
+            ${isFocused || setValue ?
               '-top-2 text-xs' :
               'top-3.5 text-gray-500'}
-            ${error && (isFocused || value) ? 'text-red-600' : ''}
+            ${error && (isFocused || setValue) ? 'text-red-600' : ''}
             peer-focus:-top-2 peer-focus:text-xs 
-            ${(isFocused || value) ? "bg-gray-900" : ""}
+            ${(isFocused || setValue) ? bgColor : ""}
           `}
         >
           {label}
@@ -65,7 +92,7 @@ export const SelectInput = forwardRef<HTMLDivElement, SelectInputProps>(
             {options.map((option) => (
               <div
                 key={option.key}
-                className={`px-4 py-2 hover:bg-blue-700 rounded-lg cursor-pointer ${value === option.value ? 'bg-blue-800' : ''
+                className={`px-4 py-2 hover:bg-blue-700 rounded-lg cursor-pointer ${setValue === option.value ? 'bg-blue-800' : ''
                   }`}
                 onClick={() => handleChange(option.key)}
               >

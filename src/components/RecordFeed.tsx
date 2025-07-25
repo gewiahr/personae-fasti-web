@@ -12,6 +12,7 @@ type RecordFeedProps = {
   sessions?: Session[];
   suggestionData?: SuggestionData | null;
   editable?: boolean;
+  showQuests?: boolean;
   onEdit?: () => void;
 };
 
@@ -20,7 +21,7 @@ type RecordSession = {
   records: Record[];
 }
 
-export const RecordFeed = ({ records, players, sessions, suggestionData = null, editable = false, onEdit = () => {} }: RecordFeedProps) => {
+export const RecordFeed = ({ records, players, sessions, suggestionData = null, editable = false, showQuests = true, onEdit = () => {} }: RecordFeedProps) => {
   const { player, game } = useAuth();
   const [ editing, setEditing ] = useState<Record | null>(null);
   const [ orderedRecords, setOrderedRecords ] = useState<RecordSession[] | null>();
@@ -91,19 +92,6 @@ export const RecordFeed = ({ records, players, sessions, suggestionData = null, 
     </div> :
     // Some Records
     <>
-      {/* <div className="space-y-4">
-        {records.sort((a, b) => b.id - a.id)
-                .map((record) => (
-                  <RecordCard 
-                    key={1000 + record.id}
-                    record={record} 
-                    label={players.find((p) => p.id === record.playerID)?.username}
-                    accented={record.playerID === player.id} 
-                    editable={editable && record.playerID == player.id}
-                    onEdit={onRecordEdit}/>
-        ))}
-      </div> */}
-
       {<div className="space-y-8">
         {orderedRecords.map((group) => {
           const endTime = group.session?.endTime;
@@ -153,6 +141,7 @@ export const RecordFeed = ({ records, players, sessions, suggestionData = null, 
                   label={players.find(p => p.id === record.playerID)?.username}
                   accented={record.playerID === player.id}
                   editable={editable && (record.playerID == player.id || game.gmID == player.id)}
+                  showQuest={showQuests}
                   onEdit={onRecordEdit}
                 />
               ))}

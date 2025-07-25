@@ -3,13 +3,14 @@ import { EntityEdit } from '../types/entities';
 
 type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
+  number?: boolean;
   setValue?: string;
   entityEdit?: EntityEdit;
   error?: string;  
 };
 
 export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
-  ({ label, setValue = "", entityEdit, error, className = '', ...props }, ref ) => {
+  ({ label, number = false, setValue = "", entityEdit, error, className = '', ...props }, ref ) => {
     const [isFocused, setIsFocused] = useState(false);
     const id = useId();
 
@@ -19,7 +20,9 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      entityEdit?.handleFieldChange(e.target.value, entityEdit?.fieldName || "");
+      if (entityEdit) {
+        entityEdit?.handleFieldChange(e.target.value, entityEdit?.fieldName, entityEdit.arrayIndex);
+      };
     };
 
     return (

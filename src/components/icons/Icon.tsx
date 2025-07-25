@@ -1,11 +1,15 @@
 import React from 'react';
 import EditIcon from './EditIcon';
 import HiddenIcon from './HiddenIcon';
+import SubmitIcon from './SubmitIcon';
+import TrashIcon from './TrashIcon';
 
 // Define all possible icon names
 export type IconName = 
   | 'hidden'
   | 'edit'
+  | 'submit'
+  | 'trash'
 
 type IconProps = {
   name: IconName;
@@ -15,18 +19,22 @@ type IconProps = {
   onClick?: () => void;
 };
 
+// https://www.flaticon.com/uicons/interface-icons
 const svgComponents: Record<IconName, React.FC<React.SVGProps<SVGSVGElement>>> = {
   hidden: HiddenIcon,
   edit: EditIcon,
-  // Map all icons
+  submit: SubmitIcon,
+  trash: TrashIcon,
 };
 
 const Icon: React.FC<IconProps> = ({ name, className = '', size = 20, ...props }) => {
   const SvgComponent = svgComponents[name];
 
   const emojiMap: Record<IconName, string> = {
-    hidden: '✅',
-    edit: '❌',
+    hidden: '👁️',
+    edit: '📝', //❌
+    submit: '✅',
+    trash: '🗑️',
   };
   
   return SvgComponent ? (

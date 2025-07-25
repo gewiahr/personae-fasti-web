@@ -32,12 +32,8 @@ export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData
         }         
     }, [fullSuggestionData]);
 
-    // useEffect(() => {
-    //     if (setValue === '') setInputValue(setValue);
-    // }, [setValue]);
-
     useEffect(() => {
-      entityEdit?.handleFieldChange(inputValue, entityEdit?.fieldName || "");
+      entityEdit?.handleFieldChange(inputValue, entityEdit?.fieldName || "", entityEdit.arrayIndex);
     }, [inputValue]);
 
     const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -45,7 +41,6 @@ export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData
         const cursorPos = e.target.selectionStart;
 
         setInputValue(newValue);
-        //entityEdit?.handleOnChange(entityEdit?.fieldName || "", newValue);
 
         const context = getMentionContext(newValue, cursorPos);
         

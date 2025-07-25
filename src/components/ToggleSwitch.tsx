@@ -18,7 +18,10 @@ export const ToggleSwitch = ({
   const [toggleValue, switchToggleValue] = useState<boolean>(setValue);
 
   const handleInputChange = () => {
-    entityEdit?.handleFieldChange(!toggleValue);
+    //entityEdit?.handleFieldChange(!toggleValue);
+    if (entityEdit) {
+      entityEdit?.handleFieldChange(!toggleValue, entityEdit?.fieldName || "", entityEdit.arrayIndex);
+    };
     switchToggleValue(!toggleValue)
   };
 

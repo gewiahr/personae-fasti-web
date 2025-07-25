@@ -33,7 +33,6 @@ export const EntityPage = <T extends Entity>({ metaData } : EntityPageProp) => {
     if (data) {
       setEntity(data[metaData.EntityType]);
     };
-    console.log("here")
   }, [data]);
 
   const openEditing = () => {

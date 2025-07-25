@@ -61,7 +61,6 @@ async function makeRequest<T>(
   body?: any,
   imageBody: boolean = false, 
 ): Promise<ApiResponse<T>> {
-  console.log(imageBody);
   try {
     //const applicationType = imageBody ? 'multipart/form-data' : 'application/json';
     const headers: Record<string, string> = {
@@ -81,7 +80,6 @@ async function makeRequest<T>(
       } catch {
         errorData = { message: await response.text() };
       }
-      console.log(errorData)
       const error: ApiError = {
         message: errorData.error || 'Request failed',
         status: response.status,
