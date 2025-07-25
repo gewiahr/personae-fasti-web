@@ -21,18 +21,17 @@ export const QuestsList = () => {
         </Link>
       </div>
 
+      {data && data.quests.length > 0 ?
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {data && data.quests.length > 0 ? 
-          data.quests.map((char) => (
-            <QuestCard
-              key={char.id}
-              quest={char}
-              labelText={char.finished ? "Завершено" : "В процессе"}
-            />
-          )) :
-          <p>Создайте первые квесты и отправьтесь навстречу приключениям!</p>
-        }
-      </div>
+        {data.quests.map((char) => (
+          <QuestCard
+            key={char.id}
+            quest={char}
+            labelText={char.finished ? "Завершено" : "В процессе"}
+          />
+        ))}
+      </div> :
+      <p>Создайте первые квесты и отправьтесь навстречу приключениям!</p>}  
     </div>
   );
 };
