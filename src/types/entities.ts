@@ -34,6 +34,8 @@ export interface EntityCreateUpdate {
 export type EntityMetaData = {
   EntityName: string;
   EntityNamePl: string;
+  EntityNameAcc: string;
+  EntityNameGender: 'm' | 'f' | 'n';
   EntityType: string;
   EntityTypePl: string;
   Icon: string;
@@ -74,6 +76,8 @@ export interface CharCreateUpdate extends EntityCreateUpdate {
 export const CharMetaData: EntityMetaData = {
   EntityName: "Герой",
   EntityNamePl: "Герои",
+  EntityNameAcc: "Героя",
+  EntityNameGender: 'm',
   EntityType: 'char',
   EntityTypePl: 'chars',
   Icon: "🎭",
@@ -111,6 +115,8 @@ export interface NPCCreateUpdate extends EntityCreateUpdate {
 export const NPCMetaData: EntityMetaData = {
   EntityName: "Персонаж",
   EntityNamePl: "Персонажи",
+  EntityNameAcc: "Персонажа",
+  EntityNameGender: 'm',
   EntityType: 'npc',
   EntityTypePl: 'npcs',
   Icon: "🎎",
@@ -148,6 +154,8 @@ export interface LocationCreateUpdate extends EntityCreateUpdate {
 export const LocationMetaData: EntityMetaData = {
   EntityName: "Место",
   EntityNamePl: "Места",
+  EntityNameAcc: "Места",
+  EntityNameGender: 'n',
   EntityType: 'location',
   EntityTypePl: 'locations',
   Icon: "🏔️",

@@ -8,6 +8,8 @@ import RichText from '../components/RichText';
 import { RecordFeed } from '../components/RecordFeed';
 import { useRecords } from '../hooks/useRecords';
 import useImage from '../hooks/useImage';
+import { LoadingPage } from './LoadingPage';
+import { ErrorPage } from './ErrorPage';
 
 interface EntityPageProp {
   metaData: EntityMetaData;
@@ -42,9 +44,9 @@ export const EntityPage = <T extends Entity>({ metaData } : EntityPageProp) => {
   return (
     <div className="max-w-4xl mx-auto p-4">
       {loading ? (
-        <p>Данные загружаются...</p>
+        <LoadingPage />
       ) : error || !entity ? (
-        <p>Данные недоступны</p>
+        <ErrorPage error={error} entityMeta={metaData}/>
       ) : (
         <>
           {image && <div className='relative pb-4 rounded-lg'>
