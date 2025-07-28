@@ -69,7 +69,7 @@ export const enrichQuestTaskFieldsMentions = <QuestTask>(editedTasks: QuestTask[
       };
     });   
   });
-  console.log(newTasks)
+
   return newTasks;
 }
 
@@ -86,7 +86,7 @@ export const enrichMentionInput = (textInput: string, suggestions: SuggestionEnt
 
 export const simplerCharFieldsMentions = (char: Char, suggestions: SuggestionData): Char => {
   let newChar: Char = char
-  // Simplify fields with rich input
+  
   CharMetaData.RichInputFields.forEach((field) => {
     if (newChar?.[field as keyof typeof newChar]) {
       newChar = {
@@ -102,7 +102,7 @@ export const simplerCharFieldsMentions = (char: Char, suggestions: SuggestionDat
 
 export const simplerEntityFieldsMentions = <T extends Entity>(entity: T, metaData: EntityMetaData, suggestions: SuggestionData): T => {
   let newEntity: T = entity
-  // Simplify fields with rich input
+  
   metaData.RichInputFields.forEach((field) => {
     if (newEntity?.[field as keyof typeof newEntity]) {
       newEntity = {
@@ -117,7 +117,7 @@ export const simplerEntityFieldsMentions = <T extends Entity>(entity: T, metaDat
 
 export const simplerQuestFieldsMentions = <Quest>(quest: Quest, suggestions: SuggestionData): Quest => {
   let newQuest: Quest = quest;
-  // Simplify fields with rich input
+  
   QuestMetaData.RichInputFields.forEach((field) => {
     if (newQuest?.[field as keyof typeof newQuest]) {
       newQuest = {
@@ -132,7 +132,7 @@ export const simplerQuestFieldsMentions = <Quest>(quest: Quest, suggestions: Sug
 
 export const simplerQuestTaskFieldsMentions = <QuestTask>(tasks: QuestTask[], suggestions: SuggestionData): QuestTask[] => {
   let newTasks: QuestTask[] = tasks;
-  // Simplify fields with rich input
+  
   QuestTaskMetaData.RichInputFields.forEach((field) => {
     newTasks.forEach((task) => {
       if (task[field as keyof QuestTask]) {

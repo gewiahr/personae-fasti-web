@@ -23,8 +23,6 @@ const EntityEditPage = <T extends EntityCreateUpdate>({ metaData }: EntityEditPa
   const { player, game, accessKey } = useAuth();
 
   const newEntity = !id;
-
-  //const { handleNewEntity } = useEntities.fetch(metaData)
   
   const [entity, setEntity] = useState<T | null>(newEntity ? {} as T : null);
   const { data: pageData } = useApi.get(`/${metaData.EntityType}/${id}`, accessKey, [], newEntity);

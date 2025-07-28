@@ -11,7 +11,7 @@ import { NewQuestTask, Quest, QuestTask } from '../types/quest';
 import { useNotifications } from '../context/NotificationContext';
 import { SelectInput } from '../components/SelectInput';
 import { NumericInputInline } from '../components/NumericInputInline';
-import { enrichQuestFieldsMentions, enrichQuestTaskFieldsMentions } from '../types/mention';
+import { enrichQuestFieldsMentions, enrichQuestTaskFieldsMentions, simplerQuestFieldsMentions, simplerQuestTaskFieldsMentions } from '../types/mention';
 import Icon from '../components/icons/Icon';
 
 
@@ -35,8 +35,8 @@ const QuestEditPage = () => {
   // Sync data to state
   useEffect(() => {
     if (apiData?.quest && apiData?.tasks && suggestionData) {
-      setQuest(apiData.quest);
-      setTasks(apiData.tasks.sort((a, b) => a.id - b.id));
+      setQuest(simplerQuestFieldsMentions(apiData.quest, suggestionData));
+      setTasks(simplerQuestTaskFieldsMentions(apiData.tasks.sort((a, b) => a.id - b.id), suggestionData));
     };
   }, [apiData, suggestionData]);
 
@@ -74,7 +74,6 @@ const QuestEditPage = () => {
     
     const endpoint = '/quest';
     const method = newQuest ? api.post : api.put;
-    //console.log(suggestionData)
     const { data, error } = await method<Quest>(endpoint, accessKey, {quest: enrichedQuest, tasks: enrichedTasks});
 
     if (error) {

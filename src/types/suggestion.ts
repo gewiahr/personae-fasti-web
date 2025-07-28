@@ -14,4 +14,5 @@ export type SuggestionEntity = {
     typeName: string;
     ref: string;
     name: string;
+    hidden: boolean;
 }
