@@ -58,11 +58,11 @@ export const enrichQuestFieldsMentions = <Quest>(editedQuest: Quest, suggestions
 
 export const enrichQuestTaskFieldsMentions = <QuestTask>(editedTasks: QuestTask[], suggestions: SuggestionData): QuestTask[] => {
   let newTasks: QuestTask[] = editedTasks;
-
+  
   QuestTaskMetaData.RichInputFields.forEach((field) => {
-    newTasks.forEach((task) => {
+    newTasks.forEach((task, i) => {
       if (task[field as keyof QuestTask]) {
-        task = {
+        newTasks[i] = {
           ...task,
           [field]: enrichMentionInput(`${task[field as keyof QuestTask]}`, suggestions?.entities || [])
         };
@@ -134,9 +134,9 @@ export const simplerQuestTaskFieldsMentions = <QuestTask>(tasks: QuestTask[], su
   let newTasks: QuestTask[] = tasks;
   
   QuestTaskMetaData.RichInputFields.forEach((field) => {
-    newTasks.forEach((task) => {
+    newTasks.forEach((task, i) => {
       if (task[field as keyof QuestTask]) {
-        task = {
+        newTasks[i] = {
           ...task,
           [field]: simplifyMentionInput(`${task[field as keyof QuestTask]}`, suggestions?.entities || [])
         };
