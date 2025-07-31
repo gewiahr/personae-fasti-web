@@ -14,7 +14,7 @@ export const CharsList = () => {
         <h1 className="text-2xl font-bold">Герои</h1>
         <Link
           to="/char/new"
-          className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded"
+          className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
         >
           Добавить
         </Link>
