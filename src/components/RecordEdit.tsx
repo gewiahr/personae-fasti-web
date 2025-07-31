@@ -51,8 +51,8 @@ export const RecordEdit = ({
 
   const handleSave = async () => {
     if (!editedRecord) {
-      return
-    }
+      return;
+    };
 
     const enrichedText = enrichMentionInput(editedRecord.text, fullSuggestionData?.entities || []);
     const { data, error } = await api.put(`/record`, accessKey, {...editedRecord, text: enrichedText});
@@ -61,7 +61,7 @@ export const RecordEdit = ({
       addNotification(error.message, 'error');
     } else if (data) {
       onClose();
-    }
+    };
   };
 
   const handleDelete = async () => {
@@ -71,7 +71,8 @@ export const RecordEdit = ({
       addNotification(error.message, 'error');
     } else {
       onClose();
-    }
+      addNotification("Запись удалена", 'info');
+    };
   };
 
   const handleQuestIDChange = async (value : number) => {

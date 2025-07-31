@@ -83,6 +83,19 @@ const QuestEditPage = () => {
     };
   };
 
+  const deleteQuest = async () => {
+    if (!quest) return;
+
+    const { error } = await api.delete(`/quest/${quest.id}`, accessKey);
+
+    if (error) {
+      addNotification(error.message, 'error');
+    } else {
+      addNotification("Квест удалён", 'info');
+      navigate('/quests');
+    };
+  };
+
   if (!newQuest && !quest || !suggestionData) {
     return <div>Loading...</div>;
   };
@@ -147,12 +160,28 @@ const QuestEditPage = () => {
 
         <div className="flex-1 border-t border-gray-700 my-2"/>
 
+        {quest?.id ? <div className='flex justify-between items-center'>
+          <button
+            className="w-[30%] bg-red-600 hover:bg-red-700 text-white mt-2 py-2 px-4 rounded"
+            onClick={deleteQuest}
+          >
+            {"Удалить"}
+          </button>
+
+          <button
+            className="w-[65%] bg-blue-600 hover:bg-blue-700 text-white mt-2 py-2 px-4 rounded"
+            onClick={() => saveEdited(quest, tasks)}
+          >
+            {"Сохранить"}
+          </button> 
+        </div> :
+
         <button
           className="bg-blue-600 hover:bg-blue-700 text-white mt-2 py-2 px-4 rounded"
           onClick={() => saveEdited(quest, tasks)}
         >
-          {quest?.id ? "Сохранить" : "Создать"}
-        </button>
+          {"Создать"}
+        </button>}
       </div>
     </div>  
   );
