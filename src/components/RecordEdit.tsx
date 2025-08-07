@@ -81,7 +81,7 @@ export const RecordEdit = ({
 
   useEffect(() => {
     if (fullSuggestionData?.entities) {
-      setEditedRecord({...editedRecord, text: simplifyMentionInput(record.text, fullSuggestionData.entities)});
+      setEditedRecord({...editedRecord, text: simplifyMentionInput(editedRecord.text, fullSuggestionData.entities)});
     }
   }, [fullSuggestionData, editedRecord.text]);
 
