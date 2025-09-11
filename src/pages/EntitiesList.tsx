@@ -34,7 +34,7 @@ export const EntitiesList = ({ metaData } : EntitiesListProp) => {
         <h1 className="text-2xl font-bold">{metaData.EntityNamePl}</h1>
         <Link
           to={`/${metaData.EntityType}/new`}
-          className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
+          className="flex justify-center items-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
         >
           Добавить
         </Link>

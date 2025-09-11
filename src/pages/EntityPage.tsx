@@ -10,6 +10,8 @@ import { useRecords } from '../hooks/useRecords';
 import useImage from '../hooks/useImage';
 import { LoadingPage } from './LoadingPage';
 import { ErrorPage } from './ErrorPage';
+import Hyperlink from '../components/Hyperlink';
+import { EntityInfo } from '../types/request';
 
 interface EntityPageProp {
   metaData: EntityMetaData;
@@ -64,14 +66,30 @@ export const EntityPage = <T extends Entity>({ metaData } : EntityPageProp) => {
             </div>}
             <div className={`mb-6 ${(image && ratio > 1 || !image) ? "w-[30%]" : "w-[100%]"}`}>
               <button
-                className={`bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded ${(image && ratio > 1 || !image) ? "w-full" : ""}`}
+                className={`flex justify-center items-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded ${(image && ratio > 1 || !image) ? "w-full" : ""}`}
                 onClick={openEditing}
               >
                 {"Изменить"}
               </button>
             </div>           
           </div>
-          <RichText text={entity.description || ""} fullWidth={true}/>        
+          <RichText text={entity.description || ""} fullWidth={true}/> 
+
+          {/* Entity specific fields */}
+          {metaData.EntityType == "location" && (data.parent != null || data.includes.length > 0) && <>
+            <div className='mt-6'>
+              {data.parent != null && <>
+                <p>
+                  Находится в <Hyperlink key={metaData.EntityType + data.parent.id} id={data.parent.id} type={metaData.EntityType} mentionText={data.parent.name}/>.
+                </p>
+              </>}
+              {data.includes.length > 0 && <>
+                <p>
+                  В {entity.name} наход{data.includes.length > 1 ? "ятся" : "ится"} {data.includes.map((el : EntityInfo, i : number) => (<Hyperlink key={metaData.EntityType + el.id} id={'' + el.id} type={metaData.EntityType} mentionText={i === 0 ? `${el.name}` : `, ${el.name}`}/>))}.
+                </p>
+              </>}
+            </div>
+          </>}             
 
           {/* ++ Change to universal feed ++ */}
           {data.records && data.records.length > 0 && <div className=''>

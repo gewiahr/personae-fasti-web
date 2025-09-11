@@ -11,6 +11,7 @@ import { useAuth } from '../hooks/useAuth';
 import { ToggleSwitch } from '../components/ToggleSwitch';
 import ImageUpload from '../components/ImageUpload';
 import FoldableCategory from '../components/FoldableCategory';
+import { SelectInput } from '../components/SelectInput';
 
 
 interface EntityEditPageProps {
@@ -81,9 +82,25 @@ const EntityEditPage = <T extends EntityCreateUpdate>({ metaData }: EntityEditPa
                       />);
           }
         })}
+
+        {/* Entity specific fields */}
+        {metaData.EntityType == 'location' && <>
+          <div className='my-4'>
+            <SelectInput  
+              key={"locationedit_parentselect"}
+              options={suggestionData.entities
+                .filter((suggestion) => suggestion.type === 'location')
+                .map((suggestion) => { return { key: suggestion.id, value: suggestion.name } })} 
+              label='Находится в' 
+              setKey={entity && 'pid' in entity ? entity?.pid : 0} 
+              entityEdit={{ fieldName: 'pid', handleFieldChange }} 
+              nullable={true}/>
+          </div>
+        </>}
+
+        {/* Image */}
         {id && <FoldableCategory title='Изображение' children={<ImageUpload entityType={metaData.EntityType} entityID={id} />} />}
         
-
         {/* // ** Change game proof by request instead of local storage ** // */}
         {player.id === game.gmID && <div className='py-2'>
           <ToggleSwitch 

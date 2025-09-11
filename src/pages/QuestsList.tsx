@@ -15,7 +15,7 @@ export const QuestsList = () => {
         <h1 className="text-2xl font-bold">Квесты</h1>
         <Link
           to="/quest/new"
-          className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
+          className="flex justify-center items-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
         >
           Добавить
         </Link>
