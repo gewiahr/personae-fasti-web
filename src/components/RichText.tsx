@@ -1,4 +1,5 @@
 import React from 'react';
+import Hyperlink from './Hyperlink';
 //import { SuggestionData } from "../types/suggestion";
 
 type RichTextProps = {
@@ -22,37 +23,10 @@ const RichText = ({ text, fullWidth = false, className='' }: RichTextProps) => {
       }
 
       const [fullMatch, type, id, mentionText] = match;
-
-      // ** temporaty color picker ** //
-      let typeColor = "";
-      switch (type) {
-        case "char":
-          typeColor = "text-blue-500";
-          break;
-        case "npc":
-          typeColor = "text-yellow-500";
-          break;
-        case "location":
-          typeColor = "text-green-500";
-          break;
-      }
-      
+  
       // Push the link component
       elements.push(
-        <a 
-          key={`${type}-${id}-${match.index}`}
-          href={`/${type}/${id}`}
-          //className="text-blue-500 text-sans mention-link hover:underline"
-          //className={`bg-${typeColor}-800 rounded px-1 py-0.5`}
-          className={`${typeColor} text-sans mention-link hover:underline`}
-          onClick={(e) => {
-            e.preventDefault();
-            // Optional: Add navigation logic here
-            window.location.href = `/${type}/${id}`;
-          }}
-        >
-          {mentionText}
-        </a>
+        <Hyperlink id={id} type={type} mentionText={mentionText}/>
       );
 
       lastIndex = match.index + fullMatch.length;
@@ -68,7 +42,7 @@ const RichText = ({ text, fullWidth = false, className='' }: RichTextProps) => {
   return (
     <>
       {/* suggestionData ? formMentionRichText(text) : text */}
-      <div className={`text-m ${fullWidth ? 'text-justify' : ''} ${className}`}>
+      <div className={`text-m ${fullWidth ? 'text-justify' : ''} ${className} whitespace-pre-line`}>
         {formMentionRichText(text)}
       </div>     
     </>
