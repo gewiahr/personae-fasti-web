@@ -19,29 +19,6 @@ export const Layout = ({ children }: { children: ReactNode }) => {
     setIsMenuOpen(false);
   };
 
-  // Handle clicks outside the burger menu
-  // useEffect(() => {
-  //   const handleClickOutside = (event: MouseEvent) => {
-  //     if (isMenuOpen && menuRef.current && !menuRef.current.contains(event.target as Node)) {
-  //       closeBurgerMenu();
-  //     }
-  //   };
-
-  //   document.addEventListener('mousedown', handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener('mousedown', handleClickOutside);
-  //   };
-  // }, [isMenuOpen]);
-
-  // Disable scrolling when menu is open
-  // useEffect(() => {
-  //   if (isMenuOpen) {
-  //     document.body.style.overflow = 'hidden';
-  //   } else {
-  //     document.body.style.overflow = '';
-  //   }
-  // }, [isMenuOpen]);
-
   return (
     <div className="min-h-screen flex flex-col bg-gray-900 text-gray-100">
       {isMenuOpen && (
@@ -51,7 +28,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
       {/* Header with burger menu */}
       <header className='sticky top-0 z-50'>
         <div className="bg-gray-800 p-4 flex justify-between items-center ">
-          <div className='grid grid-cols-2 divide-x-2 items-center' onClick={() => navigate("/")}>
+          <div className='grid grid-cols-2 divide-x-2 items-center cursor-pointer' onClick={() => navigate("/")}>
             <p 
               className="px-4 text-xl font-bold">
                 { storedValue?.currentGame?.title || "НРИ" }
