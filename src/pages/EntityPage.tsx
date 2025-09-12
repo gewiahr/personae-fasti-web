@@ -55,14 +55,14 @@ export const EntityPage = <T extends Entity>({ metaData } : EntityPageProp) => {
             <img className='w-full rounded-lg border border-gray-700 bg-gray-800 object-cover' src={image?.url}></img>
             {image && ratio <= 1 && <div className="absolute bottom-2 left-0 right-0 bg-slate-900/60 px-4 py-2 pb-4">
               <h1 className="text-xl font-bold">{entity.name}</h1>
-              <h3 className="text-sm text-gray-400 ">{entity?.title}</h3>
+              <h3 className="text-sm text-gray-400 italic">{entity?.title}</h3>
             </div>}
           </div>}
           <div className='flex justify-between pb-4'>
             {(image && ratio > 1 || !image) && 
             <div>
               <h1 className="text-2xl font-bold">{entity.name}</h1>
-              <h3 className="text-m text-gray-400 mb-4">{entity?.title}</h3>           
+              <h3 className="text-m text-gray-400 mb-4 italic">{entity?.title}</h3>           
             </div>}
             <div className={`mb-6 ${(image && ratio > 1 || !image) ? "w-[30%]" : "w-[100%]"}`}>
               <button

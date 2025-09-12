@@ -90,7 +90,9 @@ const EntityEditPage = <T extends EntityCreateUpdate>({ metaData }: EntityEditPa
               key={"locationedit_parentselect"}
               options={suggestionData.entities
                 .filter((suggestion) => suggestion.type === 'location')
-                .map((suggestion) => { return { key: suggestion.id, value: suggestion.name } })} 
+                .filter((suggestion) => suggestion.id !== entity?.id)
+                .map((suggestion) => { return { key: suggestion.id, value: suggestion.name } })
+                .sort((a, b) => a.value.localeCompare(b.value))} 
               label='Находится в' 
               setKey={entity && 'pid' in entity ? entity?.pid : 0} 
               entityEdit={{ fieldName: 'pid', handleFieldChange }} 

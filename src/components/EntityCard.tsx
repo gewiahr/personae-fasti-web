@@ -38,8 +38,8 @@ export const EntityCard = ({ entity, metaData, labelText }: EntityCardProps) => 
         <div className=''>
           <h3 className="text-lg font-semibold text-white mb-1">{entity.name}</h3>
           
-          {entity.title && ( /*title in entity && (*/
-            <p className="text-gray-300 text-sm">
+          {entity.title && (
+            <p className="text-gray-400 text-sm italic">
               {truncateDescription(entity.title)}
             </p>
           )}

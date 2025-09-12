@@ -114,7 +114,7 @@ export const SelectInput = forwardRef<HTMLDivElement, SelectInputProps>(
         {/* Dropdown options */}
         {isOpen && (
           <div 
-            className="absolute z-10 mt-1 w-full bg-gray-800 border border-gray-700 rounded-lg shadow-lg"
+            className="absolute z-50 mt-1 w-full bg-gray-800 border border-gray-700 rounded-lg shadow-lg overflow-y-auto max-h-60"
             onClick={(e) => e.stopPropagation()} >
             {options.map((option) => (
               <div
