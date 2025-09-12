@@ -49,30 +49,32 @@ export const Layout = ({ children }: { children: ReactNode }) => {
       )}
 
       {/* Header with burger menu */}
-      <header className="bg-gray-800 p-4 flex justify-between items-center sticky top-0 z-50">
-        <div className='grid grid-cols-2 divide-x-2 items-center' onClick={() => navigate("/")}>
-          <p 
-            className="px-4 text-xl font-bold">
-              { storedValue?.currentGame?.title || "НРИ" }
-          </p>
-          <p 
-            className="px-4 text-lg text-gray-400 font-bold">
-              { `${player.username}` }
-          </p>
+      <header >
+        <div className="bg-gray-800 p-4 flex justify-between items-center sticky top-0 z-50">
+          <div className='grid grid-cols-2 divide-x-2 items-center' onClick={() => navigate("/")}>
+            <p 
+              className="px-4 text-xl font-bold">
+                { storedValue?.currentGame?.title || "НРИ" }
+            </p>
+            <p 
+              className="px-4 text-lg text-gray-400 font-bold">
+                { `${player.username}` }
+            </p>
+          </div>
+          <div className="relative" ref={menuRef}>
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="p-2 focus:outline-none"
+            >
+              <div className={`w-6 h-0.5 bg-white my-1.5 transition-all ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></div>
+              <div className={`w-6 h-0.5 bg-white my-1.5 transition-all ${isMenuOpen ? 'opacity-0' : ''}`}></div>
+              <div className={`w-6 h-0.5 bg-white my-1.5 transition-all ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></div>
+            </button>
+          </div>
         </div>
-        <div className="relative" ref={menuRef}>
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="p-2 focus:outline-none"
-          >
-            <div className={`w-6 h-0.5 bg-white my-1.5 transition-all ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></div>
-            <div className={`w-6 h-0.5 bg-white my-1.5 transition-all ${isMenuOpen ? 'opacity-0' : ''}`}></div>
-            <div className={`w-6 h-0.5 bg-white my-1.5 transition-all ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></div>
-          </button>
-        </div>
+        
+        <BurgerMenu isOpen={isMenuOpen} setClose={closeBurgerMenu}/>
       </header>
-
-      <BurgerMenu isOpen={isMenuOpen} setClose={closeBurgerMenu}/>
 
       {/* Main content area */}
       <main className={`flex-grow p-4 ${isMenuOpen ? 'blur-xs' : 'blur-none'} transition-all duration-200`}> 

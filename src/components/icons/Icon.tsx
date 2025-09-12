@@ -3,6 +3,8 @@ import EditIcon from './EditIcon';
 import HiddenIcon from './HiddenIcon';
 import SubmitIcon from './SubmitIcon';
 import TrashIcon from './TrashIcon';
+import ArrowUpIcon from './ArrowUpIcon';
+import ArrowDownIcon from './ArrowDownIcon';
 
 // Define all possible icon names
 export type IconName = 
@@ -10,6 +12,8 @@ export type IconName =
   | 'edit'
   | 'submit'
   | 'trash'
+  | 'arrowUp'
+  | 'arrowDown'
 
 type IconProps = {
   name: IconName;
@@ -25,6 +29,8 @@ const svgComponents: Record<IconName, React.FC<React.SVGProps<SVGSVGElement>>> =
   edit: EditIcon,
   submit: SubmitIcon,
   trash: TrashIcon,
+  arrowUp: ArrowUpIcon,
+  arrowDown: ArrowDownIcon
 };
 
 const Icon: React.FC<IconProps> = ({ name, className = '', size = 20, ...props }) => {
@@ -35,6 +41,8 @@ const Icon: React.FC<IconProps> = ({ name, className = '', size = 20, ...props }
     edit: '📝', //❌
     submit: '✅',
     trash: '🗑️',
+    arrowUp: '🔼',
+    arrowDown: '🔽'
   };
   
   return SvgComponent ? (
