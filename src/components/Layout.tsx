@@ -49,8 +49,8 @@ export const Layout = ({ children }: { children: ReactNode }) => {
       )}
 
       {/* Header with burger menu */}
-      <header >
-        <div className="bg-gray-800 p-4 flex justify-between items-center sticky top-0 z-50">
+      <header className='sticky top-0 z-50'>
+        <div className="bg-gray-800 p-4 flex justify-between items-center ">
           <div className='grid grid-cols-2 divide-x-2 items-center' onClick={() => navigate("/")}>
             <p 
               className="px-4 text-xl font-bold">
