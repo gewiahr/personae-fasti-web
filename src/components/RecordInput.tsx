@@ -64,7 +64,7 @@ export const RecordInput = ({ currentPlayer, currentGame, onSubmit, suggestionDa
           entityEdit={{ handleFieldChange: (value) => {setQuestID(value)} }} 
           nullable={true}
         />}
-        {currentPlayer.id != currentGame.gmID && <ToggleSwitch 
+        {currentPlayer.id == currentGame.gmID && <ToggleSwitch 
           key={"recordinput_hiddenswitch"} 
           label='Скрыть пост' 
           labelPosition='left' 
