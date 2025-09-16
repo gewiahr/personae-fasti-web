@@ -64,14 +64,16 @@ export const RecordInput = ({ currentPlayer, currentGame, onSubmit, suggestionDa
           entityEdit={{ handleFieldChange: (value) => {setQuestID(value)} }} 
           nullable={true}
         />}
-        {currentPlayer.id == currentGame.gmID && <ToggleSwitch 
-          key={"recordinput_hiddenswitch"} 
-          label='Скрыть пост' 
-          labelPosition='left' 
-          className='w-[250px]'
-          entityEdit={{ handleFieldChange : (value) => setPostHidden(value) }} 
-          setValue={postHidden} 
-        />}
+        {currentPlayer.id == currentGame.gmID && <div className='w-[250px] justify-items-end'>
+          <ToggleSwitch 
+            key={"recordinput_hiddenswitch"} 
+            label='Скрыть пост' 
+            labelPosition='left' 
+            className=''
+            entityEdit={{ handleFieldChange : (value) => setPostHidden(value) }} 
+            setValue={postHidden} 
+          />
+        </div>}
       </div>}
       <div className="flex justify-between items-center mt-2">    
         <button
