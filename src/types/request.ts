@@ -30,6 +30,7 @@ export type NewRecord = {
   text: string;
   playerID: number;
   gameID: number;
+  questID: number;
   hidden: boolean;
 };
 

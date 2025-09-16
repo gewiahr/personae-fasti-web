@@ -35,15 +35,15 @@ export const RecordEdit = ({
   const { addNotification } = useNotifications();
 
   useEffect(() => {
+    const getQuests = async () => {
+      const { data } = await api.get('/quests', accessKey);
+      if (data) {
+        setQuestInfo(data.quests);
+      };
+    };
+
     getQuests();
   }, []);
-
-  const getQuests = async () => {
-    const { data } = await api.get('/quests', accessKey);
-    if (data) {
-      setQuestInfo(data.quests);
-    };
-  };
 
   const onInputChange = (value: string) => {
     setEditedRecord({...editedRecord, text: value});
@@ -105,7 +105,7 @@ export const RecordEdit = ({
         <SelectInput 
           key={"recordedit_questselect"}
           options={questInfo.map((quest) => { return { key: quest.id, value: quest.name } })} 
-          label='Связанное задание' 
+          label='Связанный квест' 
           setKey={editedRecord.questID} 
           entityEdit={{ handleFieldChange: handleQuestIDChange }} 
           nullable={true}

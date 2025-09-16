@@ -6,13 +6,15 @@ interface ToggleSwitchProps {
   labelPosition?: 'left' | 'right';
   setValue?: boolean;
   entityEdit?: EntityEdit;
+  className?: string;
 }
 
 export const ToggleSwitch = ({
   label,
   labelPosition = 'left',
   setValue = false,
-  entityEdit
+  entityEdit,
+  className = ''
 }: ToggleSwitchProps) => {
   //const [isFocused, setIsFocused] = useState(false);
   const [toggleValue, switchToggleValue] = useState<boolean>(setValue);
@@ -26,7 +28,7 @@ export const ToggleSwitch = ({
   };
 
   return (
-    <div className="flex items-center gap-3">
+    <div className={`flex items-center gap-3 ${className}`}>
       {/* Left label */}
       {labelPosition === 'left' && (
         <label className={`text-md ${toggleValue ? 'text-blue-500' : 'text-gray-500'}`}>

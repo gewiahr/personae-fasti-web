@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useApi } from './useApi';
 import { useAuth } from './useAuth';
-import { api } from '../utils/api'; // Import direct API caller
+import { api } from '../utils/api';
 import { GameRecords, NewRecord } from '../types/request';
 
 export const useRecords = () => {
@@ -9,6 +9,7 @@ export const useRecords = () => {
   const [ records, setRecords ] = useState<GameRecords['records']>([]);
   const [ sessions, setSessions ] = useState<GameRecords['sessions']>([]);
   const [ players, setPlayers ] = useState<GameRecords['players']>([]);
+  // ++ QUESTS ++ //
   const [ currentGame, setCurrentGame ] = useState<GameRecords['currentGame']>();
   
   // Get initial records
@@ -30,11 +31,12 @@ export const useRecords = () => {
   }, [initialData]);
 
   // Handle new record submission
-  const handleNewRecord = useCallback(async (content: string, hidden: boolean = false) => {
+  const handleNewRecord = useCallback(async (content: string, hidden: boolean = false, questID: number = 0) => {
     const newRecord: NewRecord = {
       text: content,
       playerID: player.id,
       gameID: game.id,
+      questID,
       hidden
     };
 

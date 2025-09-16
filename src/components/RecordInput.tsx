@@ -4,32 +4,36 @@ import { SuggestionData } from '../types/suggestion';
 import { enrichMentionInput } from '../types/mention';
 import { ToggleSwitch } from './ToggleSwitch';
 import { GameInfo, PlayerInfo } from '../types/request';
-//import { ToggleSwitch } from './ToggleSwitch';
+import { SelectInput } from './SelectInput';
+import { Quest } from '../types/quest';
+import Icon from './icons/Icon';
 
 type RecordInputProps = {
   currentPlayer: PlayerInfo;
   currentGame: GameInfo;
-  onSubmit: (content: string, hidden: boolean) => void;
+  onSubmit: (content: string, hidden: boolean, questID: number) => void;
   suggestionData?: SuggestionData | null;
+  questInfo?: Quest[];
 };
 
-export const RecordInput = ({ currentPlayer, currentGame, onSubmit, suggestionData = null }: RecordInputProps) => {
-  const [input, setInput] = useState('');
-  const [postHidden, setPostHidden] = useState(false);
-  const [richInputKey, setRichInputKey] = useState(0); // Add key for reset
-  const [isSubmitting, setIsSubmitting] = useState(false);
+export const RecordInput = ({ currentPlayer, currentGame, onSubmit, suggestionData = null, questInfo = [] }: RecordInputProps) => {
+  const [input, setInput] = useState<string>('');
+  const [questID, setQuestID] = useState<number>(0);
+  
+  const [postHidden, setPostHidden] = useState<boolean>(false);
+  const [richInputKey, setRichInputKey] = useState<number>(0);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [postSettingsOpen, setPostSettingsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     
   }, [suggestionData]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     if (input.trim() === '' || !suggestionData) return;
-    
     setIsSubmitting(true);
     const enrichedText = enrichMentionInput(input, suggestionData?.entities)
-    onSubmit(enrichedText, postHidden);
+    onSubmit(enrichedText, postHidden, questID);
     setInput('');
     setRichInputKey(prev => prev + 1);
     setIsSubmitting(false);
@@ -40,30 +44,44 @@ export const RecordInput = ({ currentPlayer, currentGame, onSubmit, suggestionDa
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-6">
+    <div className="mb-6">
       <div className="flex flex-col space-y-2">
-        {/*<label htmlFor="event-input" className="text-sm font-medium">
-          New Game Event
-        </label>*/}
-        {/* <textarea
-          id="event-input"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className="border border-gray-600 rounded-md p-3 bg-gray-800 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          placeholder="Опишите текущие события"
-          rows={3}
-        /> */}
         <RichInput 
           key={richInputKey} 
-          label='' 
+          label='Что нового?' 
           setValue={input} 
           entityEdit={{ handleFieldChange }} 
           fullSuggestionData={suggestionData} 
         />
       </div>
-      <div className="flex justify-between items-center mt-2"> 
+      {postSettingsOpen && <div className='flex justify-between gap-6 items-center my-2'>
+        {questInfo && questInfo.length > 0 && <SelectInput 
+          key={"recordinput_questselect"}
+          className='w-[100%]'
+          options={questInfo.map((quest) => { return { key: quest.id, value: quest.name } })} 
+          label='Связанный квест' 
+          setKey={questID} 
+          entityEdit={{ handleFieldChange: (value) => {setQuestID(value)} }} 
+          nullable={true}
+        />}
+        {currentPlayer.id != currentGame.gmID && <ToggleSwitch 
+          key={"recordinput_hiddenswitch"} 
+          label='Скрыть пост' 
+          labelPosition='left' 
+          className='w-[250px]'
+          entityEdit={{ handleFieldChange : (value) => setPostHidden(value) }} 
+          setValue={postHidden} 
+        />}
+      </div>}
+      <div className="flex justify-between items-center mt-2">    
         <button
-          type="submit"
+          className={`px-4 py-2 rounded-md text-white bg-blue-600 hover:bg-blue-700`}
+          onClick={() => setPostSettingsOpen(!postSettingsOpen)}
+        >
+          <Icon name={`${postSettingsOpen ? 'arrowUp' : 'arrowDown'}`} />
+        </button>
+        <button
+          onClick={handleSubmit}
           disabled={isSubmitting || input.trim() === ''}
           className={`px-4 py-2 rounded-md text-white ${
             isSubmitting || input.trim() === ''
@@ -73,14 +91,8 @@ export const RecordInput = ({ currentPlayer, currentGame, onSubmit, suggestionDa
         >
           {isSubmitting ? 'Публикуется...' : 'Опубликовать'}
         </button>
-        {currentPlayer.id == currentGame.gmID && <ToggleSwitch 
-          key={100} 
-          label='Скрыть пост' 
-          labelPosition='left' 
-          entityEdit={{ handleFieldChange : (value) => setPostHidden(value) }} 
-          setValue={postHidden} 
-        />}
       </div>
-    </form>
+      
+    </div>
   );
 };
