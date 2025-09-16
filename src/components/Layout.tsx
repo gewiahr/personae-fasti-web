@@ -7,10 +7,12 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { NotificationProvider } from '../context/NotificationContext';
 import NotificationPopup from './NotificationPopup';
+import { burgerMenuItems } from '../assets/BurgerMenuContent';
+import { BurgerMenuItemCallable } from './BurgerMenuItems';
 
 export const Layout = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
-  const { player } = useAuth();
+  const { player, logout } = useAuth();
   const [ storedValue ] = useLocalStorage<LoginInfo | null>('playerInfo', null);
   const [ isMenuOpen, setIsMenuOpen ] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -50,7 +52,15 @@ export const Layout = ({ children }: { children: ReactNode }) => {
           </div>
         </div>
         
-        <BurgerMenu isOpen={isMenuOpen} setClose={closeBurgerMenu}/>
+        {isMenuOpen && 
+        <div className="absolute 
+                        max-sm:right-[5%] max-sm:top-20 max-sm:w-[90%] max-sm:text-lg max-sm:text-center max-sm:rounded-md max-sm:shadow-lg max-sm:border max-sm:border-gray-700
+                        sm:right-14 sm:top-14 sm:w-[260px] sm:rounded-md sm:shadow-lg sm:border sm:border-gray-700 
+                        focus:ring-blue-200 focus:border-blue-500 bg-gray-800 z-100">
+          <BurgerMenu 
+            items={[...burgerMenuItems, { name: `\xa0\xa0\xa0\xa0\xa0\xa0Выйти`, callable: logout } as BurgerMenuItemCallable]} 
+            setClose={closeBurgerMenu}/>
+        </div>}         
       </header>
 
       {/* Main content area */}
