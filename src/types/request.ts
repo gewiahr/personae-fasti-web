@@ -7,6 +7,12 @@ export type LoginInfo = {
   currentGame: GameInfo;
 };
 
+export type TelegramLoginInfo = {
+  accesskey: string;
+  player: PlayerInfo;
+  currentGame: GameInfo;
+};
+
 export type GameRecords = {
   records: Record[];
   sessions: Session[];

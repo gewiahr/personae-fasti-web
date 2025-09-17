@@ -16,10 +16,21 @@ export const useAuth = () => {
       setIsAuthenticated(true);
       setAttemptCounter(0);
       return true;
-    }
+    };
 
     setAttemptCounter(attempts + 1);
     return false;
+  };
+
+  const loginTG = async (initData: string) => {
+    const { data, error } = await api.post<LoginInfo>(`/login/tg`, "", { loginData: initData });
+
+    if (!error && data) {
+      setLoginInfo(data);
+      setIsAuthenticated(true);
+      setAttemptCounter(0);
+      return true;
+    };
   };
 
   const logout = () => {
@@ -28,5 +39,13 @@ export const useAuth = () => {
     window.location.href = '/';
   };
 
-  return { isAuthenticated, login, logout, accessKey: loginInfo?.accesskey || "", player: loginInfo?.player || { id: 0, username: "" }, game: loginInfo?.currentGame || { id: 0, title: "", gmID: 0 }, attempts };
+  return {  isAuthenticated, 
+            login,
+            loginTG, 
+            logout, 
+            accessKey: 
+            loginInfo?.accesskey || "", 
+            player: loginInfo?.player || { id: 0, username: "" }, 
+            game: loginInfo?.currentGame || { id: 0, title: "", gmID: 0 }, 
+            attempts };
 };
