@@ -30,7 +30,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
         <div className="inset-0 z-40" />
       )}
 
-      {!TMA ? <header className='sticky top-0 h-[112px] z-50 bg-gray-800 p-4'>
+      {TMA ? <header className='sticky top-0 h-[112px] z-50 bg-gray-800 p-4'>
         <div className='flex flex-col items-center w-full my-4'>
           <p className="px-4 text-xl text-gray-400 font-bold w-full text-center">
             {`${player.username}`}
