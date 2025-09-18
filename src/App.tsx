@@ -17,6 +17,7 @@ import { swipeBehavior } from '@telegram-apps/sdk-react';
 
 export const App = () => {
   if (swipeBehavior.isVerticalEnabled()) {
+    swipeBehavior.mount();
     swipeBehavior.disableVertical();
   };
 
