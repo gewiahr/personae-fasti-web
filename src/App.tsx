@@ -13,14 +13,8 @@ import SettingsPage from './pages/SettingsPage';
 import QuestPage from './pages/QuestPage';
 import { QuestsList } from './pages/QuestsList';
 import QuestEditPage from './pages/QuestEditPage';
-import { swipeBehavior } from '@telegram-apps/sdk-react';
 
 export const App = () => {
-  if (swipeBehavior.isVerticalEnabled()) {
-    swipeBehavior.mount();
-    swipeBehavior.disableVertical();
-  };
-
   return (
     <Router>
       <AuthGate>

@@ -26,13 +26,15 @@ export const AuthGate = ({ children }: { children: ReactNode }) => {
   if (isAuthenticated) return <>{children}</>;
 
   return (<>
+    {/* Telegram Mini App */}
     {/* {TMA ? <>
       <div className="flex items-center justify-center h-screen bg-gray-800">
         <div className="p-6 bg-gray-900 rounded-lg shadow-lg">
           <h2 className="mb-4 text-xl font-bold text-white">Welcome to Telegram App, buddy!</h2> 
         </div>
       </div>
-    </> :  */}
+    </> : */}
+    {/* // Web App */}
     <div className="flex items-center justify-center h-screen bg-gray-800">
       <div className="p-6 bg-gray-900 rounded-lg shadow-lg">
         <h2 className="mb-4 text-xl font-bold text-white">Введите ключ</h2>
@@ -52,6 +54,6 @@ export const AuthGate = ({ children }: { children: ReactNode }) => {
         </button>
       </div>
     </div>
-  </>  
+  </> 
   );
 };
