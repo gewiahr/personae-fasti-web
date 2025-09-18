@@ -1,0 +1,27 @@
+@layer utilities {
+  .safe-area-top-height {
+    height: env(safe-area-inset-top, 0px);
+    min-height: env(safe-area-inset-top, 0px);
+  }
+  
+  .safe-area-bottom-height {
+    height: env(safe-area-inset-bottom, 0px);
+    min-height: env(safe-area-inset-bottom, 0px);
+  }
+  
+  .tg-bg {
+    background-color: var(--tg-theme-bg-color, #ffffff);
+  }
+  
+  .tg-text {
+    color: var(--tg-theme-text-color, #000000);
+  }
+  
+  .tg-hint {
+    color: var(--tg-theme-hint-color, #999999);
+  }
+  
+  .tg-secondary-bg {
+    background-color: var(--tg-theme-secondary-bg-color, #f1f1f1);
+  }
+}

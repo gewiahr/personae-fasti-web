@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import './styles/fonts.css';
+import './styles/telegram.css'
 import App from './App.tsx'
 
 import { init, miniApp, swipeBehavior } from '@telegram-apps/sdk-react';
