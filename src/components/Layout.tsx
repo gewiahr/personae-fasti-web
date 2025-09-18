@@ -9,6 +9,7 @@ import { NotificationProvider } from '../context/NotificationContext';
 import NotificationPopup from './NotificationPopup';
 import { burgerMenuItems } from '../assets/BurgerMenuContent';
 import { BurgerMenuItemCallable } from './BurgerMenuItems';
+import { miniApp } from '@telegram-apps/sdk-react';
 
 export const Layout = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
@@ -17,11 +18,33 @@ export const Layout = ({ children }: { children: ReactNode }) => {
   const [ isMenuOpen, setIsMenuOpen ] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
+  const TMA = miniApp.ready.isAvailable();
+
   const closeBurgerMenu = () => {
     setIsMenuOpen(false);
   };
 
-  return (
+  return (<>
+    {TMA ? <div className='min-h-screen flex flex-col bg-gray-900 text-gray-100'>
+      <header className='sticky top-0 h-[56px] z-50 flex justify-between items-center bg-gray-800 p-4'>
+        <p className='font-bold'>gewi</p>
+      </header>
+
+      {/* Main content area */}
+      <main className={`flex-grow p-4 ${isMenuOpen ? 'blur-xs' : 'blur-none'} transition-all duration-200`}> 
+        <NotificationProvider>
+          {children}
+          <NotificationPopup />
+        </NotificationProvider>      
+        
+      </main>
+
+      {/* Optional footer */}
+      <footer className="bg-gray-800 p-4 text-center text-sm text-gray-400">
+        {`© ${new Date().getFullYear()} gewiahr (Tomasz Mozhny)`}
+      </footer>
+
+    </div> :
     <div className="min-h-screen flex flex-col bg-gray-900 text-gray-100">
       {isMenuOpen && (
         <div className="inset-0 z-40"/>
@@ -77,5 +100,6 @@ export const Layout = ({ children }: { children: ReactNode }) => {
         {`© ${new Date().getFullYear()} gewiahr (Tomasz Mozhny)`}
       </footer>
     </div>
-  );
+    }
+  </>);
 };
