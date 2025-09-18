@@ -1,12 +1,12 @@
 import { ReactNode, useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { miniApp } from '@telegram-apps/sdk-react';
+//import { miniApp } from '@telegram-apps/sdk-react';
 
 export const AuthGate = ({ children }: { children: ReactNode }) => {
   const { isAuthenticated, login, attempts } = useAuth();
   const [input, setInput] = useState<string>('');
   
-  const TMA = miniApp.ready.isAvailable();
+  //const TMA = miniApp.ready.isAvailable();
   // ++ Implement correct server error ++ //
   //const [warning, setWarning] = useState<string>();
 
@@ -26,13 +26,13 @@ export const AuthGate = ({ children }: { children: ReactNode }) => {
   if (isAuthenticated) return <>{children}</>;
 
   return (<>
-    {TMA ? <>
+    {/* {TMA ? <>
       <div className="flex items-center justify-center h-screen bg-gray-800">
         <div className="p-6 bg-gray-900 rounded-lg shadow-lg">
           <h2 className="mb-4 text-xl font-bold text-white">Welcome to Telegram App, buddy!</h2> 
         </div>
       </div>
-    </> : 
+    </> :  */}
     <div className="flex items-center justify-center h-screen bg-gray-800">
       <div className="p-6 bg-gray-900 rounded-lg shadow-lg">
         <h2 className="mb-4 text-xl font-bold text-white">Введите ключ</h2>
@@ -51,7 +51,7 @@ export const AuthGate = ({ children }: { children: ReactNode }) => {
           Войти
         </button>
       </div>
-    </div>}
+    </div>
   </>  
   );
 };
