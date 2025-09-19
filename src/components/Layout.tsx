@@ -26,7 +26,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
   return (<>
     <div className="min-h-screen flex flex-col bg-gray-900 text-gray-100">
       {isMenuOpen && (
-        <div className="inset-0 z-40" />
+        <div className="inset-0 z-40"/>
       )}
 
       {TMA ? <header className={`sticky top-0 z-50 bg-gray-800 px-4`}>
@@ -53,10 +53,11 @@ export const Layout = ({ children }: { children: ReactNode }) => {
         </div>
 
         {isMenuOpen &&
-        <div className="absolute 
-                    max-sm:right-[5%] max-sm:top-26 max-sm:w-[90%] max-sm:text-lg max-sm:text-center max-sm:rounded-md max-sm:shadow-lg max-sm:border max-sm:border-gray-700
-                    sm:right-14 sm:top-14 sm:w-[260px] sm:rounded-md sm:shadow-lg sm:border sm:border-gray-700 
-                    focus:ring-blue-200 focus:border-blue-500 bg-gray-800 z-100">
+        <div className="absolute
+                    max-sm:right-[5%] max-sm:w-[90%] max-sm:text-lg max-sm:text-center max-sm:rounded-md max-sm:shadow-lg max-sm:border max-sm:border-gray-700
+                    sm:right-14 sm:w-[260px] sm:rounded-md sm:shadow-lg sm:border sm:border-gray-700 
+                    focus:ring-blue-200 focus:border-blue-500 bg-gray-800 z-100"
+              style={{ top: `calc((var(--tg-viewport-safe-area-inset-top) + var(--tg-viewport-content-safe-area-inset-top)) * 0.95)` }}>
           <BurgerMenu
             items={[...burgerMenuItems, { name: `\xa0\xa0\xa0\xa0\xa0\xa0Выйти`, callable: logout } as BurgerMenuItemCallable]}
             setClose={closeBurgerMenu} />
