@@ -57,7 +57,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
                     max-sm:right-[5%] max-sm:w-[90%] max-sm:text-lg max-sm:text-center max-sm:rounded-md max-sm:shadow-lg max-sm:border max-sm:border-gray-700
                     sm:right-14 sm:w-[260px] sm:rounded-md sm:shadow-lg sm:border sm:border-gray-700 
                     focus:ring-blue-200 focus:border-blue-500 bg-gray-800 z-100"
-              style={{ top: `calc((var(--tg-viewport-safe-area-inset-top) + var(--tg-viewport-content-safe-area-inset-top)) * 0.95)` }}>
+              style={{ top: `calc((var(--tg-viewport-safe-area-inset-top) + var(--tg-viewport-content-safe-area-inset-top) + (var(--spacing) * 12)) * 0.9)` }}>
           <BurgerMenu
             items={[...burgerMenuItems, { name: `\xa0\xa0\xa0\xa0\xa0\xa0Выйти`, callable: logout } as BurgerMenuItemCallable]}
             setClose={closeBurgerMenu} />
