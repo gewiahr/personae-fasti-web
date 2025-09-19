@@ -5,7 +5,7 @@ import './styles/fonts.css';
 import './styles/telegram.css'
 import App from './App.tsx'
 
-import { init, miniApp, swipeBehavior } from '@telegram-apps/sdk-react';
+import { init, miniApp, swipeBehavior, viewport } from '@telegram-apps/sdk-react';
 
 const initializeTelegramSDK = async () => {
   try {
@@ -19,6 +19,11 @@ const initializeTelegramSDK = async () => {
     if (swipeBehavior.isVerticalEnabled()) {
       swipeBehavior.mount();
       swipeBehavior.disableVertical();
+    };
+    
+    await viewport.mount();
+    if (viewport.bindCssVars.isAvailable()) {
+      viewport.bindCssVars();
     };
     
   } catch (error) {

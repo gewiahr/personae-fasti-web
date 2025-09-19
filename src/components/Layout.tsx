@@ -1,4 +1,3 @@
-// components/Layout.tsx
 import { ReactNode, useRef, useState } from 'react';
 import { BurgerMenu } from './BurgerMenu';
 import { useLocalStorage } from '../hooks/useLocalStorage';
@@ -9,7 +8,7 @@ import { NotificationProvider } from '../context/NotificationContext';
 import NotificationPopup from './NotificationPopup';
 import { burgerMenuItems } from '../assets/BurgerMenuContent';
 import { BurgerMenuItemCallable } from './BurgerMenuItems';
-import { miniApp, viewport } from '@telegram-apps/sdk-react';
+import { miniApp } from '@telegram-apps/sdk-react';
 
 export const Layout = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
@@ -23,20 +22,20 @@ export const Layout = ({ children }: { children: ReactNode }) => {
   const closeBurgerMenu = () => {
     setIsMenuOpen(false);
   };
-viewport.contentSafeAreaInsetBottom  
+ 
   return (<>
     <div className="min-h-screen flex flex-col bg-gray-900 text-gray-100">
       {isMenuOpen && (
         <div className="inset-0 z-40" />
       )}
 
-      {TMA ? <header className={`sticky top-0 z-50 bg-gray-800 p-4`}>
-        <div className='flex flex-col items-center w-full my-4'>
-          <div className='w-full safe-area-top-height'></div>
-          <p className="px-4 text-xl text-gray-400 font-bold w-full text-center h-[calc(56px-env(safe-area-inset-top,0px))] min-h-[calc(56px-env(safe-area-inset-top,0px))]">
+      {TMA ? <header className={`sticky top-0 z-50 bg-gray-800 px-4`}>
+        <div className='flex flex-col items-center w-full'>
+          <div className={`w-full`} style={{height: `var(--tg-viewport-safe-area-inset-top)`}}></div>
+          <div className={`px-4 text-xl content-center text-gray-400 font-bold w-full text-center`} style={{height: `var(--tg-viewport-content-safe-area-inset-top)`}}>
             {`${player.username}`}
-          </p>
-          <div className='flex justify-between items-center w-full h-14 min-h-14'>
+          </div>
+          <div className={`flex justify-between items-center content-center w-full h-12`}>
             <p className="text-lg font-bold flex-1 min-w-0">
               {storedValue?.currentGame?.title || "НРИ"}
             </p>

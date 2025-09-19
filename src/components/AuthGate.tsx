@@ -10,8 +10,6 @@ export const AuthGate = ({ children }: { children: ReactNode }) => {
   // ++ Implement correct server error ++ //
   //const [warning, setWarning] = useState<string>();
 
-  //alert();
-
   const loginOnClick = () => {
     if (input) {
       login(input);
