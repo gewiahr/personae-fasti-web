@@ -26,7 +26,7 @@ const RichText = ({ text, fullWidth = false, className='' }: RichTextProps) => {
   
       // Push the link component
       elements.push(
-        <Hyperlink id={id} type={type} mentionText={mentionText}/>
+        <Hyperlink key={"" + id + type} id={id} type={type} mentionText={mentionText}/>
       );
 
       lastIndex = match.index + fullMatch.length;

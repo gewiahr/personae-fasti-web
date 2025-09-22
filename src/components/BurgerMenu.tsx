@@ -20,16 +20,16 @@ export const BurgerMenu = ({ items, setClose }: BurgerMenuProps) => {
       // Category 
       ('foldable' in item ?
         item.foldable ? 
-          <BurgerMenuItemCategoryFoldable item={item} itemOnChange={itemOnChange} setClose={setClose}/> :
-          <BurgerMenuItemCategory item={item} /> :
+          <BurgerMenuItemCategoryFoldable key={"" + item.name} item={item} itemOnChange={itemOnChange} setClose={setClose}/> :
+          <BurgerMenuItemCategory key={"" + item.name} item={item} /> :
       // Link
       'internal' in item ?
         item.internal ?
-          <BurgerMenuItemLinkInternal item={item} setClose={setClose} /> :
-          <BurgerMenuItemLinkExternal item={item} /> : 
+          <BurgerMenuItemLinkInternal key={"" + item.name} item={item} setClose={setClose} /> :
+          <BurgerMenuItemLinkExternal key={"" + item.name} item={item} /> : 
       // Callable
       'callable' in item ?
-        <BurgerMenuItemCallable item={item} /> :
+        <BurgerMenuItemCallable key={"" + item.name} item={item} /> :
         null
       ))}
     </>

@@ -126,9 +126,9 @@ export const BurgerMenuItemCategoryFoldable = ({ item, itemOnChange, setClose } 
       {foldableItem.open ? foldableItem.children.map((ci) =>
         'internal' in ci ?
           ci.internal ?
-          <BurgerMenuItemLinkInternal item={ci} setClose={setClose} /> :
-          <BurgerMenuItemLinkExternal item={ci} /> : 
-        <BurgerMenuItem item={ci} />
+          <BurgerMenuItemLinkInternal key={"" + ci.name} item={ci} setClose={setClose} /> :
+          <BurgerMenuItemLinkExternal key={"" + ci.name} item={ci} /> : 
+        <BurgerMenuItem key={"" + ci.name} item={ci} />
       ) : null}  
     </>
   )
