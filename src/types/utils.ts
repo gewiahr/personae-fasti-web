@@ -5,6 +5,10 @@ export interface SelectKeyValue {
   value: string;
 }
 
+export type AuthStorage = {
+  accesskey: any;
+}
+
 // export const StructToKeyValue = (struct : any, keyField : string, valueField : string) : SelectKeyValue => {
 //     return { 
 //         key : struct[keyField], 

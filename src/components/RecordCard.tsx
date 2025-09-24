@@ -13,7 +13,6 @@ interface RecordCardProps {
 };
 
 const RecordCard = ({ record, label="", accented=false, editable=false, showQuest=true, onEdit } : RecordCardProps) => {
-
   return (
     <div>
       <div
@@ -35,8 +34,7 @@ const RecordCard = ({ record, label="", accented=false, editable=false, showQues
               <Icon 
                 key={`icon_hidden_${record.id}`} 
                 name='hidden'/>
-            </div>
-            }
+            </div>}
             {editable && onEdit && <button className='pr-4' onClick={() => onEdit(record)}>
               <Icon 
                 key={`icon_edit_${record.id}`} 

@@ -3,20 +3,18 @@ import { RichInput } from './RichInput';
 import { SuggestionData } from '../types/suggestion';
 import { enrichMentionInput } from '../types/mention';
 import { ToggleSwitch } from './ToggleSwitch';
-import { GameInfo, PlayerInfo } from '../types/request';
 import { SelectInput } from './SelectInput';
 import { Quest } from '../types/quest';
 import Icon from './icons/Icon';
+import { useSettings } from '../hooks/useSettings';
 
 type RecordInputProps = {
-  currentPlayer: PlayerInfo;
-  currentGame: GameInfo;
   onSubmit: (content: string, hidden: boolean, questID: number) => void;
   suggestionData?: SuggestionData | null;
   questInfo?: Quest[];
 };
 
-export const RecordInput = ({ currentPlayer, currentGame, onSubmit, suggestionData = null, questInfo = [] }: RecordInputProps) => {
+export const RecordInput = ({ onSubmit, suggestionData = null, questInfo = [] }: RecordInputProps) => {
   const [input, setInput] = useState<string>('');
   const [questID, setQuestID] = useState<number>(0);
   
@@ -24,6 +22,8 @@ export const RecordInput = ({ currentPlayer, currentGame, onSubmit, suggestionDa
   const [richInputKey, setRichInputKey] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [postSettingsOpen, setPostSettingsOpen] = useState<boolean>(false);
+
+  const { player, game } = useSettings();
 
   useEffect(() => {
     
@@ -64,7 +64,7 @@ export const RecordInput = ({ currentPlayer, currentGame, onSubmit, suggestionDa
           entityEdit={{ handleFieldChange: (value) => {setQuestID(value)} }} 
           nullable={true}
         />}
-        {currentPlayer.id == currentGame.gmID && <div className='w-[250px] justify-items-end'>
+        {player?.id === game?.gmID && <div className='w-[250px] justify-items-end'>
           <ToggleSwitch 
             key={"recordinput_hiddenswitch"} 
             label='Скрыть пост' 

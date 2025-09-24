@@ -14,12 +14,12 @@ export const AuthGate = ({ children }: { children: ReactNode }) => {
     if (input) {
       login(input);
       setInput("");
-    }
-  }
+    };
+  };
 
   const falseAttemptInput = () => {
-    return Boolean(attempts) && !input
-  }
+    return Boolean(attempts) && !input;
+  };
 
   if (isAuthenticated) return <>{children}</>;
 

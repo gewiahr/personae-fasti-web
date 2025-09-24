@@ -1,10 +1,12 @@
-import { PlayerInfo, Record, Session } from '../types/request';
+import { GameFullInfo, PlayerInfo, PlayerSettings, Record, Session } from '../types/request';
 import { useAuth } from '../hooks/useAuth';
 import { SuggestionData } from '../types/suggestion';
 import RecordCard from './RecordCard';
 import { useEffect, useState } from 'react';
 import RecordEdit from './RecordEdit';
-//import { groupRecordsBySession } from '../types/utils';
+import { useLocalStorage } from '../hooks/useLocalStorage';
+import { useApi } from '../hooks/useApi';
+import { useSettings } from '../hooks/useSettings';
 
 type RecordFeedProps = {
   records: Record[];
@@ -22,9 +24,13 @@ type RecordSession = {
 }
 
 export const RecordFeed = ({ records, players, sessions, suggestionData = null, editable = false, showQuests = true, onEdit = () => {} }: RecordFeedProps) => {
-  const { player, game } = useAuth();
+  const { accessKey } = useAuth();
+  const { player, game } = useSettings();
   const [ editing, setEditing ] = useState<Record | null>(null);
   const [ orderedRecords, setOrderedRecords ] = useState<RecordSession[] | null>();
+
+  const { data : playerSettingsData } = useApi.get<PlayerSettings>("/player/settings", accessKey);
+  const [ gameInfo, setGameInfo ] = useLocalStorage<GameFullInfo | null>('currentGame', playerSettingsData?.currentGame || null);
 
   const onRecordEdit = (record : Record) => {
     setEditing(record);
@@ -41,6 +47,10 @@ export const RecordFeed = ({ records, players, sessions, suggestionData = null, 
       setOrderedRecords(or);
     }; 
   }, [records, sessions]);
+
+  useEffect(() => {
+    setGameInfo(playerSettingsData?.currentGame || null);
+  }, [playerSettingsData])
 
   const orderRecords = () => {
     if (!sessions || sessions.length === 0) {
@@ -139,8 +149,8 @@ export const RecordFeed = ({ records, players, sessions, suggestionData = null, 
                   key={record.id}
                   record={record}
                   label={players.find(p => p.id === record.playerID)?.username}
-                  accented={record.playerID === player.id}
-                  editable={editable && (record.playerID == player.id || game.gmID == player.id)}
+                  accented={record.playerID === player?.id}
+                  editable={editable && ((record.playerID === player?.id || gameInfo?.gmID === player?.id) || (gameInfo?.settings?.allowAllEditRecords))}
                   showQuest={showQuests}
                   onEdit={onRecordEdit}
                 />
@@ -150,7 +160,7 @@ export const RecordFeed = ({ records, players, sessions, suggestionData = null, 
         })}
       </div>}
 
-      {editing && 
+      {editing && player && game && 
         <RecordEdit 
           key={990} 
           record={editing}

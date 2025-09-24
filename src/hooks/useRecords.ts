@@ -3,9 +3,11 @@ import { useApi } from './useApi';
 import { useAuth } from './useAuth';
 import { api } from '../utils/api';
 import { GameRecords, NewRecord } from '../types/request';
+import { useSettings } from './useSettings';
 
 export const useRecords = () => {
-  const { accessKey, player, game } = useAuth();
+  const { accessKey } = useAuth();
+  const { player, game } = useSettings();
   const [ records, setRecords ] = useState<GameRecords['records']>([]);
   const [ sessions, setSessions ] = useState<GameRecords['sessions']>([]);
   const [ players, setPlayers ] = useState<GameRecords['players']>([]);
@@ -32,6 +34,8 @@ export const useRecords = () => {
 
   // Handle new record submission
   const handleNewRecord = useCallback(async (content: string, hidden: boolean = false, questID: number = 0) => {
+    if (!player || !game) return
+    
     const newRecord: NewRecord = {
       text: content,
       playerID: player.id,
@@ -59,7 +63,7 @@ export const useRecords = () => {
       fetchRecords(); // Re-fetch original data on error
       throw err;
     }
-  }, [accessKey, player.id, game.id, fetchRecords]);
+  }, [accessKey, player?.id, game?.id, fetchRecords]);
 
   return {
     records,

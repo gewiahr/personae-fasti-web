@@ -1,18 +1,24 @@
 import { useState } from 'react';
 import { useLocalStorage } from './useLocalStorage';
 import { api } from '../utils/api';
-import { LoginInfo } from '../types/request';
+import { GameFullInfo, LoginInfo, PlayerInfo } from '../types/request';
+import { AuthStorage } from '../types/utils';
 
 export const useAuth = () => {
-  const [ loginInfo, setLoginInfo ] = useLocalStorage<LoginInfo | null>('playerInfo', null);
-  const [ isAuthenticated, setIsAuthenticated ] = useState(!!loginInfo?.accesskey);
+  const [ auth, setAuth ] = useLocalStorage<AuthStorage | null>('auth', null);
+  const [_, setPlayerInfo] = useLocalStorage<PlayerInfo | null>('playerInfo', null);
+  const [__, setCurrentGame] = useLocalStorage<GameFullInfo | null>('currentGame', null);
+
+  const [ isAuthenticated, setIsAuthenticated ] = useState(!!auth?.accesskey);
   const [ attempts, setAttemptCounter ] = useState<number>(0);
 
   const login = async (accesskey: string) => {
     const { data, error } = await api.get<LoginInfo>(`/login/${accesskey}`, "");
 
     if (!error && data) {
-      setLoginInfo(data);
+      setAuth({ accesskey: data.accesskey });
+      setPlayerInfo(data.player);
+      setCurrentGame(data.currentGame);
       setIsAuthenticated(true);
       setAttemptCounter(0);
       return true;
@@ -26,7 +32,9 @@ export const useAuth = () => {
     const { data, error } = await api.post<LoginInfo>(`/login/tg`, "", { loginData: initData });
 
     if (!error && data) {
-      setLoginInfo(data);
+      setAuth({ accesskey: data.accesskey });
+      setPlayerInfo(data.player);
+      setCurrentGame(data.currentGame);
       setIsAuthenticated(true);
       setAttemptCounter(0);
       return true;
@@ -34,7 +42,9 @@ export const useAuth = () => {
   };
 
   const logout = () => {
-    setLoginInfo(null);
+    setAuth(null);
+    setPlayerInfo(null);
+    setCurrentGame(null);
     setIsAuthenticated(false);
     window.location.href = '/';
   };
@@ -43,9 +53,6 @@ export const useAuth = () => {
             login,
             loginTG, 
             logout, 
-            accessKey: 
-            loginInfo?.accesskey || "", 
-            player: loginInfo?.player || { id: 0, username: "" }, 
-            game: loginInfo?.currentGame || { id: 0, title: "", gmID: 0 }, 
+            accessKey: auth?.accesskey || "", 
             attempts };
 };

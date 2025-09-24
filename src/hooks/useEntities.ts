@@ -4,6 +4,7 @@ import { useAuth } from './useAuth';
 import { api } from '../utils/api'; 
 import { NewEntity } from '../types/request';
 import { EntityMetaData } from '../types/entities';
+import { useSettings } from './useSettings';
 
 type UseRecordsProps = {
   entityName: string,
@@ -11,7 +12,8 @@ type UseRecordsProps = {
 }
 
 const useEntitiesCore = <T>({ entityName, entityNamePl }: UseRecordsProps) => {
-  const { accessKey, player, game } = useAuth();
+  const { accessKey } = useAuth();
+  const { player, game } = useSettings();
   //const [entities, setEntities] = useState();
 
   // Get initial records
@@ -31,6 +33,8 @@ const useEntitiesCore = <T>({ entityName, entityNamePl }: UseRecordsProps) => {
 
   // Handle new entity submission
   const handleNewEntity = useCallback(async (name: string, description: string, hidden: boolean = false) => {
+    if (!player || !game) return
+    
     const newEntity: NewEntity = {
       name,
       description,
@@ -56,7 +60,7 @@ const useEntitiesCore = <T>({ entityName, entityNamePl }: UseRecordsProps) => {
       refetch(); // Re-fetch original data on error
       throw err;
     }
-  }, [accessKey, player.id, game.id, refetch]);
+  }, [accessKey, player?.id, game?.id, refetch]);
 
   return {
     data,

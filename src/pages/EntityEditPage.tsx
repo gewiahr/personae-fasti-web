@@ -12,6 +12,7 @@ import { ToggleSwitch } from '../components/ToggleSwitch';
 import ImageUpload from '../components/ImageUpload';
 import FoldableCategory from '../components/FoldableCategory';
 import { SelectInput } from '../components/SelectInput';
+import { useSettings } from '../hooks/useSettings';
 
 
 interface EntityEditPageProps {
@@ -21,7 +22,8 @@ interface EntityEditPageProps {
 const EntityEditPage = <T extends EntityCreateUpdate>({ metaData }: EntityEditPageProps) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { player, game, accessKey } = useAuth();
+  const { accessKey } = useAuth();
+  const { player, game } = useSettings();
 
   const newEntity = !id;
   
@@ -104,13 +106,13 @@ const EntityEditPage = <T extends EntityCreateUpdate>({ metaData }: EntityEditPa
         {id && <FoldableCategory title='Изображение' children={<ImageUpload entityType={metaData.EntityType} entityID={id} />} />}
         
         {/* // ** Change game proof by request instead of local storage ** // */}
-        {player.id === game.gmID && <div className='py-2'>
+        {player?.id === game?.gmID && <div className='py-2'>
           <ToggleSwitch 
-            key={`toggle_sectert_post_${player.id}`}
+            key={`toggle_sectert_post_${player?.id}`}
             label='Скрыть'
             labelPosition='right'
             setValue={hidden}
-            entityEdit={{ handleFieldChange : (value) => setHidden(value)} }
+            entityEdit={{ handleFieldChange : (value) => setHidden(value) }}
           />
         </div>}
 

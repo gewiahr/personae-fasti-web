@@ -4,13 +4,13 @@ import { Quest, QuestTask } from "./quest";
 export type LoginInfo = {
   accesskey: string;
   player: PlayerInfo;
-  currentGame: GameInfo;
+  currentGame: GameFullInfo;
 };
 
 export type TelegramLoginInfo = {
   accesskey: string;
   player: PlayerInfo;
-  currentGame: GameInfo;
+  currentGame: GameFullInfo;
 };
 
 export type GameRecords = {
@@ -45,7 +45,7 @@ export type Session = {
   number: number;
   name: string;
   endTime: string;
-}
+};
 
 export type PlayerInfo = {
   id: number;
@@ -53,15 +53,27 @@ export type PlayerInfo = {
 };
 
 export type PlayerSettings = {
-  currentGame: GameInfo;
+  currentGame: GameFullInfo;
   playerGames: GameInfo[];
-}
+};
 
 export type GameInfo = {
   id: number;
   title: string;
   gmID: number;
 };
+
+export type GameFullInfo = {
+  id: number;
+  title: string;
+  gmID: number;
+
+  settings: GameSettings;
+};
+
+export type GameSettings = {
+  allowAllEditRecords: boolean;
+}
 
 export interface EntityInfo {
   id: number;

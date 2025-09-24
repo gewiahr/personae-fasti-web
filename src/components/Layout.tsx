@@ -1,7 +1,7 @@
 import { ReactNode, useRef, useState } from 'react';
 import { BurgerMenu } from './BurgerMenu';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { LoginInfo } from '../types/request';
+import { GameFullInfo } from '../types/request';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { NotificationProvider } from '../context/NotificationContext';
@@ -9,11 +9,13 @@ import NotificationPopup from './NotificationPopup';
 import { burgerMenuItems } from '../assets/BurgerMenuContent';
 import { BurgerMenuItemCallable } from './BurgerMenuItems';
 import { miniApp } from '@telegram-apps/sdk-react';
+import { useSettings } from '../hooks/useSettings';
 
 export const Layout = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
-  const { player, logout } = useAuth();
-  const [storedValue] = useLocalStorage<LoginInfo | null>('playerInfo', null);
+  const { logout } = useAuth();
+  const { player } = useSettings();
+  const [ currentGame ] = useLocalStorage<GameFullInfo | null>('currentGame', null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -33,11 +35,11 @@ export const Layout = ({ children }: { children: ReactNode }) => {
         <div className='flex flex-col items-center w-full'>
           <div className={`w-full`} style={{height: `var(--tg-viewport-safe-area-inset-top)`}}></div>
           <div className={`px-4 text-xl content-center text-gray-400 font-bold w-full text-center`} style={{height: `var(--tg-viewport-content-safe-area-inset-top)`}}>
-            {`${player.username}`}
+            {`${player?.username || "user"}`}
           </div>
           <div className={`flex justify-between items-center content-center w-full h-12`}>
             <p className="text-lg font-bold flex-1 min-w-0">
-              {storedValue?.currentGame?.title || "НРИ"}
+              {currentGame?.title || "НРИ"}
             </p>
             <div className="relative flex-shrink-0" ref={menuRef}>
               <button
@@ -68,11 +70,11 @@ export const Layout = ({ children }: { children: ReactNode }) => {
             <div className='grid grid-cols-2 divide-x-2 items-center cursor-pointer' onClick={() => navigate("/")}>
               <p
                 className="px-4 text-xl font-bold">
-                {storedValue?.currentGame?.title || "НРИ"}
+                {currentGame?.title || "НРИ"}
               </p>
               <p
                 className="px-4 text-lg text-gray-400 font-bold">
-                {`${player.username}`}
+                {`${player?.username || "user"}`}
               </p>
             </div>
             <div className="relative" ref={menuRef}>
