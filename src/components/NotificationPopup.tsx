@@ -2,9 +2,12 @@
 import React from 'react';
 import { useNotifications } from '../context/NotificationContext';
 import { FiCheck, FiAlertTriangle, FiInfo, FiX, FiAlertCircle } from 'react-icons/fi';
+import { miniApp } from '@telegram-apps/sdk-react';
 
 const NotificationPopup: React.FC = () => {
   const { notifications, removeNotification } = useNotifications();
+
+  const TMA = miniApp.ready.isAvailable();
 
   const getIcon = (type: string) => {
     switch (type) {
@@ -25,7 +28,7 @@ const NotificationPopup: React.FC = () => {
   };
 
   return (
-    <div className="fixed top-4 right-4 z-50 space-y-3 w-80">
+    <div className={`fixed ${!TMA ? "top-4" : "top-[calc(var(--tg-viewport-content-safe-area-inset-top)+64px)]"} right-4 z-50 space-y-3 w-80`}>
       {notifications.map((notification) => (
         <div
           key={notification.id}
