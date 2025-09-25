@@ -4,12 +4,13 @@ import Hyperlink from './Hyperlink';
 
 type RichTextProps = {
   text: string;
+  uid: string;
   fullWidth?: boolean;
   className?: string;
   //suggestionData?: SuggestionData; // Made optional
 };
 
-const RichText = ({ text, fullWidth = false, className='' }: RichTextProps) => {
+const RichText = ({ text, uid, fullWidth = false, className='' }: RichTextProps) => {
   const formMentionRichText = (content: string): React.ReactNode[] => {
     const mentionRegex = /@(\w+):(\w+)`([^`]+)`/g;
     const elements: React.ReactNode[] = [];
@@ -26,7 +27,7 @@ const RichText = ({ text, fullWidth = false, className='' }: RichTextProps) => {
   
       // Push the link component
       elements.push(
-        <Hyperlink key={"" + id + type} id={id} type={type} mentionText={mentionText}/>
+        <Hyperlink key={`richtext-${uid}_hyperlink-${type}-${id}_match-${match.index}`} id={id} type={type} mentionText={mentionText}/>
       );
 
       lastIndex = match.index + fullMatch.length;

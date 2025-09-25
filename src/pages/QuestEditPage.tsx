@@ -129,7 +129,7 @@ const QuestEditPage = () => {
           </h2>
           {tasks.map((task, i) => {
               return (
-                <div className='flex flex-col items-left mb-4'>
+                <div key={`questpage_task-${task.id ?? 0}-${i}_edit`} className='flex flex-col items-left mb-4'>
                   <InputField label='Название задачи' className='text-md my-2 w-full' setValue={task.name} entityEdit={{ fieldName: 'name', arrayIndex: i, handleFieldChange: handleTasksChange}}/>
                   <RichInput label='Доп. информация' setValue={task.description} entityEdit={{ fieldName: 'description', arrayIndex: i, handleFieldChange: handleTasksChange}} fullSuggestionData={suggestionData}/>
                   <div className='flex justify-between gap-8'>

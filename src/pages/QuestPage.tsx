@@ -109,7 +109,7 @@ export const QuestPage = ({  } : QuestPageProp) => {
               </button>
             </div>
           </div>
-          <RichText text={quest.description || ""}/>
+          <RichText key={`questpage_richtext-${id ?? "newquest"}`} text={quest.description || ""} uid={`questpage-${id ?? "newquest"}`}/>
 
           {tasks && tasks.length > 0 && <div className='flex flex-col mt-8'>
             <div className="flex-1 border-t border-gray-700 mb-4"/>
@@ -126,7 +126,7 @@ export const QuestPage = ({  } : QuestPageProp) => {
             </div>
             {tasks.sort((a, b) => a.id - b.id).map((task, i) => {
               return (
-                <div className='my-2'>
+                <div key={`questpage_task-${task.id}`} className='my-2'>
                   <div className='flex justify-between gap-8 content-center'>
                     <p className='text-md '>{task.name}</p>
                     <div className='content-center min-w-fit'>
@@ -142,7 +142,7 @@ export const QuestPage = ({  } : QuestPageProp) => {
                       }
                     </div>
                   </div> 
-                  <RichText key={`task_${task.id}_description`} text={task.description} fullWidth={true} className='text-sm italic text-gray-500' />   
+                  <RichText key={`questpage_task-${task.id}_description`} text={task.description} uid={`questpage_task-${task.id ?? "newtask"}_description`} fullWidth={true} className='text-sm italic text-gray-500' />   
                 </div>
               )
             })}

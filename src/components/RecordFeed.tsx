@@ -111,7 +111,7 @@ export const RecordFeed = ({ records, players, sessions, suggestionData = null, 
           const isPrehistory = Number(sessionNumber) < 1;
 
           return (
-            <div key={`session-${sessionNumber ?? 'unsorted'}`} className="space-y-4">
+            <div key={`recordfeed_session-${sessionNumber ?? 'unsorted'}`} className="space-y-4">
               {/* Session header - only show if there are multiple sessions */}
               {group.session && (
                 <div className='z-10 py-2'>

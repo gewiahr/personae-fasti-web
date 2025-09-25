@@ -24,7 +24,7 @@ const RecordCard = ({ record, label="", accented=false, editable=false, showQues
       >
         <div className="flex justify-between items-start">
           <div>
-            <RichText text={record.text} key={record.id} />
+            <RichText key={`recordcard_richtext-${record.id}`} text={record.text} uid={`recordcard-${record.id}`} />
           </div>
         </div>
         <div className="flex justify-between items-end text-xs text-gray-400 pt-2">

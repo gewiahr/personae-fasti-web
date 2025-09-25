@@ -73,7 +73,7 @@ export const EntityPage = <T extends Entity>({ metaData } : EntityPageProp) => {
               </button>
             </div>           
           </div>
-          <RichText text={entity.description || ""} fullWidth={true}/> 
+          <RichText key={`${metaData.EntityType}page_richtext-${id ?? "newentity"}`} text={entity.description || ""} uid={`${metaData.EntityType}page-${id ?? "newentity"}`} fullWidth={true}/> 
 
           {/* Entity specific fields */}
           {metaData.EntityType == "location" && (data.parent != null || data.includes.length > 0) && <>
