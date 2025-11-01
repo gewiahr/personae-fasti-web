@@ -45,7 +45,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
           <div className={`px-4 text-xl h-[var(--tg-viewport-content-safe-area-inset-top)] content-center text-gray-400 font-bold w-full text-center`}> {/* style={{height: `var(--tg-viewport-content-safe-area-inset-top)`}}> */}
             {`${player?.username || "user"}`}
           </div>
-          <div className={`flex justify-between items-center content-center w-full h-12`} onClick={() => navigate("/")}>
+          <div className={`flex justify-between items-center content-center w-full h-12 gap-4`} onClick={() => navigate("/")}>
             {couldReturnToPreviousPage && <p className='cursor-pointer' onClick={returnToPreviousPage}>
               {`<<`}
             </p>}
@@ -78,7 +78,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
       </header> :
         <header className='sticky top-0 z-50'>
           <div className="bg-gray-800 p-4 flex justify-between items-center ">
-            <div className='flex justify-between items-center'>
+            <div className='flex justify-between items-center gap-2'>
               {couldReturnToPreviousPage && <p className='cursor-pointer' onClick={returnToPreviousPage}>
                 {`<<`}
               </p>}
