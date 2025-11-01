@@ -45,11 +45,11 @@ export const Layout = ({ children }: { children: ReactNode }) => {
           <div className={`px-4 text-xl h-[var(--tg-viewport-content-safe-area-inset-top)] content-center text-gray-400 font-bold w-full text-center`}> {/* style={{height: `var(--tg-viewport-content-safe-area-inset-top)`}}> */}
             {`${player?.username || "user"}`}
           </div>
-          <div className={`flex justify-between items-center content-center w-full h-12 gap-4`} onClick={() => navigate("/")}>
+          <div className={`flex justify-between items-center content-center w-full h-12 gap-4`}>
             {couldReturnToPreviousPage && <button className='cursor-pointer' onClick={returnToPreviousPage}>
               {`<<`}
             </button>}
-            <p className="text-lg font-bold flex-1 min-w-0">
+            <p className="text-lg font-bold flex-1 min-w-0" onClick={() => navigate("/")}>
               {currentGame?.title || "НРИ"}
             </p>
             <div className="relative flex-shrink-0" ref={menuRef}>
