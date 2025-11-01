@@ -33,8 +33,8 @@ export const Layout = ({ children }: { children: ReactNode }) => {
 
       {TMA ? <header className={`sticky top-0 z-50 bg-gray-800 px-4`}>
         <div className='flex flex-col items-center w-full'>
-          <div className={`w-full`} style={{height: `var(--tg-viewport-safe-area-inset-top)`}}></div>
-          <div className={`px-4 text-xl content-center text-gray-400 font-bold w-full text-center`} style={{height: `var(--tg-viewport-content-safe-area-inset-top)`}}>
+          <div className={`w-full h-[var(--tg-viewport-safe-area-inset-top)]`}></div> {/* style={{height: `var(--tg-viewport-safe-area-inset-top)`}}></div> */}
+          <div className={`px-4 text-xl h-[var(--tg-viewport-content-safe-area-inset-top)] content-center text-gray-400 font-bold w-full text-center`}> {/* style={{height: `var(--tg-viewport-content-safe-area-inset-top)`}}> */}
             {`${player?.username || "user"}`}
           </div>
           <div className={`flex justify-between items-center content-center w-full h-12`}>
