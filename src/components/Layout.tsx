@@ -46,9 +46,9 @@ export const Layout = ({ children }: { children: ReactNode }) => {
             {`${player?.username || "user"}`}
           </div>
           <div className={`flex justify-between items-center content-center w-full h-12 gap-4`} onClick={() => navigate("/")}>
-            {couldReturnToPreviousPage && <p className='cursor-pointer' onClick={returnToPreviousPage}>
+            {couldReturnToPreviousPage && <button className='cursor-pointer' onClick={returnToPreviousPage}>
               {`<<`}
-            </p>}
+            </button>}
             <p className="text-lg font-bold flex-1 min-w-0">
               {currentGame?.title || "НРИ"}
             </p>
