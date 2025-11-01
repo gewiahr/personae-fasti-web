@@ -24,6 +24,14 @@ export const Layout = ({ children }: { children: ReactNode }) => {
   const closeBurgerMenu = () => {
     setIsMenuOpen(false);
   };
+
+  const couldReturnToPreviousPage = window.location.pathname.split("/").length > 2;
+
+  const returnToPreviousPage = () => {
+    var arrayPath = window.location.pathname.split("/");
+    arrayPath.pop();
+    navigate(arrayPath.join("/") + "s");
+  };
  
   return (<>
     <div className="min-h-screen flex flex-col bg-gray-900 text-gray-100">
@@ -38,6 +46,9 @@ export const Layout = ({ children }: { children: ReactNode }) => {
             {`${player?.username || "user"}`}
           </div>
           <div className={`flex justify-between items-center content-center w-full h-12`} onClick={() => navigate("/")}>
+            {couldReturnToPreviousPage && <p className='cursor-pointer' onClick={returnToPreviousPage}>
+              {`<<`}
+            </p>}
             <p className="text-lg font-bold flex-1 min-w-0">
               {currentGame?.title || "НРИ"}
             </p>
@@ -67,15 +78,20 @@ export const Layout = ({ children }: { children: ReactNode }) => {
       </header> :
         <header className='sticky top-0 z-50'>
           <div className="bg-gray-800 p-4 flex justify-between items-center ">
-            <div className='grid grid-cols-2 divide-x-2 items-center cursor-pointer' onClick={() => navigate("/")}>
-              <p
-                className="px-4 text-xl font-bold">
-                {currentGame?.title || "НРИ"}
-              </p>
-              <p
-                className="px-4 text-lg text-gray-400 font-bold">
-                {`${player?.username || "user"}`}
-              </p>
+            <div className='flex justify-between items-center'>
+              {couldReturnToPreviousPage && <p className='cursor-pointer' onClick={returnToPreviousPage}>
+                {`<<`}
+              </p>}
+              <div className='grid grid-cols-2 divide-x-2 items-center cursor-pointer' onClick={() => navigate("/")}>
+                <p
+                  className="px-4 text-xl font-bold">
+                  {currentGame?.title || "НРИ"}
+                </p>
+                <p
+                  className="px-4 text-lg text-gray-400 font-bold">
+                  {`${player?.username || "user"}`}
+                </p>
+              </div>
             </div>
             <div className="relative" ref={menuRef}>
               <button
