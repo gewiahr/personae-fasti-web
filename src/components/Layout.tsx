@@ -37,7 +37,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
           <div className={`px-4 text-xl h-[var(--tg-viewport-content-safe-area-inset-top)] content-center text-gray-400 font-bold w-full text-center`}> {/* style={{height: `var(--tg-viewport-content-safe-area-inset-top)`}}> */}
             {`${player?.username || "user"}`}
           </div>
-          <div className={`flex justify-between items-center content-center w-full h-12`}>
+          <div className={`flex justify-between items-center content-center w-full h-12`} onClick={() => navigate("/")}>
             <p className="text-lg font-bold flex-1 min-w-0">
               {currentGame?.title || "НРИ"}
             </p>
