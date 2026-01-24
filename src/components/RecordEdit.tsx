@@ -1,16 +1,16 @@
 // components/RecordEdit.tsx
 import { useEffect, useState } from 'react';
 import { enrichMentionInput, simplifyMentionInput } from '../types/mention';
-import { Modal } from './Modal';
-import { RichInput } from "./RichInput";
-import { SuggestionData } from '../types/suggestion';
-import { GameInfo, PlayerInfo, Record } from "../types/request";
+import { Modal } from './lib/Modal';
+import { RichInput } from "./lib/RichInput";
+import type { SuggestionData } from '../types/suggestion';
+import type { GameInfo, PlayerInfo, Record } from "../types/request";
 import { api } from '../utils/api';
 import { useAuth } from '../hooks/useAuth';
-import { ToggleSwitch } from './ToggleSwitch';
+import { ToggleSwitch } from './lib/ToggleSwitch';
 import { useNotifications } from '../context/NotificationContext';
-import { Quest } from '../types/quest';
-import { SelectInput } from './SelectInput';
+import type { Quest } from '../types/quest';
+import { SelectInput } from './lib/SelectInput';
 
 interface RecordEditProps {
   record: Record;
@@ -27,7 +27,7 @@ export const RecordEdit = ({
   onClose,
   fullSuggestionData
 }: RecordEditProps) => {
-  const { accessKey } = useAuth();
+  const { authorization } = useAuth();
   const [postHidden, setPostHidden] = useState<boolean>(record.hiddenBy !== 0);
   const [editedRecord, setEditedRecord] = useState<Record>(record);
   const [questInfo, setQuestInfo] = useState<Quest[]>([]);
@@ -36,7 +36,7 @@ export const RecordEdit = ({
 
   useEffect(() => {
     const getQuests = async () => {
-      const { data } = await api.get('/quests', accessKey);
+      const { data } = await api.get('/quests', authorization);
       if (data) {
         setQuestInfo(data.quests);
       };
@@ -46,7 +46,7 @@ export const RecordEdit = ({
   }, []);
 
   const onInputChange = (value: string) => {
-    setEditedRecord({...editedRecord, text: value});
+    setEditedRecord({ ...editedRecord, text: value });
   };
 
   const handleSave = async () => {
@@ -55,7 +55,7 @@ export const RecordEdit = ({
     };
 
     const enrichedText = enrichMentionInput(editedRecord.text, fullSuggestionData?.entities || []);
-    const { data, error } = await api.put(`/record`, accessKey, {...editedRecord, text: enrichedText});
+    const { data, error } = await api.put(`/record`, authorization, { ...editedRecord, text: enrichedText });
 
     if (error) {
       addNotification(error.message, 'error');
@@ -65,7 +65,7 @@ export const RecordEdit = ({
   };
 
   const handleDelete = async () => {
-    const { error } = await api.delete(`/record/${record.id}`, accessKey);
+    const { error } = await api.delete(`/record/${record.id}`, authorization);
 
     if (error) {
       addNotification(error.message, 'error');
@@ -75,13 +75,13 @@ export const RecordEdit = ({
     };
   };
 
-  const handleQuestIDChange = async (value : number) => {
-    setEditedRecord({...editedRecord, questID: value});
+  const handleQuestIDChange = async (value: number) => {
+    setEditedRecord({ ...editedRecord, questID: value });
   };
 
   useEffect(() => {
     if (fullSuggestionData?.entities) {
-      setEditedRecord({...editedRecord, text: simplifyMentionInput(editedRecord.text, fullSuggestionData.entities)});
+      setEditedRecord({ ...editedRecord, text: simplifyMentionInput(editedRecord.text, fullSuggestionData.entities) });
     }
   }, [fullSuggestionData, editedRecord.text]);
 
@@ -91,23 +91,23 @@ export const RecordEdit = ({
       title="Редактирование записи"
     >
       {fullSuggestionData && <div className='py-4'>
-        <RichInput 
-          key={1000} 
-          label="" 
-          setValue={simplifyMentionInput(record.text, fullSuggestionData?.entities)} 
-          entityEdit={{ handleFieldChange: onInputChange }} 
+        <RichInput
+          key={1000}
+          label=""
+          setValue={simplifyMentionInput(record.text, fullSuggestionData?.entities)}
+          entityEdit={{ handleFieldChange: onInputChange }}
           fullSuggestionData={fullSuggestionData} />
       </div>}
 
       <h2 className='text-lg py-2'>Дополнительно</h2>
 
       {questInfo && questInfo.length > 0 && <div className='py-2'>
-        <SelectInput 
+        <SelectInput
           key={"recordedit_questselect"}
-          options={questInfo.map((quest) => { return { key: quest.id, value: quest.name } })} 
-          label='Связанный квест' 
-          setKey={editedRecord.questID} 
-          entityEdit={{ handleFieldChange: handleQuestIDChange }} 
+          options={questInfo.map((quest) => { return { key: quest.id, value: quest.name } })}
+          label='Связанный квест'
+          setKey={editedRecord.questID}
+          entityEdit={{ handleFieldChange: handleQuestIDChange }}
           nullable={true}
         />
       </div>}

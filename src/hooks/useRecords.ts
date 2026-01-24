@@ -2,11 +2,11 @@ import { useState, useCallback, useEffect } from 'react';
 import { useApi } from './useApi';
 import { useAuth } from './useAuth';
 import { api } from '../utils/api';
-import { GameRecords, NewRecord } from '../types/request';
+import type { GameRecords, NewRecord } from '../types/request';
 import { useSettings } from './useSettings';
 
 export const useRecords = () => {
-  const { accessKey } = useAuth();
+  const { authorization } = useAuth();
   const { player, game } = useSettings();
   const [ records, setRecords ] = useState<GameRecords['records']>([]);
   const [ sessions, setSessions ] = useState<GameRecords['sessions']>([]);
@@ -20,7 +20,7 @@ export const useRecords = () => {
     loading,
     error,
     refetch: fetchRecords 
-  } = useApi.get<GameRecords>('/records', accessKey);
+  } = useApi.get<GameRecords>('/records', authorization);
 
   // Handle API response
   useEffect(() => {
@@ -48,7 +48,7 @@ export const useRecords = () => {
       // Use direct API call instead of hook
       const { data, error } = await api.post<GameRecords>(
         '/record',
-        accessKey,
+        authorization,
         newRecord
       );
 
@@ -63,7 +63,7 @@ export const useRecords = () => {
       fetchRecords(); // Re-fetch original data on error
       throw err;
     }
-  }, [accessKey, player?.id, game?.id, fetchRecords]);
+  }, [authorization, player?.id, game?.id, fetchRecords]);
 
   return {
     records,

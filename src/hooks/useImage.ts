@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useApi } from './useApi';
 import { useAuth } from './useAuth';
-import { ApiError } from '../types/api';
+import type { ApiError } from '../types/api';
 
 interface Image {
   url: string;
@@ -15,7 +15,7 @@ interface UseImageProps {
 }
 
 const useImage = ({ entityType, entityID }: UseImageProps) => {
-  const { accessKey } = useAuth();
+  const { authorization } = useAuth();
 
   const [image, setImage] = useState<Image | null>(null);
   const [ratio, setRatio] = useState<number>(0);
@@ -23,7 +23,7 @@ const useImage = ({ entityType, entityID }: UseImageProps) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<ApiError | null>(null);
 
-  const { data, error: apiError } = useApi.get(`/image/${entityType}/${entityID}`, accessKey);
+  const { data, error: apiError } = useApi.get(`/image/${entityType}/${entityID}`, authorization);
 
   useEffect(() => {
     if (!data) return;
@@ -108,7 +108,7 @@ export default useImage;
 // }
 
 // const useImage = ({ entityType, entityID }: UseImageProps) => {
-//   const { accessKey } = useAuth();
+//   const { authorization } = useAuth();
 
 //   const [image, setImage] = useState<Image | null>(null);
 //   const [ratio, setRatio] = useState<number>(0);
@@ -119,7 +119,7 @@ export default useImage;
 //   const fetchImage = useCallback(async () => {
 //     setLoading(true);
 //     try {
-//       const { data, error: apiError } = useApi.get(`/image/${entityType}/${entityID}`, accessKey);
+//       const { data, error: apiError } = useApi.get(`/image/${entityType}/${entityID}`, authorization);
       
 //       if (apiError === null && data !== "") {
 //         const img = new Image();
@@ -168,7 +168,7 @@ export default useImage;
 //       //   }
 //       // );
 
-//       const { data, status, error: apiError } = useApi.post(`/image/${entityType}/${entityID}`, accessKey); 
+//       const { data, status, error: apiError } = useApi.post(`/image/${entityType}/${entityID}`, authorization); 
 
 //       if (status === 201) {
 //         await fetchImage(); // Refresh the image data

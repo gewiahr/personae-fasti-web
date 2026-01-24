@@ -1,5 +1,5 @@
 import { forwardRef, useEffect } from "react"
-import { SuggestionData, SuggestionEntity, SuggestionTabPos } from "../types/suggestion";
+import type { SuggestionData, SuggestionEntity, SuggestionTabPos } from "../types/suggestion";
 
 type SuggestionTabProps = {
   tabPos: SuggestionTabPos,

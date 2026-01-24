@@ -1,8 +1,8 @@
 // pages/CharactersList.tsx
 import { Link } from 'react-router-dom';
-import { EntityCard } from '../components/EntityCard';
+import { EntityCard } from './EntityCard';
 import { useEntities } from '../hooks/useEntities';
-import { GameChars } from '../types/request';
+import type { GameChars } from '../types/request';
 import { CharMetaData } from '../types/entities';
 
 export const CharsList = () => {
@@ -19,9 +19,9 @@ export const CharsList = () => {
           Добавить
         </Link>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {data && data.chars.map((char) => (
+    
+      {data && data.chars.length > 0 ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {data.chars.map((char) => (
           <EntityCard
             key={char.id}
             entity={char}
@@ -29,7 +29,10 @@ export const CharsList = () => {
             labelText={data.players.find((player) => (player.id === char.playerID))?.username || ""}
           />
         ))}
-      </div>
+      </div> : 
+      <div className='mt-8 text-center text-xl italic'>
+        <p>Пока что в этой кампании нет ни одного героя. Присоединяйтесь!</p>
+      </div>}
     </div>
   );
 };

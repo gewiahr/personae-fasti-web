@@ -6,7 +6,7 @@ export interface SelectKeyValue {
 }
 
 export type AuthStorage = {
-  accesskey: any;
+  authorization: string;
 }
 
 // export const StructToKeyValue = (struct : any, keyField : string, valueField : string) : SelectKeyValue => {

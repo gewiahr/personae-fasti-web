@@ -1,7 +1,6 @@
-// hooks/useApi.ts
 import { useState, useEffect, useCallback } from 'react';
 import { api } from '../utils/api';
-import { ApiError } from '../types/api';
+import type { ApiError } from '../types/api';
 
 type UseApiResponse<T> = {
   data: T | null;
@@ -16,7 +15,7 @@ type ApiRequest = {
   method?: string;
   endpoint?: string; 
   body?: string | null;
-  accessKey: string;
+  authorization: string;
 };
 
 function useApiCore<T = any>(
@@ -39,7 +38,7 @@ function useApiCore<T = any>(
     setError(null);
     
     try {
-      const { data, status, error } = await api.fetch<T>(mergedConfig.method || "GET", mergedConfig.endpoint || "/", mergedConfig.accessKey, mergedConfig.body);
+      const { data, status, error } = await api.fetch<T>(mergedConfig.method || "GET", mergedConfig.endpoint || "/", mergedConfig.authorization, mergedConfig.body);
       
       if (error) {
         setError(error);
@@ -72,39 +71,39 @@ function useApiCore<T = any>(
 export const useApi = {
   get: <T = any>(
     endpoint: string, 
-    accessKey: string, 
+    authorization: string, 
     deps: any[] = [],
     skip: boolean = false
-  ) => useApiCore<T>({ method: 'GET', endpoint, body: null, accessKey }, skip, deps),
+  ) => useApiCore<T>({ method: 'GET', endpoint, body: null, authorization }, skip, deps),
   
   post: <T = any>(
     endpoint: string,
-    accessKey: string,
+    authorization: string,
     body?: any,
     deps: any[] = [],
     skip: boolean = false
-  ) => useApiCore<T>({ method: 'POST', endpoint, body, accessKey }, skip, deps),
+  ) => useApiCore<T>({ method: 'POST', endpoint, body, authorization }, skip, deps),
   
   put: <T = any>(
     endpoint: string,
-    accessKey: string,
+    authorization: string,
     body?: any,
     deps: any[] = [],
     skip: boolean = false
-  ) => useApiCore<T>({ method: 'PUT', endpoint, body, accessKey }, skip, deps),
+  ) => useApiCore<T>({ method: 'PUT', endpoint, body, authorization }, skip, deps),
   
   del: <T = any>(
     endpoint: string,
-    accessKey: string,
+    authorization: string,
     deps: any[] = [],
     skip: boolean = false
-  ) => useApiCore<T>({ method: 'DELETE', endpoint, body: null, accessKey }, skip, deps),
+  ) => useApiCore<T>({ method: 'DELETE', endpoint, body: null, authorization }, skip, deps),
   
   patch: <T = any>(
     endpoint: string,
-    accessKey: string,
+    authorization: string,
     body?: any,
     deps: any[] = [],
     skip: boolean = false
-  ) => useApiCore<T>({ method: 'PATCH', endpoint, body, accessKey }, skip, deps)
+  ) => useApiCore<T>({ method: 'PATCH', endpoint, body, authorization }, skip, deps)
 };

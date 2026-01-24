@@ -1,17 +1,17 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { Entity, EntityMetaData } from '../types/entities';
+import type { Entity, EntityMetaData } from '../types/entities';
 import { useApi } from '../hooks/useApi';
 import { useAuth } from '../hooks/useAuth';
 import { useEffect, useState } from 'react';
-import { SuggestionData } from '../types/suggestion';
-import RichText from '../components/RichText';
+import type { SuggestionData } from '../types/suggestion';
+import RichText from '../components/lib/RichText';
 import { RecordFeed } from '../components/RecordFeed';
 import { useRecords } from '../hooks/useRecords';
 import useImage from '../hooks/useImage';
 import { LoadingPage } from './LoadingPage';
 import { ErrorPage } from './ErrorPage';
-import Hyperlink from '../components/Hyperlink';
-import { EntityInfo } from '../types/request';
+import Hyperlink from '../components/lib/Hyperlink';
+import type { EntityInfo } from '../types/request';
 
 interface EntityPageProp {
   metaData: EntityMetaData;
@@ -26,9 +26,9 @@ export const EntityPage = <T extends Entity>({ metaData } : EntityPageProp) => {
 
   const [entity, setEntity] = useState<T>({} as T);
 
-  const { accessKey } = useAuth();
-  const { data, loading, error } = useApi.get(`/${metaData.EntityType}/${id}`, accessKey, [], newEntity);
-  const { data: suggestionData } = useApi.get<SuggestionData>(`/suggestions`, accessKey);
+  const { authorization } = useAuth();
+  const { data, loading, error } = useApi.get(`/${metaData.EntityType}/${id}`, authorization, [], newEntity);
+  const { data: suggestionData } = useApi.get<SuggestionData>(`/suggestions`, authorization);
 
   // ** change to valid player request ** //
   const { players } = useRecords();
@@ -64,7 +64,7 @@ export const EntityPage = <T extends Entity>({ metaData } : EntityPageProp) => {
               <h1 className="text-2xl font-bold">{entity.name}</h1>
               <h3 className="text-m text-gray-400 mb-4 italic">{entity?.title}</h3>           
             </div>}
-            <div className={`mb-6 ${(image && ratio > 1 || !image) ? "w-[30%]" : "w-[100%]"}`}>
+            <div className={`mb-6 ${(image && ratio > 1 || !image) ? "w-[30%]" : "w-full"}`}>
               <button
                 className={`flex justify-center items-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded ${(image && ratio > 1 || !image) ? "w-full" : ""}`}
                 onClick={openEditing}

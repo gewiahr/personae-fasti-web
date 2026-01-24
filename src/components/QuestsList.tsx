@@ -1,13 +1,12 @@
-// pages/CharactersList.tsx
 import { Link } from 'react-router-dom';
-import { GameQuests } from '../types/request';
+import type { GameQuests } from '../types/request';
 import { useAuth } from '../hooks/useAuth';
 import { useApi } from '../hooks/useApi';
-import { QuestCard } from '../components/QuestCard';
+import { QuestCard } from './QuestCard';
 
 export const QuestsList = () => {
-  const { accessKey } = useAuth();
-  const { data } = useApi.get<GameQuests>(`/quests`, accessKey);
+  const { authorization } = useAuth();
+  const { data } = useApi.get<GameQuests>(`/quests`, authorization);
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -21,8 +20,7 @@ export const QuestsList = () => {
         </Link>
       </div>
 
-      {data && data.quests.length > 0 ?
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {data && data.quests.length > 0 ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {data.quests.map((char) => (
           <QuestCard
             key={char.id}
@@ -31,7 +29,9 @@ export const QuestsList = () => {
           />
         ))}
       </div> :
-      <p>Создайте первые квесты и отправьтесь навстречу приключениям!</p>}  
+      <div className='mt-8 text-center text-xl italic'>
+        <p>Создайте первые квесты и отправьтесь навстречу приключениям!</p>  
+      </div>}  
     </div>
   );
 };

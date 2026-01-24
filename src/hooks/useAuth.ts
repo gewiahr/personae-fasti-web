@@ -1,22 +1,22 @@
 import { useState } from 'react';
 import { useLocalStorage } from './useLocalStorage';
 import { api } from '../utils/api';
-import { GameFullInfo, LoginInfo, PlayerInfo } from '../types/request';
-import { AuthStorage } from '../types/utils';
+import type { GameFullInfo, LoginInfo, LoginPlayerInfo } from '../types/request';
+import type { AuthStorage } from '../types/utils';
 
 export const useAuth = () => {
   const [ auth, setAuth ] = useLocalStorage<AuthStorage | null>('auth', null);
-  const [_, setPlayerInfo] = useLocalStorage<PlayerInfo | null>('playerInfo', null);
-  const [__, setCurrentGame] = useLocalStorage<GameFullInfo | null>('currentGame', null);
+  const [playerInfo, setPlayerInfo] = useLocalStorage<LoginPlayerInfo | null>('playerInfo', null);
+  const [currentGame, setCurrentGame] = useLocalStorage<GameFullInfo | null>('currentGame', null);
 
-  const [ isAuthenticated, setIsAuthenticated ] = useState(!!auth?.accesskey);
+  const [ isAuthenticated, setIsAuthenticated ] = useState(!!auth?.authorization);
   const [ attempts, setAttemptCounter ] = useState<number>(0);
 
-  const login = async (accesskey: string) => {
-    const { data, error } = await api.get<LoginInfo>(`/login/${accesskey}`, "");
+  const login = async (authorization: string) => {
+    const { data, error } = await api.get<LoginInfo>(`/login/${authorization}`, "");
 
     if (!error && data) {
-      setAuth({ accesskey: data.accesskey });
+      setAuth({ authorization: data.authorization });
       setPlayerInfo(data.player);
       setCurrentGame(data.currentGame);
       setIsAuthenticated(true);
@@ -29,10 +29,11 @@ export const useAuth = () => {
   };
 
   const loginTG = async (initData: string) => {
-    const { data, error } = await api.post<LoginInfo>(`/login/tg`, "", { loginData: initData });
+    const { data, error } = await api.post<LoginInfo>(`/login/tg`, "", { initDataRaw: initData });
+
 
     if (!error && data) {
-      setAuth({ accesskey: data.accesskey });
+      setAuth({ authorization: data.authorization });
       setPlayerInfo(data.player);
       setCurrentGame(data.currentGame);
       setIsAuthenticated(true);
@@ -50,9 +51,11 @@ export const useAuth = () => {
   };
 
   return {  isAuthenticated, 
+            currentGame,
+            playerInfo,
             login,
             loginTG, 
             logout, 
-            accessKey: auth?.accesskey || "", 
+            authorization: auth?.authorization || "", 
             attempts };
 };

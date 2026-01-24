@@ -1,0 +1,84 @@
+import React, { useState } from 'react';
+import { InputField } from '../components/lib/InputField';
+import { useAuth } from '../hooks/useAuth';
+import { api } from './api';
+//import { useNotifications } from '../context/NotificationContext';
+import { useLocalStorage } from '../hooks/useLocalStorage';
+import type { LoginPlayerInfo } from '../types/request';
+import { useNavigate } from 'react-router-dom';
+
+type AuthGateRegUsernameInputState = 'check' | 'accept' | 'loading';
+type AuthGateRegUsernameInputCheck = 'none' | 'valid' | 'invalid';
+
+const AuthGateReg: React.FC = () => {
+  const initInputTip = 'Выберите имя пользователя, (пока что) его нельзя будет сменить';
+  const [inputState, setInputState] = useState<AuthGateRegUsernameInputState>('check');
+  const [inputTip, setInputTip] = useState<string>(initInputTip);
+  const [inputCheck, setInputCheck] = useState<AuthGateRegUsernameInputCheck>('none');
+  const { playerInfo, authorization } = useAuth();
+  const [_, setPlayerInfoLS] = useLocalStorage<LoginPlayerInfo | null>('playerInfo', null);
+  const [newUsername, setNewUsername] = useState<string>(playerInfo?.username || "");
+  const navigate = useNavigate();
+  //const { addNotification } = useNotifications();
+
+  const checkUsername = async () => {
+    setInputState('loading');
+    var { data, error } = await api.get(`/player/username/checkAvailability/${newUsername}`, authorization);
+    if (error) {
+      //addNotification(error.message, 'error');
+      setInputState('check');
+    } else if (data) {
+      if (data.available) {
+        //addNotification("Username available", 'success');
+        setInputState('accept');
+        setInputTip('Имя свободно. Вы можете его выбрать.');
+        setInputCheck('valid');
+      } else {
+        //addNotification("Username unavailable", 'warning');
+        setInputState('check');
+        setInputTip('Имя недоступно! Попробуйте другое!');
+        setInputCheck('invalid');
+      }
+    } else {
+      //addNotification("Unexpected error", 'error');
+      setInputState('check');
+    }
+  };
+
+  const acceptUsername = async () => {
+    setInputState('loading');
+    var { data, error } = await api.patch<LoginPlayerInfo>(`/player/username`, authorization, { "newUsername": newUsername }); 
+    if (error) {
+      setInputTip('Имя недоступно! Попробуйте другое!');
+      setInputState('check');
+      setInputCheck('invalid');
+    } else if (data) {
+      setPlayerInfoLS(data);
+      setInputState('loading');
+      navigate(0);
+    }
+  };
+
+  const handleInputChange = (value: string) => {
+    setNewUsername(value);
+    setInputState('check');
+    setInputTip(initInputTip);
+    setInputCheck('none');
+  };
+
+  return (
+    <div className="flex flex-col gap-3 p-4 items-center justify-center h-screen bg-gray-800 text-gray-100">
+      <div className='flex flex-col gap-6 min-w-sm max-w-sm'>
+        {/* <p className=''>{`Выберите имя пользователя, (пока что) его нельзя будет сменить`}</p> */}
+        <InputField label='Имя пользователя' labelBGColor='bg-gray-800' setValue={newUsername} entityEdit={{ handleFieldChange: handleInputChange }} />
+        <p className={`italic ${inputCheck === 'valid' ? 'text-green-500' : inputCheck === 'invalid' ? 'text-red-500' : 'text-gray-100'}`}>{inputTip}</p>
+        {inputState === 'check' ? <button className='w-full btn-alt' onClick={checkUsername}>Проверить</button> :
+        inputState === 'accept' ? <button className='w-full btn' onClick={acceptUsername}>Применить</button> :
+        inputState === 'loading' ? <button className='w-full btn-unavailable'>Загрузка...</button> :
+        <></>}
+      </div>
+    </div>
+  );
+};
+
+export default AuthGateReg;

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BurgerMenuItem, BurgerMenuItemCallable, BurgerMenuItemCategory, BurgerMenuItemCategoryFoldable, BurgerMenuItemLink, BurgerMenuItemLinkExternal, BurgerMenuItemLinkInternal } from './BurgerMenuItems';
+import { BurgerMenuItem, BurgerMenuItemCallable, BurgerMenuItemCategory, BurgerMenuItemCategoryFoldable, type BurgerMenuItemLink, BurgerMenuItemLinkExternal, BurgerMenuItemLinkInternal } from './BurgerMenuItems';
 
 interface BurgerMenuProps {
   items: (BurgerMenuItem | BurgerMenuItemLink | BurgerMenuItemCategory | BurgerMenuItemCallable)[]

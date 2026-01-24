@@ -1,7 +1,6 @@
-// components/EntityCard.tsx
 import { Link } from 'react-router-dom';
-import { EntityMetaData } from '../types/entities';
-import { EntityInfo } from '../types/request';
+import type { EntityMetaData } from '../types/entities';
+import type { EntityInfo } from '../types/request';
 import Icon from './icons/Icon';
 
 type EntityCardProps = {
@@ -67,7 +66,7 @@ export const EntityCard = ({ entity, metaData, labelText }: EntityCardProps) => 
         )*/}
 
         {labelText && <>
-          <div className='flex-grow mt-3'></div>
+          <div className='grow mt-3'></div>
 
           <div className="flex justify-between items-end text-xs text-gray-400">
             {/* <div className='flex-grow'></div> */}

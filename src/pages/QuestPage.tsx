@@ -2,14 +2,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useApi } from '../hooks/useApi';
 import { useAuth } from '../hooks/useAuth';
 import { useEffect, useState } from 'react';
-import { SuggestionData } from '../types/suggestion';
-import RichText from '../components/RichText';
+import type { SuggestionData } from '../types/suggestion';
+import RichText from '../components/lib/RichText';
 import { RecordFeed } from '../components/RecordFeed';
 import { useRecords } from '../hooks/useRecords';
-import { Quest, QuestTask, QuestTaskType } from '../types/quest';
+import { QuestTaskType, type Quest, type QuestTask } from '../types/quest';
 import Icon from '../components/icons/Icon';
-import { ToggleSwitch } from '../components/ToggleSwitch';
-import { NumericInputInline } from '../components/NumericInputInline';
+import { ToggleSwitch } from '../components/lib/ToggleSwitch';
+import { NumericInputInline } from '../components/lib/NumericInputInline';
 import { useNotifications } from '../context/NotificationContext';
 import { api } from '../utils/api';
 
@@ -26,9 +26,9 @@ export const QuestPage = ({  } : QuestPageProp) => {
   const [tasks, setTasks] = useState<QuestTask[]>([]);
   const [isEditingTasks, setEditingTasks] = useState<boolean>(false);
 
-  const { accessKey } = useAuth();
-  const { data, loading, error } = useApi.get(`/quest/${id}`, accessKey, [], newQuest);
-  const { data: suggestionData } = useApi.get<SuggestionData>(`/suggestions`, accessKey);
+  const { authorization } = useAuth();
+  const { data, loading, error } = useApi.get(`/quest/${id}`, authorization, [], newQuest);
+  const { data: suggestionData } = useApi.get<SuggestionData>(`/suggestions`, authorization);
 
   const { addNotification } = useNotifications();
 
@@ -54,7 +54,7 @@ export const QuestPage = ({  } : QuestPageProp) => {
 
   const saveTasks = async () => {
     if (quest == null) return
-    const { data, error, status } = await api.patch(`/quest/tasks`, accessKey, {"questID":quest.id, "tasks": tasks});
+    const { data, error, status } = await api.patch(`/quest/tasks`, authorization, {"questID":quest.id, "tasks": tasks});
     if (status === 200) {
       addNotification("Задачи обновлены", 'success');
       setTasks(data);

@@ -1,16 +1,17 @@
-import { useState, useId, InputHTMLAttributes, forwardRef, useEffect } from 'react';
-import { EntityEdit } from '../types/entities';
+import { useState, useId, type InputHTMLAttributes, forwardRef, useEffect } from 'react';
+import type { EntityEdit } from '../../types/entities';
 
 type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
   number?: boolean;
   setValue?: string;
   entityEdit?: EntityEdit;
-  error?: string;  
+  error?: string; 
+  labelBGColor?: string; 
 };
 
 export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
-  ({ label, number = false, setValue = "", entityEdit, error, className = '', ...props }, ref ) => {
+  ({ label, number = false, setValue = "", entityEdit, error, labelBGColor = 'bg-gray-900', className = '', ...props }, ref ) => {
     const [isFocused, setIsFocused] = useState(false);
     const id = useId();
 
@@ -54,16 +55,16 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
               '-top-2 text-xs' : 
               'top-3.5 text-gray-500'}
             ${error && (isFocused || setValue.length) ? 'text-red-600' : ''}
-            peer-focus:-top-2 peer-focus:text-xs ${isFocused || setValue.length ? "bg-gray-900" : ""}
+            peer-focus:-top-2 peer-focus:text-xs ${isFocused || setValue.length ? labelBGColor : ""}
 
           `}
         >
           {label}
         </label>
 
-        {/*error && (
+        {error && (
           <p className="mt-1 text-sm text-red-600">{error}</p>
-        )*/}
+        )}
       </div>
     );
   }

@@ -1,18 +1,19 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthGate } from './components/AuthGate';
-import { Layout } from './components/Layout';
+import { AuthGate } from './utils/AuthGate';
+import { Layout } from './layout/Layout';
 import { RecordPage } from './pages/RecordPage';
-import { CharsList } from './pages/CharsList';
+import { CharsList } from './components/CharsList';
 // import { CharPage } from './pages/CharPage';
 // import CharEditPage from './pages/CharEditPage';
 import EntityPage from './pages/EntityPage';
-import { EntitiesList } from './pages/EntitiesList';
+import { EntitiesList } from './components/EntitiesList';
 import { CharMetaData, LocationMetaData, NPCMetaData } from './types/entities';
 import EntityEditPage from './pages/EntityEditPage';
 import SettingsPage from './pages/SettingsPage';
 import QuestPage from './pages/QuestPage';
-import { QuestsList } from './pages/QuestsList';
+import { QuestsList } from './components/QuestsList';
 import QuestEditPage from './pages/QuestEditPage';
+import GameCreateEditPage from './pages/GameCreateEditPage';
 
 export const App = () => {
   return (
@@ -41,6 +42,9 @@ export const App = () => {
             <Route path="/quest/:id" element={<QuestPage key={31} />} />
             <Route path="/quest/new" element={<QuestEditPage key={32} />} />
             <Route path="/quest/:id/edit" element={<QuestEditPage key={33} />} />
+
+            <Route path="/game/:id" element={<GameCreateEditPage key={400001} />} />
+            <Route path="/game/new" element={<GameCreateEditPage key={400002} />} />
 
             <Route path="settings" element={<SettingsPage key={999}/>} />
           </Routes>

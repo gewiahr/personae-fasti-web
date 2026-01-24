@@ -59,7 +59,7 @@ const FoldableCategory = ({ title, children }: FoldableCategoryProps) => {
       <div
         ref={contentRef}
         className={`transition-all duration-300 ease-in-out overflow-hidden ${
-          isOpen ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-80'
+          isOpen ? 'max-h-250 opacity-100' : 'max-h-0 opacity-80'
         }`}
         style={{
           transitionProperty: 'max-height, opacity'
@@ -72,7 +72,7 @@ const FoldableCategory = ({ title, children }: FoldableCategoryProps) => {
 
       {<div 
         className={`h-px bg-gray-300 transition-all duration-300 ${
-          isOpen ? 'w-[100%] opacity-100 my-6' : 'w-0 opacity-0'
+          isOpen ? 'w-full opacity-100 my-6' : 'w-0 opacity-0'
         }`}
         style={{ transform: 'translateY(-50%)' }}
       />}

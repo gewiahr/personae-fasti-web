@@ -1,8 +1,8 @@
 import { useState, useRef } from 'react';
 import { FiUpload, FiX } from 'react-icons/fi';
-import { useNotifications } from '../context/NotificationContext';
-import { useAuth } from '../hooks/useAuth';
-import { api } from '../utils/api';
+import { useNotifications } from '../../context/NotificationContext';
+import { useAuth } from '../../hooks/useAuth';
+import { api } from '../../utils/api';
 
 interface ImageUploadProps {
   entityType: string;
@@ -17,7 +17,7 @@ export const ImageUpload = ({ entityType, entityID } : ImageUploadProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { addNotification } = useNotifications();
-  const { accessKey } = useAuth();
+  const { authorization } = useAuth();
 
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,7 +84,7 @@ export const ImageUpload = ({ entityType, entityID } : ImageUploadProps) => {
     if (file === null) return
     const formData = new FormData();
     formData.append('file', file.file);
-    const response = await api.post(`/image/${entityType}/${entityID}`, accessKey, formData, true);
+    const response = await api.post(`/image/${entityType}/${entityID}`, authorization, formData, true);
     if (response.error) {
       addNotification(`Ошибка загрузки изображения: ${response.error.message}`, "error");
     } else if (response.status === 201) {

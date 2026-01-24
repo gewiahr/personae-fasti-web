@@ -1,6 +1,6 @@
-import { GameFullInfo, PlayerInfo, PlayerSettings, Record, Session } from '../types/request';
+import type { GameFullInfo, PlayerInfo, PlayerSettings, Record, Session } from '../types/request';
 import { useAuth } from '../hooks/useAuth';
-import { SuggestionData } from '../types/suggestion';
+import type { SuggestionData } from '../types/suggestion';
 import RecordCard from './RecordCard';
 import { useEffect, useState } from 'react';
 import RecordEdit from './RecordEdit';
@@ -24,12 +24,12 @@ type RecordSession = {
 }
 
 export const RecordFeed = ({ records, players, sessions, suggestionData = null, editable = false, showQuests = true, onEdit = () => {} }: RecordFeedProps) => {
-  const { accessKey } = useAuth();
+  const { authorization } = useAuth();
   const { player, game } = useSettings();
   const [ editing, setEditing ] = useState<Record | null>(null);
   const [ orderedRecords, setOrderedRecords ] = useState<RecordSession[] | null>();
 
-  const { data : playerSettingsData } = useApi.get<PlayerSettings>("/player/settings", accessKey);
+  const { data : playerSettingsData } = useApi.get<PlayerSettings>("/player/settings", authorization);
   const [ gameInfo, setGameInfo ] = useLocalStorage<GameFullInfo | null>('currentGame', playerSettingsData?.currentGame || null);
 
   const onRecordEdit = (record : Record) => {
@@ -97,8 +97,8 @@ export const RecordFeed = ({ records, players, sessions, suggestionData = null, 
 
   return (!orderedRecords || suggestionData == null ? //(records.length === 0 || suggestionData == null ?
     // No Records
-    <div className="text-center py-8 text-gray-400">
-      Пока что нет ни одного события. Пора добавить несколько штрихов!
+    <div className='mt-8 text-center text-xl italic text-gray-400'>
+      <p>Пока что нет ни одного события. Пора добавить несколько штрихов!</p>  
     </div> :
     // Some Records
     <>

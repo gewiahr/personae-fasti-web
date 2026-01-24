@@ -1,17 +1,17 @@
-import { EntityCreateUpdate, EntityMetaData } from '../types/entities'
-import { RichInput } from '../components/RichInput'
-import { SuggestionData } from '../types/suggestion';
+import type { EntityCreateUpdate, EntityMetaData } from '../types/entities';
+import { RichInput } from '../components/lib/RichInput'
+import type { SuggestionData } from '../types/suggestion';
 import { useEffect, useState } from 'react';
-import { InputField } from '../components/InputField';
+import { InputField } from '../components/lib/InputField';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useApi } from '../hooks/useApi';
 import { enrichEntityFieldsMentions, simplerEntityFieldsMentions } from '../types/mention';
 import { api } from '../utils/api';
 import { useAuth } from '../hooks/useAuth';
-import { ToggleSwitch } from '../components/ToggleSwitch';
-import ImageUpload from '../components/ImageUpload';
-import FoldableCategory from '../components/FoldableCategory';
-import { SelectInput } from '../components/SelectInput';
+import { ToggleSwitch } from '../components/lib/ToggleSwitch';
+import ImageUpload from '../components/lib/ImageUpload';
+import FoldableCategory from '../components/lib/FoldableCategory';
+import { SelectInput } from '../components/lib/SelectInput';
 import { useSettings } from '../hooks/useSettings';
 
 
@@ -22,14 +22,14 @@ interface EntityEditPageProps {
 const EntityEditPage = <T extends EntityCreateUpdate>({ metaData }: EntityEditPageProps) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { accessKey } = useAuth();
+  const { authorization } = useAuth();
   const { player, game } = useSettings();
 
   const newEntity = !id;
   
   const [entity, setEntity] = useState<T | null>(newEntity ? {} as T : null);
-  const { data: pageData } = useApi.get(`/${metaData.EntityType}/${id}`, accessKey, [], newEntity);
-  const { data: suggestionData } = useApi.get<SuggestionData>(`/suggestions`, accessKey);
+  const { data: pageData } = useApi.get(`/${metaData.EntityType}/${id}`, authorization, [], newEntity);
+  const { data: suggestionData } = useApi.get<SuggestionData>(`/suggestions`, authorization);
   const [hidden, setHidden] = useState<boolean>(entity && entity?.hidden || false);
 
   // Sync data to state
@@ -54,7 +54,7 @@ const EntityEditPage = <T extends EntityCreateUpdate>({ metaData }: EntityEditPa
     const endpoint = `/${metaData.EntityType}`;
     const method = newEntity ? api.post : api.put;
 
-    const { data, error } = await method<T>(endpoint, accessKey, enrichedEntity);
+    const { data, error } = await method<T>(endpoint, authorization, enrichedEntity);
     if (!error) {
       navigate(data?.id ? `/${metaData.EntityType}/${data.id}` : `/${metaData.EntityType}`);
     }

@@ -2,8 +2,8 @@ import { useCallback } from 'react';
 import { useApi } from './useApi';
 import { useAuth } from './useAuth';
 import { api } from '../utils/api'; 
-import { NewEntity } from '../types/request';
-import { EntityMetaData } from '../types/entities';
+import type { NewEntity } from '../types/request';
+import type { EntityMetaData } from '../types/entities';
 import { useSettings } from './useSettings';
 
 type UseRecordsProps = {
@@ -12,7 +12,7 @@ type UseRecordsProps = {
 }
 
 const useEntitiesCore = <T>({ entityName, entityNamePl }: UseRecordsProps) => {
-  const { accessKey } = useAuth();
+  const { authorization } = useAuth();
   const { player, game } = useSettings();
   //const [entities, setEntities] = useState();
 
@@ -22,7 +22,7 @@ const useEntitiesCore = <T>({ entityName, entityNamePl }: UseRecordsProps) => {
     loading,
     error,
     refetch
-  } = useApi.get<T>(`/${entityNamePl}`, accessKey);
+  } = useApi.get<T>(`/${entityNamePl}`, authorization);
 
   // Handle API response
   // useEffect(() => {
@@ -48,7 +48,7 @@ const useEntitiesCore = <T>({ entityName, entityNamePl }: UseRecordsProps) => {
       // Use direct API call instead of hook
       const { /*data,*/ error } = await api.post<T>(
         `/${entityName}`,
-        accessKey,
+        authorization,
         newEntity
       );
 
@@ -60,7 +60,7 @@ const useEntitiesCore = <T>({ entityName, entityNamePl }: UseRecordsProps) => {
       refetch(); // Re-fetch original data on error
       throw err;
     }
-  }, [accessKey, player?.id, game?.id, refetch]);
+  }, [authorization, player?.id, game?.id, refetch]);
 
   return {
     data,

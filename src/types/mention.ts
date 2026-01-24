@@ -1,6 +1,6 @@
-import { Char, CharMetaData, Entity, EntityCreateUpdate, EntityMetaData } from "./entities";
+import { type Char, CharMetaData, type Entity, type EntityCreateUpdate, type EntityMetaData } from "./entities";
 import { QuestMetaData, QuestTaskMetaData } from "./quest";
-import { SuggestionData, SuggestionEntity } from "./suggestion";
+import type { SuggestionData, SuggestionEntity } from "./suggestion";
 
 export type MentionContext = {
   position: number;

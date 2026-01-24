@@ -1,5 +1,4 @@
-// components/Modal.tsx
-import { ReactNode, useEffect } from 'react';
+import { type ReactNode, useEffect } from 'react';
 
 interface ModalProps {
   onClose: () => void;

@@ -1,5 +1,5 @@
-import { useState, useId, InputHTMLAttributes, forwardRef, useEffect } from 'react';
-import { EntityEdit } from '../types/entities';
+import { useState, useId, type InputHTMLAttributes, forwardRef, useEffect } from 'react';
+import type { EntityEdit } from '../../types/entities';
 
 type NumericInputInlineProps = InputHTMLAttributes<HTMLInputElement> & {
   setValue?: number;

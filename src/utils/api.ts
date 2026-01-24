@@ -1,63 +1,63 @@
-import { config } from '../utils/config';
-import { ApiResponse, ApiError } from '../types/api';
+import { config } from './config';
+import type { ApiResponse, ApiError } from '../types/api';
 
 export const api = {
   get: async <T = any>(
     endpoint: string,
-    accessKey: string
+    authorization: string
   ): Promise<ApiResponse<T>> => {
-    return makeRequest<T>(endpoint, 'GET', accessKey);
+    return makeRequest<T>(endpoint, 'GET', authorization);
   },
 
   post: async <T = any>(
     endpoint: string,
-    accessKey: string,
+    authorization: string,
     body: any,
     imageBody?: boolean
   ): Promise<ApiResponse<T>> => {
-    return makeRequest<T>(endpoint, 'POST', accessKey, body, imageBody);
+    return makeRequest<T>(endpoint, 'POST', authorization, body, imageBody);
   },
 
   put: async <T = any>(
     endpoint: string,
-    accessKey: string,
+    authorization: string,
     body: any,
     imageBody?: boolean
   ): Promise<ApiResponse<T>> => {
-    return makeRequest<T>(endpoint, 'PUT', accessKey, body, imageBody);
+    return makeRequest<T>(endpoint, 'PUT', authorization, body, imageBody);
   },
 
   patch: async <T = any>(
     endpoint: string,
-    accessKey: string,
+    authorization: string,
     body: any,
     imageBody?: boolean
   ): Promise<ApiResponse<T>> => {
-    return makeRequest<T>(endpoint, 'PATCH', accessKey, body, imageBody);
+    return makeRequest<T>(endpoint, 'PATCH', authorization, body, imageBody);
   },
 
   delete: async (
     endpoint: string,
-    accessKey: string
+    authorization: string
   ): Promise<ApiResponse<void>> => {
-    return makeRequest<void>(endpoint, 'DELETE', accessKey);
+    return makeRequest<void>(endpoint, 'DELETE', authorization);
   },
 
   fetch: async <T = any>(
     method: string,
     endpoint: string,
-    accessKey: string,
+    authorization: string,
     body?: any,
     imageBody?: boolean
   ): Promise<ApiResponse<T>> => {
-    return makeRequest<T>(endpoint, method, accessKey, body, imageBody);
+    return makeRequest<T>(endpoint, method, authorization, body, imageBody);
   },
 };
 
 async function makeRequest<T>(
   endpoint: string,
   method: string,
-  accessKey: string,
+  authorization: string,
   body?: any,
   imageBody: boolean = false, 
 ): Promise<ApiResponse<T>> {
@@ -65,7 +65,7 @@ async function makeRequest<T>(
     //const applicationType = imageBody ? 'multipart/form-data' : 'application/json';
     const headers: Record<string, string> = {
       //'Content-Type': applicationType,
-      'AccessKey': accessKey,   
+      'Authorization': authorization,   
     };
     const response = await fetch(`${config.apiBaseUrl}${endpoint}`, {
       method,

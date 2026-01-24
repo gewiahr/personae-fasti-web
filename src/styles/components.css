@@ -7,3 +7,17 @@
 .btn:hover {
   @apply bg-blue-700;
 }
+
+.btn-alt {
+  @apply bg-green-600 text-white py-2 px-4 rounded cursor-pointer;
+}
+
+.btn-alt:hover {
+  @apply bg-green-700;
+}
+
+.btn-unavailable {
+  @apply bg-gray-600 text-white py-2 px-4 rounded cursor-not-allowed;
+}
+
+

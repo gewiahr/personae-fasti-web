@@ -1,8 +1,8 @@
-import React, { useCallback, useState, useRef, KeyboardEvent, useEffect } from "react"
-import { SuggestionsTab } from "./SuggestionsTab";
-import { /*extractMentions, Mention,*/ MentionContext } from "../types/mention";
-import { SuggestionData, SuggestionEntity } from "../types/suggestion";
-import { EntityEdit, formSuggestionRef } from "../types/entities";
+import React, { useCallback, useState, useRef, type KeyboardEvent, useEffect } from "react"
+import { SuggestionsTab } from "../SuggestionsTab";
+import type { MentionContext } from "../../types/mention";
+import type { SuggestionData, SuggestionEntity } from "../../types/suggestion";
+import { type EntityEdit, formSuggestionRef } from "../../types/entities";
 
 interface RichInputProps {
   label: string;
@@ -156,7 +156,7 @@ export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData
         onKeyDown={handleKeyDown}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        className={`w-full min-h-[100px] max-h-[40vh] field-sizing-content px-4 py-3 border rounded-lg
+        className={`w-full min-h-25 max-h-[40vh] field-sizing-content px-4 py-3 border rounded-lg
                     focus:outline-none focus:ring-2
                     peer
                     'border-gray-300 focus:ring-blue-200 focus:border-blue-500'

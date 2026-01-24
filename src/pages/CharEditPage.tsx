@@ -1,10 +1,10 @@
-import { Char } from '../types/entities'
-import { RichInput } from '../components/RichInput'
-import { SuggestionData } from '../types/suggestion';
+import type { Char } from '../types/entities';
+import { RichInput } from '../components/lib/RichInput'
+import type { SuggestionData } from '../types/suggestion';
 import { useEffect, useState } from 'react';
-import { InputField } from '../components/InputField';
+import { InputField } from '../components/lib/InputField';
 import { useNavigate, useParams } from 'react-router-dom';
-import { CharPageData } from '../types/request';
+import type { CharPageData } from '../types/request';
 import { useApi } from '../hooks/useApi';
 import { enrichCharFieldsMentions, simplerCharFieldsMentions } from '../types/mention';
 import { api } from '../utils/api';
@@ -15,7 +15,7 @@ import { useAuth } from '../hooks/useAuth';
 const CharEditPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { accessKey } = useAuth();
+  const { authorization } = useAuth();
 
   // Derived state
   const newChar = !id;
@@ -24,8 +24,8 @@ const CharEditPage = () => {
   const [char, setChar] = useState<Char | null>(newChar ? {} as Char : null);
   
   // API calls
-  const { data: apiData } = useApi.get<CharPageData>(`/char/${id}`, accessKey, [], newChar);
-  const { data: suggestionData } = useApi.get<SuggestionData>(`/suggestions`, accessKey);
+  const { data: apiData } = useApi.get<CharPageData>(`/char/${id}`, authorization, [], newChar);
+  const { data: suggestionData } = useApi.get<SuggestionData>(`/suggestions`, authorization);
 
   // Sync data to state
   useEffect(() => {
@@ -47,7 +47,7 @@ const CharEditPage = () => {
     const endpoint = '/char';//newChar ? '/char' : `/char/${id}`;
     const method = newChar ? api.post : api.put;
 
-    const { data, error } = await method<Char>(endpoint, accessKey, enrichedChar);
+    const { data, error } = await method<Char>(endpoint, authorization, enrichedChar);
     if (!error) {
       navigate(data?.id ? `/char/${data.id}` : '/chars');
     }

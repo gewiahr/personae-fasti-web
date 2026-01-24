@@ -1,4 +1,4 @@
-import { SuggestionEntity } from "./suggestion";
+import type { SuggestionEntity } from "./suggestion";
 
 export interface EntityEdit {
   fieldName?: string;

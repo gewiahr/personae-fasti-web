@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { RichInput } from './RichInput';
-import { SuggestionData } from '../types/suggestion';
+import { RichInput } from './lib/RichInput';
+import type { SuggestionData } from '../types/suggestion';
 import { enrichMentionInput } from '../types/mention';
-import { ToggleSwitch } from './ToggleSwitch';
-import { SelectInput } from './SelectInput';
-import { Quest } from '../types/quest';
+import { ToggleSwitch } from './lib/ToggleSwitch';
+import { SelectInput } from './lib/SelectInput';
+import type { Quest } from '../types/quest';
 import Icon from './icons/Icon';
 import { useSettings } from '../hooks/useSettings';
 
@@ -57,14 +57,14 @@ export const RecordInput = ({ onSubmit, suggestionData = null, questInfo = [] }:
       {postSettingsOpen && <div className='flex justify-between gap-6 items-center my-2'>
         {questInfo && questInfo.length > 0 && <SelectInput 
           key={"recordinput_questselect"}
-          className='w-[100%]'
+          className='w-full'
           options={questInfo.map((quest) => { return { key: quest.id, value: quest.name } })} 
           label='Связанный квест' 
           setKey={questID} 
           entityEdit={{ handleFieldChange: (value) => {setQuestID(value)} }} 
           nullable={true}
         />}
-        {player?.id === game?.gmID && <div className='w-[250px] justify-items-end'>
+        {player?.id === game?.gmID && <div className='w-62.5 justify-items-end'>
           <ToggleSwitch 
             key={"recordinput_hiddenswitch"} 
             label='Скрыть пост' 

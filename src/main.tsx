@@ -5,7 +5,7 @@ import './styles/fonts.css';
 import './styles/telegram.css'
 import App from './App.tsx'
 
-import { init, miniApp, swipeBehavior, viewport } from '@telegram-apps/sdk-react';
+import { init, miniApp, swipeBehavior, viewport } from '@tma.js/sdk-react';
 
 const initializeTelegramSDK = async () => {
   try {

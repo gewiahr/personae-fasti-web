@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { EntityEdit } from '../types/entities';
+import type { EntityEdit } from '../../types/entities';
 
 interface ToggleSwitchProps {
   label: string;
@@ -51,7 +51,7 @@ export const ToggleSwitch = ({
         {/* Thumb */}
         <span
           className={`
-            absolute top-0.5 h-5 w-5 rounded-[4px] bg-white shadow-sm
+            absolute top-0.5 h-5 w-5 rounded-sm bg-white shadow-sm
             transition-transform duration-200
             ${toggleValue ? 'translate-x-0.5' : '-translate-x-5.5'}
           `}

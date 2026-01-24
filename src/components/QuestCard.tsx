@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { QuestInfo } from '../types/request';
+import type { QuestInfo } from '../types/request';
 
 type QuestCardProps = {
   quest: QuestInfo;
@@ -28,7 +28,7 @@ export const QuestCard = ({ quest, labelText=null }: QuestCardProps) => {
         </div>
 
         {labelText && <>
-          <div className='flex-grow'></div>
+          <div className='grow'></div>
 
           <div className="flex justify-end items-end text-xs text-gray-400">
             <span className={`px-2 py-1 rounded 

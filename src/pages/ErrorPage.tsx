@@ -1,5 +1,5 @@
-import { ApiError } from "../types/api";
-import { EntityMetaData } from "../types/entities";
+import type { ApiError } from "../types/api";
+import type { EntityMetaData } from "../types/entities";
 
 interface ErrorPageProps {
     error: ApiError | null;

@@ -1,10 +1,10 @@
 // pages/CharactersList.tsx
 import { Link } from 'react-router-dom';
-import { EntityCard } from '../components/EntityCard';
+import { EntityCard } from './EntityCard';
 import { useEntities } from '../hooks/useEntities';
-import { EntityMetaData } from '../types/entities';
+import type { EntityMetaData } from '../types/entities';
 import { useEffect, useState } from 'react';
-import { EntityInfo } from '../types/request';
+import type { EntityInfo } from '../types/request';
 //import { useRecords } from '../hooks/useRecords';
 
 interface EntitiesListProp {
@@ -41,8 +41,8 @@ export const EntitiesList = ({ metaData } : EntitiesListProp) => {
       </div>
 
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {entities && entities.map((entity) => (
+      {entities && entities.length > 0 ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {entities.map((entity) => (
           <EntityCard
             key={entity.id}
             entity={entity}
@@ -52,7 +52,10 @@ export const EntitiesList = ({ metaData } : EntitiesListProp) => {
             //labelText={players.find((player) => (player.id === entity.playerID))?.username || ""}
           />
         ))}
-      </div>
+      </div> : 
+      <div className='mt-8 text-center text-xl italic'>
+        <p>{`Пока что в этой кампании нет ни одного ${metaData.EntityNameAcc.toLowerCase()}. Пора создать парочку!`}</p>  
+      </div>}
     </div>
   );
 };

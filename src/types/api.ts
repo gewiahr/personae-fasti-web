@@ -2,7 +2,7 @@ export type ApiRequest = {
   method?: string;
   endpoint?: string; 
   body?: string | null;
-  accessKey: string;
+  authorization: string;
 };
 
 export type ApiResponse<T> = {

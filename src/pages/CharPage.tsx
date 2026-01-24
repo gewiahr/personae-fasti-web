@@ -1,11 +1,11 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { Char } from '../types/entities';
+import type { Char } from '../types/entities';
 import { useApi } from '../hooks/useApi';
 import { useAuth } from '../hooks/useAuth';
-import { CharPageData } from '../types/request';
+import type { CharPageData } from '../types/request';
 import { useEffect, useState } from 'react';
-import { SuggestionData } from '../types/suggestion';
-import RichText from '../components/RichText';
+import type { SuggestionData } from '../types/suggestion';
+import RichText from '../components/lib/RichText';
 import { RecordFeed } from '../components/RecordFeed';
 import { useRecords } from '../hooks/useRecords';
 
@@ -16,9 +16,9 @@ export const CharPage = () => {
 
   const [char, setChar] = useState<Char>({} as Char);
 
-  const { accessKey } = useAuth();
-  const { data, loading, error } = useApi.get<CharPageData>(`/char/${id}`, accessKey, [], newChar);
-  const { data: suggestionData } = useApi.get<SuggestionData>(`/suggestions`, accessKey);
+  const { authorization } = useAuth();
+  const { data, loading, error } = useApi.get<CharPageData>(`/char/${id}`, authorization, [], newChar);
+  const { data: suggestionData } = useApi.get<SuggestionData>(`/suggestions`, authorization);
 
   // ** change to valid player request ** //
   const { players } = useRecords();

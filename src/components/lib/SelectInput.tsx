@@ -1,7 +1,7 @@
 import { useState, forwardRef, useEffect, useRef, useImperativeHandle } from 'react';
-import { EntityEdit } from '../types/entities';
-import { SelectKeyValue } from '../types/utils';
-import Icon from './icons/Icon';
+import type { EntityEdit } from '../../types/entities';
+import type { SelectKeyValue } from '../../types/utils';
+import Icon from '../icons/Icon';
 
 type SelectInputProps = {
   options: SelectKeyValue[];

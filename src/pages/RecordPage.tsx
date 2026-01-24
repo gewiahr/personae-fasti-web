@@ -5,8 +5,8 @@ import { RecordInput } from '../components/RecordInput';
 import { useApi } from '../hooks/useApi';
 import { useAuth } from '../hooks/useAuth';
 import { useRecords } from '../hooks/useRecords';
-import { SuggestionData } from '../types/suggestion';
-import { Quest } from '../types/quest';
+import type { SuggestionData } from '../types/suggestion';
+import type { Quest } from '../types/quest';
 import { api } from '../utils/api';
 
 export const RecordPage = () => {
@@ -20,16 +20,16 @@ export const RecordPage = () => {
     handleNewRecord,
     refresh
   } = useRecords();
-  const { accessKey } = useAuth();
+  const { authorization } = useAuth();
   const [questInfo, setQuestInfo] = useState<Quest[]>([]);
   
-  const { data: suggestionData, loading: suggestionLoading } = useApi.get<SuggestionData>(`/suggestions`, accessKey);
+  const { data: suggestionData, loading: suggestionLoading } = useApi.get<SuggestionData>(`/suggestions`, authorization);
   
   //const { addNotification } = useNotifications();
 
   useEffect(() => {
     const getQuests = async () => {
-      const { data } = await api.get('/quests', accessKey);
+      const { data } = await api.get('/quests', authorization);
       if (data) {
         setQuestInfo(data.quests);
       };

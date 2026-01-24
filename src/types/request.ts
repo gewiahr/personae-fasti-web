@@ -1,15 +1,9 @@
-import { Char, NPC, Location } from "./entities";
-import { Quest, QuestTask } from "./quest";
+import type { Char, NPC, Location } from "./entities";
+import type { Quest, QuestTask } from "./quest";
 
 export type LoginInfo = {
-  accesskey: string;
-  player: PlayerInfo;
-  currentGame: GameFullInfo;
-};
-
-export type TelegramLoginInfo = {
-  accesskey: string;
-  player: PlayerInfo;
+  authorization: string;
+  player: LoginPlayerInfo;
   currentGame: GameFullInfo;
 };
 
@@ -47,14 +41,25 @@ export type Session = {
   endTime: string;
 };
 
-export type PlayerInfo = {
+export type LoginPlayerInfo = {
   id: number;
   username: string;
+  settings: PlayerInfoSettings;
+};
+
+export type PlayerInfoSettings = {
+  couldChangeUsername: boolean;
+  //colorTheme: 'blue' | 'green'
 };
 
 export type PlayerSettings = {
   currentGame: GameFullInfo;
   playerGames: GameInfo[];
+};
+
+export type PlayerInfo = {
+  id: number;
+  username: string;
 };
 
 export type GameInfo = {

@@ -1,4 +1,3 @@
-// contexts/NotificationContext.tsx
 import React, { createContext, useContext, useState } from 'react';
 
 type NotificationType = 'success' | 'error' | 'warning' | 'info';

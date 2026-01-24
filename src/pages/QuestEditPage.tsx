@@ -1,16 +1,16 @@
-import { RichInput } from '../components/RichInput'
-import { SuggestionData } from '../types/suggestion';
+import { RichInput } from '../components/lib/RichInput'
+import type { SuggestionData } from '../types/suggestion';
 import { useEffect, useState } from 'react';
-import { InputField } from '../components/InputField';
+import { InputField } from '../components/lib/InputField';
 import { useNavigate, useParams } from 'react-router-dom';
-import { QuestPageData } from '../types/request';
+import type { QuestPageData } from '../types/request';
 import { useApi } from '../hooks/useApi';
 import { api } from '../utils/api';
 import { useAuth } from '../hooks/useAuth';
-import { NewQuestTask, Quest, QuestTask } from '../types/quest';
+import { NewQuestTask, type Quest, type QuestTask } from '../types/quest';
 import { useNotifications } from '../context/NotificationContext';
-import { SelectInput } from '../components/SelectInput';
-import { NumericInputInline } from '../components/NumericInputInline';
+import { SelectInput } from '../components/lib/SelectInput';
+import { NumericInputInline } from '../components/lib/NumericInputInline';
 import { enrichQuestFieldsMentions, enrichQuestTaskFieldsMentions, simplerQuestFieldsMentions, simplerQuestTaskFieldsMentions } from '../types/mention';
 import Icon from '../components/icons/Icon';
 
@@ -18,7 +18,7 @@ import Icon from '../components/icons/Icon';
 const QuestEditPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { accessKey } = useAuth();
+  const { authorization } = useAuth();
   const { addNotification } = useNotifications();
 
   // Derived state
@@ -29,8 +29,8 @@ const QuestEditPage = () => {
   const [tasks, setTasks] = useState<QuestTask[]>([]);
   
   // API calls
-  const { data: apiData } = useApi.get<QuestPageData>(`/quest/${id}`, accessKey, [], newQuest);
-  const { data: suggestionData } = useApi.get<SuggestionData>(`/suggestions`, accessKey);
+  const { data: apiData } = useApi.get<QuestPageData>(`/quest/${id}`, authorization, [], newQuest);
+  const { data: suggestionData } = useApi.get<SuggestionData>(`/suggestions`, authorization);
 
   // Sync data to state
   useEffect(() => {
@@ -74,7 +74,7 @@ const QuestEditPage = () => {
     
     const endpoint = '/quest';
     const method = newQuest ? api.post : api.put;
-    const { data, error } = await method<Quest>(endpoint, accessKey, {quest: enrichedQuest, tasks: enrichedTasks});
+    const { data, error } = await method<Quest>(endpoint, authorization, {quest: enrichedQuest, tasks: enrichedTasks});
 
     if (error) {
       addNotification(`Ошибка: ${error.message}`, 'error'); 
@@ -86,7 +86,7 @@ const QuestEditPage = () => {
   const deleteQuest = async () => {
     if (!quest) return;
 
-    const { error } = await api.delete(`/quest/${quest.id}`, accessKey);
+    const { error } = await api.delete(`/quest/${quest.id}`, authorization);
 
     if (error) {
       addNotification(error.message, 'error');

@@ -1,8 +1,7 @@
-// components/NotificationPopup.tsx
 import React from 'react';
-import { useNotifications } from '../context/NotificationContext';
+import { useNotifications } from '../../context/NotificationContext';
 import { FiCheck, FiAlertTriangle, FiInfo, FiX, FiAlertCircle } from 'react-icons/fi';
-import { miniApp } from '@telegram-apps/sdk-react';
+import { miniApp } from '@tma.js/sdk-react';
 
 const NotificationPopup: React.FC = () => {
   const { notifications, removeNotification } = useNotifications();

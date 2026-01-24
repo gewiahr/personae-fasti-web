@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react';
-import { SelectInput } from '../components/SelectInput';
+import { SelectInput } from '../components/lib/SelectInput';
 import { useAuth } from '../hooks/useAuth'
-import { GameInfo, GameFullInfo } from '../types/request';
+import type { GameInfo, GameFullInfo } from '../types/request';
 import { api } from '../utils/api';
 import { useNavigate } from 'react-router-dom';
 import { useNotifications } from '../context/NotificationContext';
-import FoldableCategory from '../components/FoldableCategory';
-import { ToggleSwitch } from '../components/ToggleSwitch';
+import FoldableCategory from '../components/lib/FoldableCategory';
+import { ToggleSwitch } from '../components/lib/ToggleSwitch';
 import "../styles/components.css";
 import { useSettings } from '../hooks/useSettings';
 
 const SettingsPage = () => {
   const navigate = useNavigate();
-  const { accessKey } = useAuth();
+  const { authorization } = useAuth();
   const { game, setGame, player, playerGames, updateSettings } = useSettings();
-  //const { data : settingsData } = useApi.get<PlayerSettings>("/player/settings", accessKey);
+  //const { data : settingsData } = useApi.get<PlayerSettings>("/player/settings", authorization);
   //const [ playerGames ] = useState<GameInfo[]>([]);
   const [editedCurrentGame, setEditedCurrentGame] = useState<GameFullInfo | null>(game);
 
@@ -29,7 +29,7 @@ const SettingsPage = () => {
   })
 
   const handleChangeCurrentGame = async (value: string) => {
-    const { data, error } = await api.put<GameFullInfo>("/player/game", accessKey, { gameID: Number(value) });
+    const { data, error } = await api.put<GameFullInfo>("/player/game", authorization, { gameID: Number(value) });
     if (error) {
       addNotification(error.message, 'error')
       return;
@@ -40,7 +40,7 @@ const SettingsPage = () => {
   };
 
   const handleNewSession = async () => {
-    const { error, status } = await api.post<GameInfo>("/game/session/new", accessKey, null);
+    const { error, status } = await api.post<GameInfo>("/game/session/new", authorization, null);
     if (error) {
       addNotification(error.message, 'error');
       return;
@@ -64,7 +64,7 @@ const SettingsPage = () => {
   const handleSaveGameSettings = async () => {
     if (!editedCurrentGame) return
     console.log(editedCurrentGame);
-    const { data, error } = await api.put<GameFullInfo>("/game/settings", accessKey, { ...editedCurrentGame.settings, gameID: editedCurrentGame.id });
+    const { data, error } = await api.put<GameFullInfo>("/game/settings", authorization, { ...editedCurrentGame.settings, gameID: editedCurrentGame.id });
     if (error) {
       addNotification(error.message, 'error');
       return;
@@ -82,22 +82,32 @@ const SettingsPage = () => {
         <h2 className='text-xl'>{player?.username}</h2>
 
         <div>
-          {game && <>
-            {playerGames.length > 1 ? <SelectInput
-              key={playerGames.length}
-              options={playerGames?.
-                filter((pg) => pg.id != game.id).
-                map((pg) => { return { key: pg.id, value: pg.title } }) || []}
-              label='Текущая игра'
-              bgColor='bg-gray-900'
-              setValue={game.title}
-              entityEdit={{ handleFieldChange: handleChangeCurrentGame }}
-            /> :
-              <>
-                <p className='text-sm'>Текущая игра:</p>
-                <h2 className='text-xl'>{game.title}</h2>
-              </>}
-          </>}
+          <p className='text-sm'>Текущая игра:</p>
+          <div className='flex justify-between items-center'>
+            {game && <div className=''>
+              {playerGames && playerGames.length > 1 ? <SelectInput
+                key={playerGames.length}
+                options={playerGames?.
+                  filter((pg) => pg.id != game.id).
+                  map((pg) => { return { key: pg.id, value: pg.title } }) || []}
+                label='Текущая игра'
+                bgColor='bg-gray-900'
+                setValue={game.title}
+                entityEdit={{ handleFieldChange: handleChangeCurrentGame }}
+              /> :
+                <>
+                  <h2 className='text-xl'>{game.title}</h2>
+                </>}
+            </div>}
+            <div className='flex gap-2'>
+              <button className='btn' onClick={() => navigate(`/game/${game ? game.id : 0 }`)}>
+                Ред.
+              </button>
+              <button className='btn' onClick={() => navigate("/game/new")}>
+                +
+              </button>
+            </div>
+          </div>
         </div>
 
         {game?.gmID === player?.id && <FoldableCategory key="sessions_settings" title='Сессии' children={
