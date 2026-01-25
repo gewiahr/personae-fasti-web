@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { RichInput } from './lib/RichInput';
+import { RichInput } from './lib/Inputs/RichInput';
 import type { SuggestionData } from '../types/suggestion';
 import { enrichMentionInput } from '../types/mention';
 import { ToggleSwitch } from './lib/ToggleSwitch';
-import { SelectInput } from './lib/SelectInput';
+import { SelectInput } from './lib/Inputs/SelectInput';
 import type { Quest } from '../types/quest';
 import Icon from './icons/Icon';
 import { useSettings } from '../hooks/useSettings';
@@ -49,7 +49,7 @@ export const RecordInput = ({ onSubmit, suggestionData = null, questInfo = [] }:
         <RichInput 
           key={richInputKey} 
           label='Что нового?' 
-          setValue={input} 
+          value={input} 
           entityEdit={{ handleFieldChange }} 
           fullSuggestionData={suggestionData} 
         />

@@ -11,7 +11,7 @@ type SuggestionTabProps = {
 export const SuggestionsTab = forwardRef<HTMLDivElement, SuggestionTabProps>(({ data, selectionIndex, insertMention }) => {
 
   useEffect(() => {
-    
+
   }, [selectionIndex])
 
   return (

@@ -1,15 +1,14 @@
 import type { Char } from '../types/entities';
-import { RichInput } from '../components/lib/RichInput'
+import { RichInput } from '../components/lib/Inputs/RichInput'
 import type { SuggestionData } from '../types/suggestion';
 import { useEffect, useState } from 'react';
-import { InputField } from '../components/lib/InputField';
+import { InputField } from '../components/lib/Inputs/InputField';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { CharPageData } from '../types/request';
 import { useApi } from '../hooks/useApi';
 import { enrichCharFieldsMentions, simplerCharFieldsMentions } from '../types/mention';
 import { api } from '../utils/api';
 import { useAuth } from '../hooks/useAuth';
-//import { SelectInput } from '../components/SelectInput';
 
 
 const CharEditPage = () => {
@@ -63,18 +62,18 @@ const CharEditPage = () => {
         <InputField 
           className="mb-4" 
           label='Имя' 
-          setValue={char?.name} 
+          value={char?.name} 
           entityEdit={{ fieldName: 'name', handleFieldChange }}
         />
         <InputField 
           className="mb-4" 
           label='Титул' 
-          setValue={char?.title} 
+          value={char?.title} 
           entityEdit={{ fieldName: 'title', handleFieldChange }}
         />
         <RichInput 
           label='Описание' 
-          setValue={char?.description} 
+          value={char?.description} 
           entityEdit={{ fieldName: 'description', handleFieldChange }} 
           fullSuggestionData={suggestionData}
         />

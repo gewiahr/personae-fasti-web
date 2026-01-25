@@ -1,7 +1,7 @@
-import { RichInput } from '../components/lib/RichInput'
+import { RichInput } from '../components/lib/Inputs/RichInput'
 import type { SuggestionData } from '../types/suggestion';
 import { useEffect, useState } from 'react';
-import { InputField } from '../components/lib/InputField';
+import { InputField } from '../components/lib/Inputs/InputField';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { QuestPageData } from '../types/request';
 import { useApi } from '../hooks/useApi';
@@ -9,8 +9,8 @@ import { api } from '../utils/api';
 import { useAuth } from '../hooks/useAuth';
 import { NewQuestTask, type Quest, type QuestTask } from '../types/quest';
 import { useNotifications } from '../context/NotificationContext';
-import { SelectInput } from '../components/lib/SelectInput';
-import { NumericInputInline } from '../components/lib/NumericInputInline';
+import { SelectInput } from '../components/lib/Inputs/SelectInput';
+import { NumericInputInline } from '../components/lib/Inputs/NumericInputInline';
 import { enrichQuestFieldsMentions, enrichQuestTaskFieldsMentions, simplerQuestFieldsMentions, simplerQuestTaskFieldsMentions } from '../types/mention';
 import Icon from '../components/icons/Icon';
 
@@ -106,18 +106,18 @@ const QuestEditPage = () => {
         <InputField 
           className="mb-4" 
           label='Название'
-          setValue={quest?.name} 
+          value={quest?.name} 
           entityEdit={{ fieldName: 'name', handleFieldChange }}
         />
         <InputField 
           className="mb-4" 
           label='Действие'
-          setValue={quest?.title} 
+          value={quest?.title} 
           entityEdit={{ fieldName: 'title', handleFieldChange }}
         />
         <RichInput 
           label='Описание' 
-          setValue={quest?.description} 
+          value={quest?.description} 
           entityEdit={{ fieldName: 'description', handleFieldChange }} 
           fullSuggestionData={suggestionData}
         />
@@ -130,13 +130,13 @@ const QuestEditPage = () => {
           {tasks.map((task, i) => {
               return (
                 <div key={`questpage_task-${task.id ?? 0}-${i}_edit`} className='flex flex-col items-left mb-4'>
-                  <InputField label='Название задачи' className='text-md my-2 w-full' setValue={task.name} entityEdit={{ fieldName: 'name', arrayIndex: i, handleFieldChange: handleTasksChange}}/>
-                  <RichInput label='Доп. информация' setValue={task.description} entityEdit={{ fieldName: 'description', arrayIndex: i, handleFieldChange: handleTasksChange}} fullSuggestionData={suggestionData}/>
+                  <InputField label='Название задачи' className='text-md my-2 w-full' value={task.name} entityEdit={{ fieldName: 'name', arrayIndex: i, handleFieldChange: handleTasksChange}}/>
+                  <RichInput label='Доп. информация' value={task.description} entityEdit={{ fieldName: 'description', arrayIndex: i, handleFieldChange: handleTasksChange}} fullSuggestionData={suggestionData}/>
                   <div className='flex justify-between gap-8'>
                     <SelectInput className='w-[40%]' options={[ {key: 0, value: "Выполнение"}, {key: 1, value: "Количество"} ]} setKey={task.type} entityEdit={{ fieldName: 'type', arrayIndex: i, handleFieldChange: handleTasksChange}} />               
                     <div className='flex gap-8'>
                       {task.type > 0 && 
-                        <NumericInputInline setValue={task.capacity} entityEdit={{ fieldName: 'capacity', arrayIndex: i, handleFieldChange: handleTasksChange}} />
+                        <NumericInputInline value={task.capacity} entityEdit={{ fieldName: 'capacity', arrayIndex: i, handleFieldChange: handleTasksChange}} />
                       }
                       <button className='pr-2' onClick={() => deleteTask(i)}>
                         <Icon 

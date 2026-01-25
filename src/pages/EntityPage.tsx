@@ -4,13 +4,13 @@ import { useApi } from '../hooks/useApi';
 import { useAuth } from '../hooks/useAuth';
 import { useEffect, useState } from 'react';
 import type { SuggestionData } from '../types/suggestion';
-import RichText from '../components/lib/RichText';
+import RichText from '../components/lib/TextOutput/RichText';
 import { RecordFeed } from '../components/RecordFeed';
 import { useRecords } from '../hooks/useRecords';
 import useImage from '../hooks/useImage';
 import { LoadingPage } from './LoadingPage';
 import { ErrorPage } from './ErrorPage';
-import Hyperlink from '../components/lib/Hyperlink';
+import Hyperlink from '../components/lib/TextOutput/Hyperlink';
 import type { EntityInfo } from '../types/request';
 
 interface EntityPageProp {

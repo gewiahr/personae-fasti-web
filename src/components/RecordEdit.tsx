@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { enrichMentionInput, simplifyMentionInput } from '../types/mention';
 import { Modal } from './lib/Modal';
-import { RichInput } from "./lib/RichInput";
+import { RichInput } from "./lib/Inputs/RichInput";
 import type { SuggestionData } from '../types/suggestion';
 import type { GameInfo, PlayerInfo, Record } from "../types/request";
 import { api } from '../utils/api';
@@ -10,7 +10,7 @@ import { useAuth } from '../hooks/useAuth';
 import { ToggleSwitch } from './lib/ToggleSwitch';
 import { useNotifications } from '../context/NotificationContext';
 import type { Quest } from '../types/quest';
-import { SelectInput } from './lib/SelectInput';
+import { SelectInput } from './lib/Inputs/SelectInput';
 
 interface RecordEditProps {
   record: Record;
@@ -94,7 +94,7 @@ export const RecordEdit = ({
         <RichInput
           key={1000}
           label=""
-          setValue={simplifyMentionInput(record.text, fullSuggestionData?.entities)}
+          value={simplifyMentionInput(record.text, fullSuggestionData?.entities)}
           entityEdit={{ handleFieldChange: onInputChange }}
           fullSuggestionData={fullSuggestionData} />
       </div>}

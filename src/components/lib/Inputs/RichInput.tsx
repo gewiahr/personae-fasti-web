@@ -1,23 +1,20 @@
 import React, { useCallback, useState, useRef, type KeyboardEvent, useEffect } from "react"
-import { SuggestionsTab } from "../SuggestionsTab";
-import type { MentionContext } from "../../types/mention";
-import type { SuggestionData, SuggestionEntity } from "../../types/suggestion";
-import { type EntityEdit, formSuggestionRef } from "../../types/entities";
+import { SuggestionsTab } from "../../SuggestionsTab";
+import type { MentionContext } from "../../../types/mention";
+import type { SuggestionData, SuggestionEntity } from "../../../types/suggestion";
+import { formSuggestionRef } from "../../../types/entities";
+import type { TextInputProps } from "./InputProps";
 
-interface RichInputProps {
-  label: string;
-  setValue?: string;
-  entityEdit?: EntityEdit;
+type RichInputProps = TextInputProps & {
   fullSuggestionData?: SuggestionData | null;
 };
 
-export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData = null }: RichInputProps) => {
+export const RichInput : React.FC<RichInputProps> = ({ label, value = "", entityEdit, fullSuggestionData = null }) => {
   const [isFocused, setIsFocused] = useState(false);
-  const [inputValue, setInputValue] = useState(setValue);
-  //const [mentions, setMentions] = useState<Mention[]>([]);
+  const [inputValue, setInputValue] = useState(value);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [suggestionData, setSuggestionData] = useState<SuggestionData | null>(fullSuggestionData);
-  const [suggestionTabPos, /*setSuggestionTabPos*/] = useState({ top: 0, left: 0 });
+  const [suggestionTabPos] = useState({ top: 0, left: 0 });
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(0);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -110,7 +107,6 @@ export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData
       case 'Enter':
         e.preventDefault();
         if (selectedSuggestionIndex === suggestionData.entities.length) {
-          // ++ handleCreateNewEntity();
         } else {
           const selected = suggestionData.entities[selectedSuggestionIndex];
           selected && insertMention(selected);
@@ -186,8 +182,6 @@ export const RichInput = ({ label, setValue = "", entityEdit, fullSuggestionData
           insertMention={insertMention}
         />
       }
-
-      {/*<button onClick={collectMentions}>1234</button>*/}
     </div>
   );
 }

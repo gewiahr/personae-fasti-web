@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { SelectInput } from '../components/lib/SelectInput';
+import { SelectInput } from '../components/lib/Inputs/SelectInput';
 import { useAuth } from '../hooks/useAuth'
 import type { GameInfo, GameFullInfo } from '../types/request';
 import { api } from '../utils/api';
@@ -91,8 +91,8 @@ const SettingsPage = () => {
                   filter((pg) => pg.id != game.id).
                   map((pg) => { return { key: pg.id, value: pg.title } }) || []}
                 label='Текущая игра'
-                bgColor='bg-gray-900'
-                setValue={game.title}
+                labelBGColor='bg-gray-900'
+                value={game.title}
                 entityEdit={{ handleFieldChange: handleChangeCurrentGame }}
               /> :
                 <>

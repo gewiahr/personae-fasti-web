@@ -1,0 +1,55 @@
+import { useState, useId } from 'react';
+import type { NumericInputProps } from './InputProps';
+
+type NumericInputInlineComponentProps = NumericInputProps & {
+
+};
+
+export const NumericInputInline: React.FC<NumericInputInlineComponentProps> = ({ value = 0, entityEdit, className = '' }) => {
+  const [_, setIsFocused] = useState(false);
+  const id = useId();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    entityEdit?.handleFieldChange(Number(e.target.value), entityEdit?.fieldName || "", entityEdit.arrayIndex);
+  };
+
+  const increment = () => entityEdit?.handleFieldChange(value + 1, entityEdit?.fieldName || "", entityEdit.arrayIndex);
+  const decrement = () => entityEdit?.handleFieldChange(Math.max(value - 1, 0), entityEdit?.fieldName || "", entityEdit.arrayIndex);
+
+  return (
+    <div className={`relative ${className} flex justify-between content-center`}>
+      {/* <div className="flex items-center border-b border-gray-200 focus-within:border-blue-500 transition-colors"> */}
+      <button
+        onClick={decrement}
+        className="px-2 text-gray-500 hover:text-blue-600 focus:outline-none"
+        aria-label="Decrease"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M20 12H4" stroke="currentColor" strokeWidth="2" />
+        </svg>
+      </button>
+
+      <div className='relative flex items-center justify-center h-full'>
+        <input
+          id={id}
+          type='number'
+          className={`w-12 text-center border-none focus:ring-0 focus:outline-none bg-transparent`}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          onChange={handleChange}
+          value={value}
+        />
+      </div>
+
+      <button
+        onClick={increment}
+        className="px-2 text-gray-500 hover:text-blue-600 focus:outline-none"
+        aria-label="Increase"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M12 4V20M20 12H4" stroke="currentColor" strokeWidth="2" />
+        </svg>
+      </button>
+    </div>
+  );
+};

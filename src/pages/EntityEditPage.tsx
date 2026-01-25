@@ -1,8 +1,8 @@
 import type { EntityCreateUpdate, EntityMetaData } from '../types/entities';
-import { RichInput } from '../components/lib/RichInput'
+import { RichInput } from '../components/lib/Inputs/RichInput'
 import type { SuggestionData } from '../types/suggestion';
 import { useEffect, useState } from 'react';
-import { InputField } from '../components/lib/InputField';
+import { InputField } from '../components/lib/Inputs/InputField';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useApi } from '../hooks/useApi';
 import { enrichEntityFieldsMentions, simplerEntityFieldsMentions } from '../types/mention';
@@ -11,7 +11,7 @@ import { useAuth } from '../hooks/useAuth';
 import { ToggleSwitch } from '../components/lib/ToggleSwitch';
 import ImageUpload from '../components/lib/ImageUpload';
 import FoldableCategory from '../components/lib/FoldableCategory';
-import { SelectInput } from '../components/lib/SelectInput';
+import { SelectInput } from '../components/lib/Inputs/SelectInput';
 import { useSettings } from '../hooks/useSettings';
 
 
@@ -72,13 +72,13 @@ const EntityEditPage = <T extends EntityCreateUpdate>({ metaData }: EntityEditPa
               return (<InputField 
                         className="mb-4" 
                         label={field.FieldLabel} 
-                        setValue={entity[field.FieldName as keyof typeof entity] as string} 
+                        value={entity[field.FieldName as keyof typeof entity] as string} 
                         entityEdit={{ fieldName: field.FieldName, handleFieldChange }}
                       />);
           } else if (field.EditType == 'richInput') {
               return (<RichInput 
                         label='Описание' 
-                        setValue={entity[field.FieldName as keyof typeof entity] as string} 
+                        value={entity[field.FieldName as keyof typeof entity] as string} 
                         entityEdit={{ fieldName: field.FieldName, handleFieldChange }} 
                         fullSuggestionData={suggestionData}
                       />);

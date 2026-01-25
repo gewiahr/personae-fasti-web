@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { InputField } from '../components/lib/InputField';
+import { InputField } from '../components/lib/Inputs/InputField';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useApi } from '../hooks/useApi';
 import { api } from '../utils/api';
@@ -50,7 +50,7 @@ const GameCreateEditPage : React.FC = () => {
         <InputField 
           className="mb-4" 
           label={`Название игры`} 
-          setValue={game.name} 
+          value={game.name} 
           entityEdit={({ fieldName: 'name', handleFieldChange })}
         />
 

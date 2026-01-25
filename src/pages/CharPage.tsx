@@ -5,7 +5,7 @@ import { useAuth } from '../hooks/useAuth';
 import type { CharPageData } from '../types/request';
 import { useEffect, useState } from 'react';
 import type { SuggestionData } from '../types/suggestion';
-import RichText from '../components/lib/RichText';
+import RichText from '../components/lib/TextOutput/RichText';
 import { RecordFeed } from '../components/RecordFeed';
 import { useRecords } from '../hooks/useRecords';
 

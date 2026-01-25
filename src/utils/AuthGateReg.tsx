@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { InputField } from '../components/lib/InputField';
+import { InputField } from '../components/lib/Inputs/InputField';
 import { useAuth } from '../hooks/useAuth';
 import { api } from './api';
 //import { useNotifications } from '../context/NotificationContext';
@@ -70,7 +70,7 @@ const AuthGateReg: React.FC = () => {
     <div className="flex flex-col gap-3 p-4 items-center justify-center h-screen bg-gray-800 text-gray-100">
       <div className='flex flex-col gap-6 min-w-sm max-w-sm'>
         {/* <p className=''>{`Выберите имя пользователя, (пока что) его нельзя будет сменить`}</p> */}
-        <InputField label='Имя пользователя' labelBGColor='bg-gray-800' setValue={newUsername} entityEdit={{ handleFieldChange: handleInputChange }} />
+        <InputField label='Имя пользователя' labelBGColor='bg-gray-800' value={newUsername} entityEdit={{ handleFieldChange: handleInputChange }} />
         <p className={`italic ${inputCheck === 'valid' ? 'text-green-500' : inputCheck === 'invalid' ? 'text-red-500' : 'text-gray-100'}`}>{inputTip}</p>
         {inputState === 'check' ? <button className='w-full btn-alt' onClick={checkUsername}>Проверить</button> :
         inputState === 'accept' ? <button className='w-full btn' onClick={acceptUsername}>Применить</button> :

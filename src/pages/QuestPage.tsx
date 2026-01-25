@@ -3,13 +3,13 @@ import { useApi } from '../hooks/useApi';
 import { useAuth } from '../hooks/useAuth';
 import { useEffect, useState } from 'react';
 import type { SuggestionData } from '../types/suggestion';
-import RichText from '../components/lib/RichText';
+import RichText from '../components/lib/TextOutput/RichText';
 import { RecordFeed } from '../components/RecordFeed';
 import { useRecords } from '../hooks/useRecords';
 import { QuestTaskType, type Quest, type QuestTask } from '../types/quest';
 import Icon from '../components/icons/Icon';
 import { ToggleSwitch } from '../components/lib/ToggleSwitch';
-import { NumericInputInline } from '../components/lib/NumericInputInline';
+import { NumericInputInline } from '../components/lib/Inputs/NumericInputInline';
 import { useNotifications } from '../context/NotificationContext';
 import { api } from '../utils/api';
 
@@ -133,7 +133,7 @@ export const QuestPage = ({  } : QuestPageProp) => {
                       {isEditingTasks ? 
                         /* is editing */
                         task.type == QuestTaskType.Decimal ? 
-                        <NumericInputInline setValue={task.current} entityEdit={{ fieldName: 'current', arrayIndex: i, handleFieldChange: handleTasksChange}} /> : 
+                        <NumericInputInline value={task.current} entityEdit={{ fieldName: 'current', arrayIndex: i, handleFieldChange: handleTasksChange}} /> : 
                         <ToggleSwitch label='Выполнено' key={`task_completion_${task.id}`} setValue={task.current > 0 ? true : false} entityEdit={{ fieldName: 'current', arrayIndex: i, handleFieldChange: handleToggleTasksChange }}/> : 
                         /* preview mode */
                         <p className={`text-md ${task.finished ? 'text-blue-500' : 'text-gray-500'}`}>
