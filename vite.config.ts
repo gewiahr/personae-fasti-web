@@ -14,4 +14,7 @@ export default defineConfig({
     tailwindcss(),
     mkcert(),
   ],
+  resolve: {
+    dedupe: ['react', 'react-dom', 'react-redux'],
+  },
 })

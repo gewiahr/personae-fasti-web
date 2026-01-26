@@ -8,13 +8,15 @@ import { useRecords } from '../hooks/useRecords';
 import type { SuggestionData } from '../types/suggestion';
 import type { Quest } from '../types/quest';
 import { api } from '../utils/api';
+import { useAppDispatch, useAppSelector } from '../store';
+import { getCurrentGameRecords, selectCurrentGame, selectCurrentGamePlayers, selectCurrentGameRecords, selectCurrentGameSessions } from '../reducers/CurrentGameSlice';
 
 export const RecordPage = () => {
   const {
-    records,
-    sessions,
-    players,
-    currentGame,
+    //records,
+    //sessions,
+    //players,
+    //currentGame,
     loading,
     error,
     handleNewRecord,
@@ -24,6 +26,12 @@ export const RecordPage = () => {
   const [questInfo, setQuestInfo] = useState<Quest[]>([]);
   
   const { data: suggestionData, loading: suggestionLoading } = useApi.get<SuggestionData>(`/suggestions`, authorization);
+
+  const dispatch = useAppDispatch();
+  const currentGame = useAppSelector(selectCurrentGame);
+  const currentGameRecords = useAppSelector(selectCurrentGameRecords);
+  const currentGameSessions = useAppSelector(selectCurrentGameSessions);
+  const currentGamePlayers = useAppSelector(selectCurrentGamePlayers);
   
   //const { addNotification } = useNotifications();
 
@@ -36,9 +44,10 @@ export const RecordPage = () => {
     };
 
     getQuests();
+    dispatch(getCurrentGameRecords({authorization}));
   }, []);
 
-  if (loading && records.length === 0) {
+  if (loading && currentGameRecords.length === 0) {
     return <div className="text-center py-8">Загрузка событий...</div>;
   }
 
@@ -55,7 +64,7 @@ export const RecordPage = () => {
       {currentGame &&
         <>
           <RecordInput key={"recordpage_recordinput_" + Number(suggestionLoading)} onSubmit={handleNewRecord} suggestionData={suggestionData} questInfo={questInfo} />
-          <RecordFeed key={"recordpage_recordfeed_" + Number(suggestionLoading)} records={records} sessions={sessions} players={players} suggestionData={suggestionData} editable={true} onEdit={() => refresh()} />
+          <RecordFeed key={"recordpage_recordfeed_" + Number(suggestionLoading)} records={currentGameRecords} sessions={currentGameSessions} players={currentGamePlayers} suggestionData={suggestionData} editable={true} onEdit={() => refresh()} />
         </>
       }
     </div>
