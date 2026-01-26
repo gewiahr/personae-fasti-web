@@ -1,4 +1,4 @@
-import { BurgerMenuItem, BurgerMenuItemCallable, BurgerMenuItemCategory, type BurgerMenuItemLink } from "../components/lib/BurgerMenuItems";
+import { BurgerMenuItem, BurgerMenuItemCallable, BurgerMenuItemCategory, type BurgerMenuItemLink } from "../components/lib/BurgerMenu/BurgerMenuItems";
 import { CharMetaData, LocationMetaData, NPCMetaData } from "../types/entities";
 import { config } from "../utils/config";
 

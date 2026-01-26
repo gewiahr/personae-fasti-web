@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import type { Record } from '../types/request';
 import Icon from './icons/Icon';
-import RichText from './lib/TextOutput/RichText';
+import RichText from './lib/RichText/RichText';
 
 interface RecordCardProps {
   record: Record;

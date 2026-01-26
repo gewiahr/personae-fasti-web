@@ -3,7 +3,7 @@ import { useApi } from '../hooks/useApi';
 import { useAuth } from '../hooks/useAuth';
 import { useEffect, useState } from 'react';
 import type { SuggestionData } from '../types/suggestion';
-import RichText from '../components/lib/TextOutput/RichText';
+import RichText from '../components/lib/RichText/RichText';
 import { RecordFeed } from '../components/RecordFeed';
 import { useRecords } from '../hooks/useRecords';
 import { QuestTaskType, type Quest, type QuestTask } from '../types/quest';

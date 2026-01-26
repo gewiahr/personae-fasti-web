@@ -1,12 +1,12 @@
 import { type ReactNode, useState } from 'react';
-import { BurgerMenu } from '../components/lib/BurgerMenu';
+import { BurgerMenu } from '../components/lib/BurgerMenu/BurgerMenu';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import type { GameFullInfo } from '../types/request';
 import { useAuth } from '../hooks/useAuth';
 import { NotificationProvider } from '../context/NotificationContext';
 import NotificationPopup from '../components/lib/NotificationPopup';
 import { burgerMenuItems } from '../assets/BurgerMenuContent';
-import { BurgerMenuItemCallable } from '../components/lib/BurgerMenuItems';
+import { BurgerMenuItemCallable } from '../components/lib/BurgerMenu/BurgerMenuItems';
 import { miniApp } from '@tma.js/sdk-react';
 import { useSettings } from '../hooks/useSettings';
 import HeaderWeb from './HeaderWeb';

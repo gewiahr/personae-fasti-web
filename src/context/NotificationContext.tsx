@@ -1,3 +1,4 @@
+import { miniApp } from '@tma.js/sdk-react';
 import React, { createContext, useContext, useState } from 'react';
 
 type NotificationType = 'success' | 'error' | 'warning' | 'info';
@@ -7,13 +8,14 @@ interface Notification {
   message: string;
   type: NotificationType;
   duration?: number;
-}
+};
 
 interface NotificationContextType {
   notifications: Notification[];
   addNotification: (message: string, type: NotificationType, duration?: number) => void;
   removeNotification: (id: string) => void;
-}
+  TMA: boolean;
+};
 
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
@@ -37,8 +39,10 @@ export const NotificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
     setNotifications(prev => prev.filter(notification => notification.id !== id));
   };
 
+  const TMA = miniApp.ready.isAvailable();
+
   return (
-    <NotificationContext.Provider value={{ notifications, addNotification, removeNotification }}>
+    <NotificationContext.Provider value={{ notifications, addNotification, removeNotification, TMA }}>
       {children}
     </NotificationContext.Provider>
   );

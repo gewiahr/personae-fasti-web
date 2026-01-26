@@ -1,14 +1,9 @@
 import React from 'react';
 import { useNotifications } from '../../context/NotificationContext';
 import { FiCheck, FiAlertTriangle, FiInfo, FiX, FiAlertCircle } from 'react-icons/fi';
-import { miniApp } from '@tma.js/sdk-react';
 
 const NotificationPopup: React.FC = () => {
-  const { notifications, removeNotification } = useNotifications();
-
-  // ** Move TMA to Notification Provider ** //
-  const TMA = miniApp.ready.isAvailable();
-  // ** Move TMA to Notification Provider ** //
+  const { notifications, removeNotification, TMA } = useNotifications();
 
   const getIcon = (type: string) => {
     switch (type) {
