@@ -4,8 +4,9 @@ import './index.css'
 import './styles/fonts.css';
 import './styles/telegram.css'
 import App from './App.tsx'
-
 import { init, miniApp, swipeBehavior, viewport } from '@tma.js/sdk-react';
+// import { configureStore } from '@reduxjs/toolkit';
+// import { Provider } from 'react-redux';
 
 const initializeTelegramSDK = async () => {
   try {
@@ -33,8 +34,14 @@ const initializeTelegramSDK = async () => {
 
 initializeTelegramSDK();
 
+//const store = configureStore()
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
+    {/* <Provider store={store}>
+      <App />
+    </Provider>  */}
+
     <App />
   </StrictMode>,
 )
