@@ -65,7 +65,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
           </div>}
       </header>
 
-      <main className={`grow p-4 ${isMenuOpen ? 'blur-xs' : 'blur-none'} transition-all duration-200`}>
+      <main className={`grow p-2 ${isMenuOpen ? 'blur-xs' : 'blur-none'} transition-all duration-200`}>
         <NotificationProvider>
           {children}
           <NotificationPopup />

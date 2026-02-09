@@ -60,6 +60,7 @@ export const RecordInput = ({ onSubmit, suggestionData = null, questInfo = [] }:
           className='w-full'
           options={questInfo.map((quest) => { return { key: quest.id, value: quest.name } })} 
           label='Связанный квест' 
+          labelBGColor='bg-gray-900'
           setKey={questID} 
           entityEdit={{ handleFieldChange: (value) => {setQuestID(value)} }} 
           nullable={true}
