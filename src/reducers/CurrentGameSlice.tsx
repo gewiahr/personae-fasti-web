@@ -1,16 +1,15 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { GameInfo, GameRecords, PlayerInfo, Record, Session } from '../types/request';
-import type { RootState } from '../store';
+import type { GameInfo, GameRecords, NewRecord, PlayerInfo, Record, Session } from '../types/request';
+import { type RootState } from '../store';
 import { api } from '../utils/api';
 
-export interface CurrentGameData {
+export type CurrentGameData = {
   game: GameInfo | null;
   records: Record[];
   sessions: Session[];
   players: PlayerInfo[];
 };
 
-// Initial state
 const initialState : CurrentGameData = {
   game: null,
   records: [],
@@ -20,13 +19,43 @@ const initialState : CurrentGameData = {
 
 export const getCurrentGameRecords = createAsyncThunk(
   'getCurrentGameRecords',
-  async (data: {authorization: string}, appThunk) => {
-    const response = await api.get<GameRecords>('/records', data.authorization);
+  async (params: { auth: string }, appThunk) => {
+    const response = await api.get<GameRecords>('/records', params.auth);
 
     appThunk.dispatch(setCurrentGame(response.data?.currentGame || null));
     appThunk.dispatch(setCurrentGameRecords(response.data?.records || []));
     appThunk.dispatch(setCurrentGameSessions(response.data?.sessions || []));
     appThunk.dispatch(setCurrentGamePlayers(response.data?.players || []));
+  }
+);
+
+export const postNewRecord = createAsyncThunk(
+  'postNewRecord',
+  async (params: { auth: string, playerID: number, gameID: number, content: string, hidden: boolean, questID: number }, { dispatch, getState }) => {       
+    const game = selectCurrentGameInfo(getState() as RootState);
+    if (!game) return;
+
+    const newRecord: NewRecord = {
+      text: params.content,
+      playerID: params.playerID,
+      gameID: game.id,
+      questID: params.questID,
+      hidden: params.hidden
+    };
+    
+    try {
+      const { data, error } = await api.post<GameRecords>('/record', params.auth, newRecord);
+
+      if (error) throw error;
+      if (data) {
+        dispatch(setCurrentGame(data?.currentGame || null));
+        dispatch(setCurrentGameRecords(data?.records || []));
+        dispatch(setCurrentGameSessions(data?.sessions || []));
+        dispatch(setCurrentGamePlayers(data?.players || []));
+      }
+    } catch (err) {     
+      throw err;
+    };
   }
 );
 
@@ -62,6 +91,7 @@ export const {
 
 // Export selectors
 export const selectCurrentGame = (state: RootState) => state.currentGame;
+export const selectCurrentGameInfo = (state: RootState) => state.currentGame.game;
 export const selectCurrentGameGM = (state: RootState) => state.currentGame.players.find((el) => el.id === state.currentGame.game?.gmID);
 export const selectCurrentGamePlayers = (state: RootState) => state.currentGame.players || [];
 export const selectCurrentGameRecords = (state: RootState) => state.currentGame.records || [];

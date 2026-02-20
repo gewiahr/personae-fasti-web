@@ -44,7 +44,7 @@ export const RecordPage = () => {
     };
 
     getQuests();
-    dispatch(getCurrentGameRecords({authorization}));
+    dispatch(getCurrentGameRecords({auth: authorization}));
   }, []);
 
   if (loading && currentGameRecords.length === 0) {

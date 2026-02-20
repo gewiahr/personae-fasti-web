@@ -7,6 +7,9 @@ import { SelectInput } from './lib/Inputs/SelectInput';
 import type { Quest } from '../types/quest';
 import Icon from './icons/Icon';
 import { useSettings } from '../hooks/useSettings';
+import { useAppDispatch, useAppSelector } from '../store';
+import { useAuth } from '../hooks/useAuth';
+import { postNewRecord, selectCurrentGame } from '../reducers/CurrentGameSlice';
 
 type RecordInputProps = {
   onSubmit: (content: string, hidden: boolean, questID: number) => void;
@@ -23,7 +26,11 @@ export const RecordInput = ({ onSubmit, suggestionData = null, questInfo = [] }:
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [postSettingsOpen, setPostSettingsOpen] = useState<boolean>(false);
 
-  const { player, game } = useSettings();
+  const { player } = useSettings();
+  const { authorization } = useAuth();
+
+  const dispatch = useAppDispatch();
+  const { game } = useAppSelector(selectCurrentGame);
 
   useEffect(() => {
     
@@ -31,9 +38,20 @@ export const RecordInput = ({ onSubmit, suggestionData = null, questInfo = [] }:
 
   const handleSubmit = () => {
     if (input.trim() === '' || !suggestionData) return;
+    console.log(game);
+    console.log(player);
+    if (!game || !player) return;
     setIsSubmitting(true);
     const enrichedText = enrichMentionInput(input, suggestionData?.entities)
-    onSubmit(enrichedText, postHidden, questID);
+    //onSubmit(enrichedText, postHidden, questID);
+    dispatch(postNewRecord({
+      auth: authorization,
+      content: enrichedText,
+      gameID: game?.id,
+      playerID: player.id,
+      hidden: postHidden,
+      questID
+    }));
     setInput('');
     setRichInputKey(prev => prev + 1);
     setIsSubmitting(false);
@@ -78,7 +96,7 @@ export const RecordInput = ({ onSubmit, suggestionData = null, questInfo = [] }:
       </div>}
       <div className="flex justify-between items-center mt-2">    
         <button
-          className={`px-4 py-2 rounded-md text-white bg-blue-600 hover:bg-blue-700`}
+          className={`px-4 py-2 rounded-md text-white bg-blue-600 hover:bg-blue-700 cursor-pointer`}
           onClick={() => setPostSettingsOpen(!postSettingsOpen)}
         >
           <Icon name={`${postSettingsOpen ? 'arrowUp' : 'arrowDown'}`} />
@@ -89,7 +107,7 @@ export const RecordInput = ({ onSubmit, suggestionData = null, questInfo = [] }:
           className={`px-4 py-2 rounded-md text-white ${
             isSubmitting || input.trim() === ''
               ? 'bg-gray-600 cursor-not-allowed'
-              : 'bg-blue-600 hover:bg-blue-700'
+              : 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
           }`}
         >
           {isSubmitting ? 'Публикуется...' : 'Опубликовать'}

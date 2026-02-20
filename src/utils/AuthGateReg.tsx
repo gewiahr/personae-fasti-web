@@ -4,7 +4,7 @@ import { useAuth } from '../hooks/useAuth';
 import { api } from './api';
 //import { useNotifications } from '../context/NotificationContext';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import type { LoginPlayerInfo } from '../types/request';
+import type { PlayerFullInfo } from '../types/request';
 import { useNavigate } from 'react-router-dom';
 
 type AuthGateRegUsernameInputState = 'check' | 'accept' | 'loading';
@@ -16,7 +16,7 @@ const AuthGateReg: React.FC = () => {
   const [inputTip, setInputTip] = useState<string>(initInputTip);
   const [inputCheck, setInputCheck] = useState<AuthGateRegUsernameInputCheck>('none');
   const { playerInfo, authorization } = useAuth();
-  const [_, setPlayerInfoLS] = useLocalStorage<LoginPlayerInfo | null>('playerInfo', null);
+  const [_, setPlayerInfoLS] = useLocalStorage<PlayerFullInfo | null>('playerInfo', null);
   const [newUsername, setNewUsername] = useState<string>(playerInfo?.username || "");
   const navigate = useNavigate();
   //const { addNotification } = useNotifications();
@@ -47,7 +47,7 @@ const AuthGateReg: React.FC = () => {
 
   const acceptUsername = async () => {
     setInputState('loading');
-    var { data, error } = await api.patch<LoginPlayerInfo>(`/player/username`, authorization, { "newUsername": newUsername }); 
+    var { data, error } = await api.patch<PlayerFullInfo>(`/player/username`, authorization, { "newUsername": newUsername }); 
     if (error) {
       setInputTip('Имя недоступно! Попробуйте другое!');
       setInputState('check');

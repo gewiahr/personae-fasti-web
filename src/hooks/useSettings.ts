@@ -1,16 +1,16 @@
 import { useState } from "react";
-import type { GameFullInfo, GameInfo, LoginPlayerInfo, PlayerSettings } from "../types/request";
+import type { GameFullInfo, GameInfo, PlayerFullInfo, PlayerGamesInfo } from "../types/request";
 import { api } from "../utils/api";
 import { useAuth } from "./useAuth";
 import { useLocalStorage } from "./useLocalStorage";
 
 export const useSettings = () => {
   const { authorization } = useAuth();
-  const [playerInfo, setPlayerInfo] = useLocalStorage<LoginPlayerInfo | null>('playerInfo', null);
+  const [playerInfo, setPlayerInfo] = useLocalStorage<PlayerFullInfo | null>('playerInfo', null);
   const [currentGame, setCurrentGame] = useLocalStorage<GameFullInfo | null>('currentGame', null);
   const [playerGames, setPlayerGames] = useState<GameInfo[]>([]);
 
-  const setPlayer = (newPlayerInfo: LoginPlayerInfo | null) => {
+  const setPlayer = (newPlayerInfo: PlayerFullInfo | null) => {
     setPlayerInfo(newPlayerInfo);
   };
 
@@ -19,7 +19,7 @@ export const useSettings = () => {
   };
 
   const updateSettings = async () => {
-    var playerSettings = await api.get<PlayerSettings>("/player/settings", authorization);
+    var playerSettings = await api.get<PlayerGamesInfo>("/player/settings", authorization);
     if (playerSettings.data) {
       setCurrentGame(playerSettings.data.currentGame);
       setPlayerGames(playerSettings.data.playerGames);

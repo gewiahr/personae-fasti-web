@@ -1,4 +1,4 @@
-import type { GameFullInfo, PlayerInfo, PlayerSettings, Record, Session } from '../types/request';
+import type { GameFullInfo, PlayerInfo, PlayerGamesInfo, Record, Session } from '../types/request';
 import { useAuth } from '../hooks/useAuth';
 import type { SuggestionData } from '../types/suggestion';
 import RecordCard from './RecordCard';
@@ -7,6 +7,8 @@ import RecordEdit from './RecordEdit';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useApi } from '../hooks/useApi';
 import { useSettings } from '../hooks/useSettings';
+import { useAppSelector } from '../store';
+import { selectCurrentGameRecords } from '../reducers/CurrentGameSlice';
 
 type RecordFeedProps = {
   records: Record[];
@@ -23,14 +25,16 @@ type RecordSession = {
   records: Record[];
 }
 
-export const RecordFeed = ({ records, players, sessions, suggestionData = null, editable = false, showQuests = true, onEdit = () => {} }: RecordFeedProps) => {
+export const RecordFeed = ({ records: recordsOld, players, sessions, suggestionData = null, editable = false, showQuests = true, onEdit = () => {} }: RecordFeedProps) => {
   const { authorization } = useAuth();
   const { player, game } = useSettings();
   const [ editing, setEditing ] = useState<Record | null>(null);
   const [ orderedRecords, setOrderedRecords ] = useState<RecordSession[] | null>();
 
-  const { data : playerSettingsData } = useApi.get<PlayerSettings>("/player/settings", authorization);
+  const { data : playerSettingsData } = useApi.get<PlayerGamesInfo>("/player/settings", authorization);
   const [ gameInfo, setGameInfo ] = useLocalStorage<GameFullInfo | null>('currentGame', playerSettingsData?.currentGame || null);
+
+  const records = useAppSelector(selectCurrentGameRecords);
 
   const onRecordEdit = (record : Record) => {
     setEditing(record);
@@ -42,7 +46,7 @@ export const RecordFeed = ({ records, players, sessions, suggestionData = null, 
   };
 
   useEffect(() => {
-    if (records) {
+    if (records && records.length > 0) {
       let or = orderRecords();
       setOrderedRecords(or);
     }; 
@@ -53,8 +57,12 @@ export const RecordFeed = ({ records, players, sessions, suggestionData = null, 
   }, [playerSettingsData])
 
   const orderRecords = () => {
+    if (!records || records.length === 0) {
+      return [];
+    };
+
     if (!sessions || sessions.length === 0) {
-      return [{ records: records.sort((a, b) => b.created.localeCompare(a.created)), session: null }] as RecordSession[]
+      return [{ records: [...records].sort((a, b) => b.created.localeCompare(a.created)), session: null }] as RecordSession[]
     };
 
     // Sort sessions by endTime (ascending), with current session (null endTime) last

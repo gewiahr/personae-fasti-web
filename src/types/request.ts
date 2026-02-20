@@ -3,7 +3,7 @@ import type { Quest, QuestTask } from "./quest";
 
 export type LoginInfo = {
   authorization: string;
-  player: LoginPlayerInfo;
+  player: PlayerFullInfo;
   currentGame: GameFullInfo;
 };
 
@@ -41,18 +41,18 @@ export type Session = {
   endTime: string;
 };
 
-export type LoginPlayerInfo = {
+export type PlayerFullInfo = {
   id: number;
   username: string;
-  settings: PlayerInfoSettings;
+  settings: PlayerSettings;
 };
 
-export type PlayerInfoSettings = {
+export type PlayerSettings = {
   couldChangeUsername: boolean;
   //colorTheme: 'blue' | 'green'
 };
 
-export type PlayerSettings = {
+export type PlayerGamesInfo = {
   currentGame: GameFullInfo;
   playerGames: GameInfo[];
 };

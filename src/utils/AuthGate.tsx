@@ -1,14 +1,59 @@
-import { type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import useTelegram from '../hooks/useTelegram';
 import AuthGateReg from './AuthGateReg';
 import AuthGateNoGame from './AuthGateNoGame';
+import { useAppDispatch, useAppSelector } from '../store';
+import { loginTG as playerLoginTG, selectAuthorization, selectPlayerInfo } from '../reducers/PlayerSlice';
+import { getCurrentGameRecords, selectCurrentGameInfo } from '../reducers/CurrentGameSlice';
 
 export const AuthGate = ({ children }: { children: ReactNode }) => {
-  const { isAuthenticated, playerInfo, currentGame, loginTG } = useAuth();
-  //const [input, setInput] = useState<string>('');
-
+  const { loginTG } = useAuth();
   const { TMA, initDataRaw } = useTelegram();
+
+  const dispatch = useAppDispatch();
+
+  const playerInfo = useAppSelector(selectPlayerInfo);
+  const auth = useAppSelector(selectAuthorization);
+  const currentGame = useAppSelector(selectCurrentGameInfo);
+  const isAuthenticated = !!playerInfo;
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    // setIsLoading(true);
+    // const fetchPlayerData = () => {
+    //   if (!playerInfo && initDataRaw) {
+    //     dispatch(getPlayerInfo({ rawData: initDataRaw }));
+    //   }
+    // };
+
+    // const fetchGameInfo = async () => {
+    //   if (!currentGame) {
+    //     dispatch(getCurrentGameRecords({ auth }));
+    //   }
+    // };
+    
+    // fetchPlayerData();
+    // fetchGameInfo();
+    // setIsLoading(false);
+    //console.log(initDataRaw)
+    if (!isAuthenticated) {
+      dispatch(playerLoginTG({ rawData: initDataRaw })).unwrap();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (playerInfo) setIsLoading(false);
+  }, [playerInfo]);
+
+  const buttonLoginTG = async () => {
+    try {
+      await dispatch(playerLoginTG({ rawData: initDataRaw })).unwrap();
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   // ++ Implement correct server error ++ //
   //const [warning, setWarning] = useState<string>();
@@ -49,12 +94,19 @@ export const AuthGate = ({ children }: { children: ReactNode }) => {
             На канале я рассказываю о геймдизайне и о других своих интересных проектах.
             А после подписки ты сможешь войти и зарегистрироваться одной кнопкой внизу.
           </p>
-          <button className='btn' onClick={() => loginTG(initDataRaw || "")}>
+          {/* <button className='btn' onClick={() => loginTG(initDataRaw || "")}> */}
+          <button className='btn' onClick={buttonLoginTG}>
             Войти
           </button>
         </div>
       </div>
     </>
+  );
+
+  if (isLoading) return (
+    <div className="flex flex-col gap-4 p-6 text-center items-center justify-center h-screen bg-gray-800 text-gray-100">
+      <p>Загрузка...</p>
+    </div>
   );
 
   if (playerInfo?.settings == null) return (

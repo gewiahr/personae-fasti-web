@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import type { GameFullInfo, LoginPlayerInfo, PlayerSettings } from '../types/request';
+import type { GameFullInfo, PlayerFullInfo, PlayerGamesInfo } from '../types/request';
 import GameCreateEditPage from '../pages/GameCreateEditPage';
 import { useApi } from '../hooks/useApi';
 import { useAuth } from '../hooks/useAuth';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
 type AuthGateNoGameProps = {
-  player: LoginPlayerInfo;
+  player: PlayerFullInfo;
 };
 
 const AuthGateNoGame: React.FC<AuthGateNoGameProps> = ({ player }) => {
   const { authorization } = useAuth();
-  const { data: playerSettingsData } = useApi.get<PlayerSettings>("/player/settings", authorization);
+  const { data: playerSettingsData } = useApi.get<PlayerGamesInfo>("/player/settings", authorization);
   const [ _, setGameInfo ] = useLocalStorage<GameFullInfo | null>('currentGame', playerSettingsData?.currentGame || null);
   const [newGameSwitch, switchNewGame] = useState<boolean>(false);
   const [usernameCopied, setUsernameCopied] = useState<boolean>(false);

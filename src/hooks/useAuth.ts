@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useLocalStorage } from './useLocalStorage';
 import { api } from '../utils/api';
-import type { GameFullInfo, LoginInfo, LoginPlayerInfo } from '../types/request';
+import type { GameFullInfo, LoginInfo, PlayerFullInfo } from '../types/request';
 import type { AuthStorage } from '../types/utils';
 
 export const useAuth = () => {
   const [ auth, setAuth ] = useLocalStorage<AuthStorage | null>('auth', null);
-  const [playerInfo, setPlayerInfo] = useLocalStorage<LoginPlayerInfo | null>('playerInfo', null);
+  const [playerInfo, setPlayerInfo] = useLocalStorage<PlayerFullInfo | null>('playerInfo', null);
   const [currentGame, setCurrentGame] = useLocalStorage<GameFullInfo | null>('currentGame', null);
 
   const [ isAuthenticated, setIsAuthenticated ] = useState(!!auth?.authorization);

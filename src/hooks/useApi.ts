@@ -2,12 +2,11 @@ import { useState, useEffect, useCallback } from 'react';
 import { api } from '../utils/api';
 import type { ApiError } from '../types/api';
 
-type UseApiResponse<T> = {
+type ApiResponse<T> = {
   data: T | null;
   loading: boolean;
-  error: ApiError | null;
+  error?: ApiError;
   status: number;
-  //refetch: (newConfig?: Partial<ApiConfig>) => void;
   refetch: (newConfig? : Partial<ApiRequest>) => void;
 };
 
@@ -20,13 +19,12 @@ type ApiRequest = {
 
 function useApiCore<T = any>(
   config: ApiRequest,
-  //config: ApiConfig = { method: 'GET' }, // Default to GET
   skip: boolean = false,
   dependencies: any[] = [],
-): UseApiResponse<T> {
+): ApiResponse<T> {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<ApiError | null>(null);
+  const [error, setError] = useState<ApiError>();
   const [status, setStatus] = useState<number>(0);
 
   const fetchData = useCallback(async (overrideConfig?: Partial<ApiRequest>) => {
@@ -35,7 +33,6 @@ function useApiCore<T = any>(
     if (skip) return;
     
     setLoading(true);
-    setError(null);
     
     try {
       const { data, status, error } = await api.fetch<T>(mergedConfig.method || "GET", mergedConfig.endpoint || "/", mergedConfig.authorization, mergedConfig.body);
@@ -55,7 +52,7 @@ function useApiCore<T = any>(
     } finally {
       setLoading(false);
     }
-  }, []); //JSON.stringify(config)]);
+  }, []);
 
   useEffect(() => {
     fetchData();
@@ -66,7 +63,7 @@ function useApiCore<T = any>(
   }, [fetchData]);
 
   return { data, loading, error, status, refetch };
-}
+};
 
 export const useApi = {
   get: <T = any>(

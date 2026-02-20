@@ -4,8 +4,11 @@ import { useAuth } from './useAuth';
 import { api } from '../utils/api';
 import type { GameRecords, NewRecord } from '../types/request';
 import { useSettings } from './useSettings';
+import { getCurrentGameRecords } from '../reducers/CurrentGameSlice';
+import { useAppDispatch } from '../store';
 
 export const useRecords = () => {
+  const dispatch = useAppDispatch();
   const { authorization } = useAuth();
   const { player, game } = useSettings();
   const [ records, setRecords ] = useState<GameRecords['records']>([]);
@@ -14,7 +17,6 @@ export const useRecords = () => {
   // ++ QUESTS ++ //
   const [ currentGame, setCurrentGame ] = useState<GameRecords['currentGame']>();
   
-  // Get initial records
   const { 
     data: initialData,
     loading,
@@ -22,7 +24,6 @@ export const useRecords = () => {
     refetch: fetchRecords 
   } = useApi.get<GameRecords>('/records', authorization);
 
-  // Handle API response
   useEffect(() => {
     if (initialData) {
       setRecords(initialData.records);
@@ -32,7 +33,6 @@ export const useRecords = () => {
     }
   }, [initialData]);
 
-  // Handle new record submission
   const handleNewRecord = useCallback(async (content: string, hidden: boolean = false, questID: number = 0) => {
     if (!player || !game) return
     
@@ -45,7 +45,6 @@ export const useRecords = () => {
     };
 
     try {
-      // Use direct API call instead of hook
       const { data, error } = await api.post<GameRecords>(
         '/record',
         authorization,
@@ -54,13 +53,14 @@ export const useRecords = () => {
 
       if (error) throw error;
       if (data) {
-        setRecords(data.records);
-        setSessions(data.sessions);
-        setPlayers(data.players);
-        setCurrentGame(data.currentGame);
+        dispatch(getCurrentGameRecords({auth: authorization}));
+        // setRecords(data.records);
+        // setSessions(data.sessions);
+        // setPlayers(data.players);
+        // setCurrentGame(data.currentGame);
       }
     } catch (err) {
-      fetchRecords(); // Re-fetch original data on error
+      fetchRecords(); 
       throw err;
     }
   }, [authorization, player?.id, game?.id, fetchRecords]);

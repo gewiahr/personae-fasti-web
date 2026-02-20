@@ -1,4 +1,5 @@
 export const config = {
   apiBaseUrl: import.meta.env.VITE_API_URL,
-  compendiumBaseUrl: import.meta.env.VITE_COMPENDIUM_URL
+  compendiumBaseUrl: import.meta.env.VITE_COMPENDIUM_URL,
+  tgRawData: import.meta.env.VITE_TG_RAW_DATA
 };
