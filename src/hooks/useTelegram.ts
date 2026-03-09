@@ -4,7 +4,7 @@ import { config } from "../utils/config";
 const useTelegram = () => {
   const TMA = miniApp.ready.isAvailable();
   
-  const initDataRaw = ""; //TMA ? retrieveRawInitData() : config.tgRawData; //"";
+  const initDataRaw = TMA ? retrieveRawInitData() : config.tgRawData; //"";
   const initData = TMA ? parseInitDataQuery(String(initDataRaw)) : null;
   const user = TMA ? initData?.user : null;
 
