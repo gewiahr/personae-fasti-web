@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useNotifications } from '../context/NotificationContext';
 import FoldableCategory from '../components/lib/FoldableCategory';
 import { ToggleSwitch } from '../components/lib/ToggleSwitch';
-import "../styles/components.css";
+//import "../styles/components.css";
 import { useAppDispatch, useAppSelector } from '../store';
 import { loadPlayerGames, selectAuthorization, selectPlayerGames, selectPlayerInfo } from '../reducers/PlayerSlice';
 import { changeCurrentGame, selectCurrentGame, startNewSession } from '../reducers/CurrentGameSlice';

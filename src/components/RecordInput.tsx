@@ -94,7 +94,7 @@ export const RecordInput: React.FC<RecordInputProps> = () => {
       </div>}
       <div className="flex justify-between items-center mt-2">    
         {showPostSettings && <button
-          className={`px-4 py-2 rounded-md text-white bg-blue-600 hover:bg-blue-700 cursor-pointer`}
+          className={`btn`}
           onClick={() => setPostSettingsOpen(!postSettingsOpen)}
         >
           <Icon name={`${postSettingsOpen ? 'arrowUp' : 'arrowDown'}`} />
@@ -104,8 +104,8 @@ export const RecordInput: React.FC<RecordInputProps> = () => {
           disabled={isSubmitting || input.trim() === ''}
           className={`px-4 py-2 rounded-md text-white 
             ${ isSubmitting || input.trim() === ''
-              ? 'bg-gray-600 cursor-not-allowed'
-              : 'bg-blue-600 hover:bg-blue-700 cursor-pointer' } 
+              ? 'btn-unavailable'
+              : 'btn' } 
             ${ showPostSettings ? '' : 'w-full' }
           `}
         >

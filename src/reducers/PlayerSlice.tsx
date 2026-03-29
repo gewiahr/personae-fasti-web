@@ -4,18 +4,22 @@ import { type RootState } from '../store';
 import { api } from '../utils/api';
 import { loadCurrentGameRecords, setCurrentGame } from './CurrentGameSlice';
 
+type UITheme = 'blue' | 'green' | 'olive' | 'tomato';
+
 export type PlayerData = {
   loading: boolean;
   info: PlayerFullInfo | null;
   token: string;
   games: GameInfo[];
+  theme: UITheme;
 };
 
 const initialState : PlayerData = {
   loading: true,
   info: null,
   token: window.localStorage.getItem('auth') || '',
-  games: []
+  games: [],
+  theme: 'tomato'
 };
 
 export const loginTG = createAsyncThunk(
@@ -119,6 +123,7 @@ export const selectPlayerInfoLoading = (state: RootState) => state.player.loadin
 export const selectPlayerInfo = (state: RootState): PlayerFullInfo | null => state.player.info;
 export const selectPlayerGames = (state: RootState): GameInfo[] => state.player.games;
 export const selectAuthorization = (state: RootState): string => state.player.token;
+export const selectPlayerTheme = (state: RootState): UITheme => state.player.theme;
 
 // Export reducer
 export default PlayerSlice;

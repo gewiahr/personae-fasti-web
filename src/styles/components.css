@@ -1,23 +1,99 @@
 @import "tailwindcss";
 
 .btn {
-  @apply bg-blue-600 text-white py-2 px-4 rounded cursor-pointer;
+  /* @apply bg-blue-600 text-white py-2 px-4 rounded cursor-pointer; */
+  @apply text-white py-2 px-4 rounded cursor-pointer;
+  background-color: var(--color-primary);
 }
 
 .btn:hover {
-  @apply bg-blue-700;
+  /* @apply bg-blue-700; */
+  background-color: var(--color-primary-hover);
 }
 
 .btn-alt {
-  @apply bg-green-600 text-white py-2 px-4 rounded cursor-pointer;
+  /* @apply bg-green-600 text-white py-2 px-4 rounded cursor-pointer; */
+  @apply text-white py-2 px-4 rounded cursor-pointer;
+  background-color: var(--color-success);
 }
 
 .btn-alt:hover {
-  @apply bg-green-700;
+  /* @apply bg-green-700; */
+  background-color: var(--color-success-hover);
 }
 
 .btn-unavailable {
-  @apply bg-gray-600 text-white py-2 px-4 rounded cursor-not-allowed;
+  /* @apply bg-gray-600 text-white py-2 px-4 rounded cursor-not-allowed; */
+  @apply text-white py-2 px-4 rounded cursor-not-allowed;
+  background-color: var(--color-disabled);
+}
+
+.btn-unavailable:hover {
+  background-color: var(--color-disabled-hover);
 }
 
 
+/* Кнопки */
+
+.btn {
+  @apply text-white py-2 px-4 rounded cursor-pointer;
+  background-color: var(--color-primary-button);
+}
+
+.btn:hover {
+  background-color: var(--color-primary-button-hover);
+}
+
+.btn-alt {
+  /* @apply bg-green-600 text-white py-2 px-4 rounded cursor-pointer; */
+  @apply text-white py-2 px-4 rounded cursor-pointer;
+  background-color: var(--color-success);
+}
+
+.btn-alt:hover {
+  background-color: var(--color-success-hover);
+}
+
+.btn-unavailable {
+  @apply text-white py-2 px-4 rounded cursor-not-allowed;
+  background-color: var(--color-disabled);
+}
+
+.btn-unavailable:hover {
+  background-color: var(--color-disabled-hover);
+}
+
+/* Фон, шапка и подвал */
+
+.main-bg {
+  background-color: var(--color-bg-primary)
+}
+
+.head-bg {
+  background-color: var(--color-header);
+}
+
+/* Текст */
+
+.primary-text {
+  color: var(--color-primary-text);
+}
+
+.gray-text {
+  color: var(--color-gray-text)
+}
+
+/* Свичи */
+
+.switch {
+  @apply relative min-w-12 h-6 rounded-md transition-colors duration-200 cursor-pointer
+          focus:outline-none focus:ring-2
+}
+
+.switch-active {
+  background-color: var(--color-accent);
+}
+
+.switch-disabled {
+  background-color: var( --color-gray);
+}
