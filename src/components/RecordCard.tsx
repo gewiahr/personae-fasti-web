@@ -17,10 +17,7 @@ const RecordCard = ({ record, label="", accented=false, editable=false, showQues
     <div>
       <div
         key={record.id}
-        className={`p-4 rounded-lg border ${accented
-          ? 'border-blue-500 bg-gray-800'
-          : 'border-gray-700 bg-gray-800'
-          } relative z-40`}
+        className={`record-card-container ${accented ? 'record-card-container-accented' : 'record-card-container-dimmed'}`}
       >
         <div className="flex justify-between items-start">
           <div>
@@ -42,10 +39,7 @@ const RecordCard = ({ record, label="", accented=false, editable=false, showQues
                 className='text-blue-500 hover:fill-current hover:text-gray-400 cursor-pointer'/>
             </button>}
             {label !== "" && <span
-              className={`text-xs px-2 py-1 rounded ${accented
-                ? 'bg-blue-900 text-blue-200'
-                : 'bg-gray-700 text-gray-300'
-                }`}
+              className={`card-label-container ${accented ? 'card-label-container-accented' : 'card-label-container-dimmed'}`}
             >
               {label}
             </span>}

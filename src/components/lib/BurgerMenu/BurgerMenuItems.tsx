@@ -29,7 +29,7 @@ interface BurgerMenuItemProps {
 export const BurgerMenuItem = ({ item } : BurgerMenuItemProps) => {
   return (
     <>
-      <div className="block w-full px-4 max-sm:py-4 sm:py-2 text-white text-left rounded-md">
+      <div className="burger-menu-item">
         <div className='flex items-center justify-between'>
           <p className='text-left'>{item.name}</p>
         </div>
@@ -51,7 +51,7 @@ export const BurgerMenuItemLinkExternal = ({ item } : BurgerMenuItemLinkProps) =
     <>
       <button
         onClick={() => ExternalLinkOnClick(item.path)}
-        className="block cursor-pointer w-full px-4 max-sm:py-4 sm:py-2 text-white text-left hover:bg-gray-700 rounded-md"
+        className="burger-menu-item burger-menu-button"
       >
         <div className='flex items-center justify-between'>
           <p className='text-left'>{item.name}</p>
@@ -71,7 +71,7 @@ export const BurgerMenuItemLinkInternal = ({ item, setClose } : BurgerMenuItemLi
       <Link
         key={item.path}
         to={item.path}
-        className="block px-4 max-sm:py-4 sm:py-2 text-white hover:bg-gray-700 rounded-md"
+        className="burger-menu-item burger-menu-button"
         onClick={setClose}
       >
         <div className='flex items-center justify-between'>
@@ -89,7 +89,7 @@ interface BurgerMenuItemCategoryProps {
 export const BurgerMenuItemCategory = ({ item } : BurgerMenuItemCategoryProps) => {
   return (
     <>
-      <div className="block w-full px-4 max-sm:py-4 sm:py-2 text-white text-left rounded-md">
+      <div className="burger-menu-item">
         <div className='flex items-center justify-between'>
           <p className='text-left'>{item.name}</p>
         </div>
@@ -116,7 +116,7 @@ export const BurgerMenuItemCategoryFoldable = ({ item, itemOnChange, setClose } 
     <>
       <button
         onClick={openFoldable}
-        className="block cursor-pointer w-full px-4 max-sm:py-4 sm:py-2 text-white text-left hover:bg-gray-700 rounded-md"
+        className="burger-menu-item burger-menu-button"
       >
         <div className='flex items-center justify-between'>
           <p className='text-left'>{foldableItem.name}</p>

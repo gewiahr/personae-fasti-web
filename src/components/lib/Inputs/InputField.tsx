@@ -1,5 +1,6 @@
 import { useState, useId } from 'react';
 import type { TextInputProps } from './InputProps';
+import FloatingLabel from './FloatingLabel';
 
 type InputFieldProps = TextInputProps & {
 
@@ -32,7 +33,14 @@ export const InputField: React.FC<InputFieldProps> = ({ label = '', value = "", 
         value={value}
       />
 
-      <label
+      <FloatingLabel 
+        id={id}
+        label={label}
+        placeholder={isFocused || value.length > 0} 
+        labelBGColor={labelBGColor}        
+      />
+
+      {/* <label
         htmlFor={id}
         className={`
             absolute left-4 px-1
@@ -47,7 +55,7 @@ export const InputField: React.FC<InputFieldProps> = ({ label = '', value = "", 
           `}
       >
         {label}
-      </label>
+      </label> */}
 
       {error && (
         <p className="mt-1 text-sm text-red-600">{error}</p>

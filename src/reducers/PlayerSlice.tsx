@@ -30,7 +30,6 @@ export const loginTG = createAsyncThunk(
 
       appThunk.dispatch(loadCurrentGameRecords({ auth: response.data.authorization }));
     } catch (e: any) {
-      console.log(e)
       throw e;
     } finally {
       appThunk.dispatch(setPlayerInfoLoading(false));
