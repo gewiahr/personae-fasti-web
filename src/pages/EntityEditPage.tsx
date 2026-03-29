@@ -1,6 +1,6 @@
 import type { EntityCreateUpdate, EntityMetaData } from '../types/entities';
 import { RichInput } from '../components/lib/Inputs/RichInput'
-import type { SuggestionData } from '../types/suggestion';
+import { convertSuggestionDataToRender, type SuggestionData } from '../types/suggestion';
 import { useEffect, useState } from 'react';
 import { InputField } from '../components/lib/Inputs/InputField';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -48,7 +48,7 @@ const EntityEditPage = <T extends EntityCreateUpdate>({ metaData }: EntityEditPa
   const saveEdited = async (editedEntity: T | null) => {
     if (!editedEntity || !suggestionData) return;
 
-    var enrichedEntity = enrichEntityFieldsMentions(editedEntity, metaData, suggestionData);
+    var enrichedEntity = enrichEntityFieldsMentions(editedEntity, metaData, convertSuggestionDataToRender(suggestionData));
     enrichedEntity.hidden = hidden 
 
     const endpoint = `/${metaData.EntityType}`;
@@ -80,7 +80,7 @@ const EntityEditPage = <T extends EntityCreateUpdate>({ metaData }: EntityEditPa
                         label='Описание' 
                         value={entity[field.FieldName as keyof typeof entity] as string} 
                         entityEdit={{ fieldName: field.FieldName, handleFieldChange }} 
-                        fullSuggestionData={suggestionData}
+                        suggestionData={convertSuggestionDataToRender(suggestionData)}
                       />);
           }
         })}
