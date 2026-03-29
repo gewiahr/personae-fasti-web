@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+[twtheme='blue'] {
+  --color-bg-primary: oklch(21% 0.034 264.665); 
+  --color-bg-secondary: oklch(27.8% 0.033 256.848);
+  --color-header: oklch(27.8% 0.033 256.848);
+
+  --color-primary-button: oklch(54.6% 0.245 262.881);
+  --color-primary-button-hover: oklch(48.8% 0.243 264.376);
+  --color-disabled: oklch(44.6% 0.03 256.802);
+  --color-disabled-hover: oklch(44.6% 0.03 256.802);
+
+  --color-primary-text: oklch(62.3% 0.214 259.815);
+  --color-gray-text: oklch(55.1% 0.027 264.364);
+
+  --color-accent:oklch(62.3% 0.214 259.815);
+  --color-gray:oklch(87.2% 0.01 258.338);
+}
+
+[twtheme='green'] {
+  --color-bg-primary: oklch(0.175 0.032 165);
+  --color-bg-secondary: oklch(0.269 0.083 165);
+  --color-header: oklch(0.206 0.045 165);
+
+  --color-primary-button: oklch(0.363 0.138 165);
+  --color-primary-button-hover: oklch(0.318 0.113 165);
+  --color-disabled: oklch(44.6% 0.03 256.802);
+  --color-disabled-hover: oklch(44.6% 0.03 256.802);
+
+  --color-primary-text: oklch(0.566 0.202 165);
+  --color-gray-text:oklch(55.1% 0.027 264.364);
+
+  --color-accent:oklch(0.566 0.202 165);
+  --color-gray:oklch(87.2% 0.01 258.338);
+}
+
+[twtheme='olive'] {
+  --color-bg-primary: oklch(0.24 0.03 115); 
+  --color-bg-secondary: oklch(0.45 0.06 110);
+  --color-header: oklch(0.45 0.06 110);
+
+  --color-primary-button: oklch(0.57 0.13 50);
+  --color-primary-button-hover: oklch(48.795% 0.10851 51.054);
+  --color-disabled: oklch(44.6% 0.03 256.802);
+  --color-disabled-hover: oklch(44.6% 0.03 256.802);
+
+  --color-primary-text: oklch(0.57 0.13 50);
+  --color-gray-text: oklch(55.1% 0.027 264.364);
+
+  --color-accent:oklch(0.57 0.13 50);
+  --color-gray:oklch(87.2% 0.01 258.338);
+}
+
+[twtheme='tomato'] {
+  --color-bg-primary: oklch(0.191 0.029 25); 
+  --color-bg-secondary: oklch(0.45 0.06 110);
+  --color-header: oklch(0.287 0.076 25);
+
+  --color-primary-button: oklch(0.435 0.151 25);
+  --color-primary-button-hover: oklch(0.384 0.13 25);
+  --color-disabled: oklch(44.6% 0.03 256.802);
+  --color-disabled-hover: oklch(44.6% 0.03 256.802);
+
+  --color-primary-text: oklch(0.435 0.151 25);
+  --color-gray-text: oklch(55.1% 0.027 264.364);
+
+  --color-accent:oklch(0.435 0.151 25);
+  --color-gray:oklch(87.2% 0.01 258.338);
+}

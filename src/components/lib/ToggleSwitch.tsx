@@ -31,7 +31,7 @@ export const ToggleSwitch = ({
     <div className={`flex items-center gap-3 ${className}`}>
       {/* Left label */}
       {labelPosition === 'left' && (
-        <label className={`text-md ${toggleValue ? 'text-blue-500' : 'text-gray-500'}`}>
+        <label className={`text-md ${toggleValue ? 'primary-text' : 'gray-text'}`}>
           {label}
         </label>
       )}
@@ -42,11 +42,7 @@ export const ToggleSwitch = ({
         onClick={handleInputChange}
         // onFocus={() => setIsFocused(true)}
         // onBlur={() => setIsFocused(false)}
-        className={`
-          relative min-w-12 h-6 rounded-md transition-colors duration-200 cursor-pointer
-          focus:outline-none focus:ring-2 focus:ring-blue-200
-          ${toggleValue ? 'bg-blue-500' : 'bg-gray-300'}
-        `}
+        className={`switch ${toggleValue ? 'switch-active' : 'switch-disabled'}`}
       >
         {/* Thumb */}
         <span
@@ -60,7 +56,7 @@ export const ToggleSwitch = ({
 
       {/* Right label */}
       {labelPosition === 'right' && (
-        <label className={`text-md ${toggleValue ? 'text-blue-500' : 'text-gray-500'}`}>
+        <label className={`text-md ${toggleValue ? 'primary-text' : 'gray-text'}`}>
           {label}
         </label>
       )}

@@ -8,18 +8,28 @@ module.exports = {
     },
     extend: {
       colors: {
-        blue: {
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          600: '#2563eb',
-          800: '#1e40af',
+        primary: 'var(--color-primary)',
+        'primary-hover': 'var(--color-primary-hover)',
+        secondary: 'var(--color-secondary)',
+        background: 'var(--color-background)',
+        surface: 'var(--color-surface)',
+        text: {
+          DEFAULT: 'var(--color-text)',
+          secondary: 'var(--color-text-secondary)',
         },
-        green: {
-          100: '#dcfce7',
-          200: '#bbf7d0',
-          600: '#16a34a',
-          800: '#166534',
-        },
+        border: 'var(--color-border)',
+        // blue: {
+        //   100: '#dbeafe',
+        //   200: '#bfdbfe',
+        //   600: '#2563eb',
+        //   800: '#1e40af',
+        // },
+        // green: {
+        //   100: '#dcfce7',
+        //   200: '#bbf7d0',
+        //   600: '#16a34a',
+        //   800: '#166534',
+        // },
         fontFamily: {
           stetica: ['var(--font-stetica)'], // Optional: add as custom utility
         },
