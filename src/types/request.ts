@@ -74,11 +74,17 @@ export type GameFullInfo = {
   gmID: number;
 
   settings: GameSettings;
+  sessions: Session[];
 };
+
+export type GamePage = {
+  game: GameFullInfo;
+  players: PlayerInfo[];
+}
 
 export type GameSettings = {
   allowAllEditRecords: boolean;
-}
+};
 
 export interface EntityInfo {
   id: number;
@@ -87,7 +93,7 @@ export interface EntityInfo {
 
   gameID: number;
   hiddenBy: number;  
-}
+};
 
 export interface CharInfo extends EntityInfo {
   playerID: number;
@@ -139,7 +145,6 @@ export interface QuestInfo {
 }
 
 export interface GameQuests {
-  currentGame: GameInfo;
   quests: QuestInfo[];
 }
 
