@@ -72,7 +72,7 @@ const AuthGateReg: React.FC = () => {
         {/* <p className=''>{`Выберите имя пользователя, (пока что) его нельзя будет сменить`}</p> */}
         <InputField label='Имя пользователя' labelBGColor='bg-gray-800' value={newUsername} entityEdit={{ handleFieldChange: handleInputChange }} />
         <p className={`italic ${inputCheck === 'valid' ? 'text-green-500' : inputCheck === 'invalid' ? 'text-red-500' : 'text-gray-100'}`}>{inputTip}</p>
-        {inputState === 'check' ? <button className='w-full btn-alt' onClick={checkUsername}>Проверить</button> :
+        {inputState === 'check' ? <button className='w-full btn' onClick={checkUsername}>Проверить</button> :
         inputState === 'accept' ? <button className='w-full btn' onClick={acceptUsername}>Применить</button> :
         inputState === 'loading' ? <button className='w-full btn-unavailable'>Загрузка...</button> :
         <></>}

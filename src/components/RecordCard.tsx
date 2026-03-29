@@ -36,7 +36,7 @@ const RecordCard = ({ record, label="", accented=false, editable=false, showQues
               <Icon 
                 key={`icon_edit_${record.id}`} 
                 name='edit'
-                className='text-blue-500 hover:fill-current hover:text-gray-400 cursor-pointer'/>
+                className='icon-button-accented'/>
             </button>}
             {label !== "" && <span
               className={`card-label-container ${accented ? 'card-label-container-accented' : 'card-label-container-dimmed'}`}
@@ -49,12 +49,7 @@ const RecordCard = ({ record, label="", accented=false, editable=false, showQues
 
       {showQuest && record.quest && 
         <Link to={`/quest/${record.quest.id}`} >
-          <div className={`relative -top-4 -mb-4 z-30 px-4 pt-6 pb-2 rounded-lg border ${accented
-            ? 'border-blue-500 bg-gray-800'
-            : 'border-gray-700 bg-gray-800'
-            } text-xs cursor-pointer hover:text-blue-500`}
-            
-          >
+          <div className={`record-card-quest-container ${accented ? 'record-card-quest-container-accented' : 'record-card-quest-container-dimmed'}`} >
             Квест: {record.quest.name}  
           </div>
         </Link>

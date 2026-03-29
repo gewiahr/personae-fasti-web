@@ -21,7 +21,7 @@ export const NumericInputInline: React.FC<NumericInputInlineComponentProps> = ({
       {/* <div className="flex items-center border-b border-gray-200 focus-within:border-blue-500 transition-colors"> */}
       <button
         onClick={decrement}
-        className="px-2 text-gray-500 hover:text-blue-600 focus:outline-none"
+        className="number-input-inline-arrow"
         aria-label="Decrease"
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -43,7 +43,7 @@ export const NumericInputInline: React.FC<NumericInputInlineComponentProps> = ({
 
       <button
         onClick={increment}
-        className="px-2 text-gray-500 hover:text-blue-600 focus:outline-none"
+        className="number-input-inline-arrow"
         aria-label="Increase"
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none">

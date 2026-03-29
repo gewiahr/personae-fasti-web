@@ -11,6 +11,7 @@ import { SelectInput } from './lib/Inputs/SelectInput';
 import { useAppDispatch, useAppSelector } from '../store';
 import { deleteRecord, editRecord, loadCurrentGameQuests, selectCurrentGameQuests } from '../reducers/CurrentGameSlice';
 import { selectAuthorization } from '../reducers/PlayerSlice';
+import SubmitButton from './lib/SubmitButton';
 
 interface RecordEditProps {
   record: Record;
@@ -130,19 +131,20 @@ export const RecordEdit = ({
       }
 
       <div className='flex justify-between items-center'>
-        <button
-          className="w-[30%] bg-red-600 hover:bg-red-700 text-white mt-2 py-2 px-4 rounded"
+        <SubmitButton 
           onClick={handleDelete}
+          danger={true}
+          className="w-[30%] mt-2"
         >
           {"Удалить"}
-        </button>
+        </SubmitButton>
 
-        <button
-          className="w-[65%] bg-blue-600 hover:bg-blue-700 text-white mt-2 py-2 px-4 rounded"
-          onClick={handleSave}
+        <SubmitButton 
+          onClick={handleSave} 
+          className="w-[65%] mt-2"
         >
-          {"Сохранить"}
-        </button>
+          {"Сохранить"}  
+        </SubmitButton>
       </div>
 
     </Modal>

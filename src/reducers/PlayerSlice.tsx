@@ -4,7 +4,7 @@ import { type RootState } from '../store';
 import { api } from '../utils/api';
 import { loadCurrentGameRecords, setCurrentGame } from './CurrentGameSlice';
 
-type UITheme = 'blue' | 'green' | 'olive' | 'tomato';
+type UITheme = 'blue' | 'mint' | 'olive' | 'tomato';
 
 export type PlayerData = {
   loading: boolean;
@@ -19,7 +19,7 @@ const initialState : PlayerData = {
   info: null,
   token: window.localStorage.getItem('auth') || '',
   games: [],
-  theme: 'tomato'
+  theme: 'mint'
 };
 
 export const loginTG = createAsyncThunk(

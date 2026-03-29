@@ -16,35 +16,27 @@ export const ToggleSwitch = ({
   entityEdit,
   className = ''
 }: ToggleSwitchProps) => {
-  //const [isFocused, setIsFocused] = useState(false);
   const [toggleValue, switchToggleValue] = useState<boolean>(setValue);
 
   const handleInputChange = () => {
-    //entityEdit?.handleFieldChange(!toggleValue);
-    if (entityEdit) {
-      entityEdit?.handleFieldChange(!toggleValue, entityEdit?.fieldName || "", entityEdit.arrayIndex);
-    };
+    if (entityEdit) entityEdit?.handleFieldChange(!toggleValue, entityEdit?.fieldName || "", entityEdit.arrayIndex);
     switchToggleValue(!toggleValue)
   };
 
   return (
     <div className={`flex items-center gap-3 ${className}`}>
-      {/* Left label */}
+
       {labelPosition === 'left' && (
-        <label className={`text-md ${toggleValue ? 'primary-text' : 'gray-text'}`}>
+        <label className={`text-md ${toggleValue ? 'switch-label-on' : 'switch-label-off'}`}>
           {label}
         </label>
       )}
 
-      {/* Square iOS-style switch */}
       <button
         type="button"
         onClick={handleInputChange}
-        // onFocus={() => setIsFocused(true)}
-        // onBlur={() => setIsFocused(false)}
         className={`switch ${toggleValue ? 'switch-active' : 'switch-disabled'}`}
       >
-        {/* Thumb */}
         <span
           className={`
             absolute top-0.5 h-5 w-5 rounded-sm bg-white shadow-sm
@@ -54,12 +46,12 @@ export const ToggleSwitch = ({
         />
       </button>
 
-      {/* Right label */}
       {labelPosition === 'right' && (
-        <label className={`text-md ${toggleValue ? 'primary-text' : 'gray-text'}`}>
+        <label className={`text-md ${toggleValue ? 'switch-label-on' : 'switch-label-off'}`}>
           {label}
         </label>
       )}
+
     </div>
   );
 };

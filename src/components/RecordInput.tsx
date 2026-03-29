@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '../store';
 import { postNewRecord, selectCurrentGame } from '../reducers/CurrentGameSlice';
 import { selectAuthorization, selectPlayerInfo } from '../reducers/PlayerSlice';
 import { convertSuggestionDataToRender } from '../types/suggestion';
+import SubmitButton from './lib/SubmitButton';
 
 type RecordInputProps = {
 
@@ -93,24 +94,19 @@ export const RecordInput: React.FC<RecordInputProps> = () => {
         </div>}
       </div>}
       <div className="flex justify-between items-center mt-2">    
-        {showPostSettings && <button
-          className={`btn`}
+        {showPostSettings && <SubmitButton
           onClick={() => setPostSettingsOpen(!postSettingsOpen)}
         >
           <Icon name={`${postSettingsOpen ? 'arrowUp' : 'arrowDown'}`} />
-        </button>}
-        <button
+        </SubmitButton>}
+
+        <SubmitButton
           onClick={handleSubmit}
+          className={`${ showPostSettings ? '' : 'w-full' }`}
           disabled={isSubmitting || input.trim() === ''}
-          className={`px-4 py-2 rounded-md text-white 
-            ${ isSubmitting || input.trim() === ''
-              ? 'btn-unavailable'
-              : 'btn' } 
-            ${ showPostSettings ? '' : 'w-full' }
-          `}
         >
           {isSubmitting ? 'Публикуется...' : 'Опубликовать'}
-        </button>
+        </SubmitButton>
       </div>
       
     </div>

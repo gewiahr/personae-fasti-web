@@ -95,7 +95,7 @@ export const QuestPage: React.FC<QuestPageProp> = () => {
               <h1 className="text-2xl font-bold">{quest.name}</h1>
               <h3 className="text-m text-gray-400 mb-4">{quest.title}</h3>
             </div>
-            <div className={`mb-6 w-[30%] `}>
+            <div className={`mb-6 w-[30%]`}>
               <button
                 className={`flex justify-center items-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded w-full`}
                 onClick={openEditing}
@@ -116,7 +116,7 @@ export const QuestPage: React.FC<QuestPageProp> = () => {
                 <Icon 
                   key={`icon_edit_tasks`} 
                   name={isEditingTasks ? 'submit' : 'edit'}
-                  className='text-blue-500 hover:fill-current hover:text-gray-400 cursor-pointer'/>
+                  className='icon-button-accented'/>
               </button>
             </div>
             {tasks.sort((a, b) => a.id - b.id).map((task, i) => {

@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import './styles/fonts.css';
 import './styles/telegram.css'
+import './styles/components.css';
+import './styles/themes.css'
 import App from './App.tsx'
 import { init, miniApp, swipeBehavior, viewport } from '@tma.js/sdk-react';
 import { Provider } from 'react-redux';

@@ -26,12 +26,12 @@ export const Layout = ({ children }: { children: ReactNode }) => {
   const closeBurgerMenu = () => switchMenuOpen(false);
 
   return (<>
-    <div className="min-h-screen flex flex-col bg-gray-900 text-gray-100">
+    <div className="layout-main">
       {isMenuOpen && (
         <div className="inset-0 z-40" />
       )}
 
-      <header className='sticky top-0 z-50 bg-gray-800 p-4'>
+      <header className='layout-header'>
         {TMA ?
           <HeaderTMA
             menuButton={<MenuButton isMenuOpen={isMenuOpen} buttonClick={() => switchMenuOpen(!isMenuOpen)} />}
@@ -63,7 +63,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
         </NotificationProvider>
       </main>
 
-      <footer className="bg-gray-800 p-4 text-center text-sm text-gray-400">
+      <footer className="layout-footer">
         <a href='https://github.com/gewiahr'>{`© ${new Date().getFullYear()} gewiahr (Tomasz Mozhny)`}</a>
       </footer>
     </div>

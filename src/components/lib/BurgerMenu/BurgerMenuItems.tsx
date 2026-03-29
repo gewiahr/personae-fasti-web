@@ -143,7 +143,7 @@ export const BurgerMenuItemCallable = ({ item } : BurgerMenuItemCallableProps) =
     <>
       <button
         onClick={item.callable}
-        className="block cursor-pointer w-full px-4 max-sm:py-4 sm:py-2 text-white text-left hover:bg-gray-700 rounded-md"
+        className="burger-menu-item burger-menu-button"
       >
         <div className='flex items-center justify-between'>
           <p className='text-left'>{item.name}</p>
