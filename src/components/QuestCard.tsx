@@ -6,7 +6,7 @@ type QuestCardProps = {
   labelText?: string | null;
 };
 
-export const QuestCard = ({ quest, labelText=null }: QuestCardProps) => {
+export const QuestCard = ({ quest, labelText = null }: QuestCardProps) => {
 
   const truncateDescription = (text: string, maxLength: number = 100) => {
     if (text.length <= maxLength) return text;

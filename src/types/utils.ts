@@ -9,6 +9,10 @@ export type AuthStorage = {
   authorization: string;
 }
 
+export interface Dictionary<T> {
+  [Key: string]: T;
+}
+
 // export const StructToKeyValue = (struct : any, keyField : string, valueField : string) : SelectKeyValue => {
 //     return { 
 //         key : struct[keyField], 

@@ -3,21 +3,21 @@ import { useEffect, useState } from 'react';
 import { enrichMentionInput, simplifyMentionInput } from '../types/mention';
 import { Modal } from './lib/Modal';
 import { RichInput } from "./lib/Inputs/RichInput";
-import type { SuggestionData } from '../types/suggestion';
+import type { SuggestionEntityRender } from '../types/suggestion';
 import type { GameInfo, PlayerInfo, Record } from "../types/request";
-import { api } from '../utils/api';
-import { useAuth } from '../hooks/useAuth';
 import { ToggleSwitch } from './lib/ToggleSwitch';
 import { useNotifications } from '../context/NotificationContext';
-import type { Quest } from '../types/quest';
 import { SelectInput } from './lib/Inputs/SelectInput';
+import { useAppDispatch, useAppSelector } from '../store';
+import { deleteRecord, editRecord, loadCurrentGameQuests, selectCurrentGameQuests } from '../reducers/CurrentGameSlice';
+import { selectAuthorization } from '../reducers/PlayerSlice';
 
 interface RecordEditProps {
   record: Record;
   currentPlayer: PlayerInfo;
   currentGame: GameInfo;
   onClose: () => void;
-  fullSuggestionData?: SuggestionData;
+  suggestionData: SuggestionEntityRender[];
 }
 
 export const RecordEdit = ({
@@ -25,54 +25,59 @@ export const RecordEdit = ({
   currentPlayer,
   currentGame,
   onClose,
-  fullSuggestionData
+  suggestionData
 }: RecordEditProps) => {
-  const { authorization } = useAuth();
+  const dispatch = useAppDispatch();
+  const auth = useAppSelector(selectAuthorization);
+  const quests = useAppSelector(selectCurrentGameQuests);
+
   const [postHidden, setPostHidden] = useState<boolean>(record.hiddenBy !== 0);
   const [editedRecord, setEditedRecord] = useState<Record>(record);
-  const [questInfo, setQuestInfo] = useState<Quest[]>([]);
 
   const { addNotification } = useNotifications();
 
   useEffect(() => {
-    const getQuests = async () => {
-      const { data } = await api.get('/quests', authorization);
-      if (data) {
-        setQuestInfo(data.quests);
-      };
-    };
-
-    getQuests();
+    dispatch(loadCurrentGameQuests({ auth }))
   }, []);
 
   const onInputChange = (value: string) => {
     setEditedRecord({ ...editedRecord, text: value });
   };
 
-  const handleSave = async () => {
-    if (!editedRecord) {
-      return;
-    };
+  const handleSave = () => {
+    if (!editedRecord) return;
 
-    const enrichedText = enrichMentionInput(editedRecord.text, fullSuggestionData?.entities || []);
-    const { data, error } = await api.put(`/record`, authorization, { ...editedRecord, text: enrichedText });
+    const enrichedText = enrichMentionInput(editedRecord.text, suggestionData);
 
-    if (error) {
-      addNotification(error.message, 'error');
-    } else if (data) {
-      onClose();
-    };
+    dispatch(editRecord({
+      auth,
+      record: { ...editedRecord, text: enrichedText }
+    }))
+      .unwrap()
+      .then(() => {
+        onClose();
+        addNotification('Запись сохранена', 'success');
+      })
+      .catch((e: any) => {
+        addNotification(e?.message || 'Ошибка при сохранении', 'error');
+      });
   };
 
-  const handleDelete = async () => {
-    const { error } = await api.delete(`/record/${record.id}`, authorization);
+  const handleDelete = () => {
+    if (!editedRecord) return;
 
-    if (error) {
-      addNotification(error.message, 'error');
-    } else {
-      onClose();
-      addNotification("Запись удалена", 'info');
-    };
+    dispatch(deleteRecord({
+      auth,
+      recordID: record.id
+    }))
+      .unwrap()
+      .then(() => {
+        onClose();
+        addNotification('Запись удалена', 'info');
+      })
+      .catch((e: any) => {
+        addNotification(e?.message || 'Ошибка при удалении', 'error');
+      });
   };
 
   const handleQuestIDChange = async (value: number) => {
@@ -80,31 +85,31 @@ export const RecordEdit = ({
   };
 
   useEffect(() => {
-    if (fullSuggestionData?.entities) {
-      setEditedRecord({ ...editedRecord, text: simplifyMentionInput(editedRecord.text, fullSuggestionData.entities) });
+    if (suggestionData) {
+      setEditedRecord({ ...editedRecord, text: simplifyMentionInput(editedRecord.text, suggestionData) });
     }
-  }, [fullSuggestionData, editedRecord.text]);
+  }, [suggestionData, editedRecord.text]);
 
   return (
     <Modal
       onClose={onClose}
       title="Редактирование записи"
     >
-      {fullSuggestionData && <div className='py-4'>
+      {suggestionData && <div className='py-4'>
         <RichInput
           key={1000}
           label=""
-          value={simplifyMentionInput(record.text, fullSuggestionData?.entities)}
+          value={simplifyMentionInput(record.text, suggestionData)}
           entityEdit={{ handleFieldChange: onInputChange }}
-          fullSuggestionData={fullSuggestionData} />
+          suggestionData={suggestionData} />
       </div>}
 
       <h2 className='text-lg py-2'>Дополнительно</h2>
 
-      {questInfo && questInfo.length > 0 && <div className='py-2'>
+      {quests && quests.length > 0 && <div className='py-2'>
         <SelectInput
           key={"recordedit_questselect"}
-          options={questInfo.map((quest) => { return { key: quest.id, value: quest.name } })}
+          options={quests.map((quest) => { return { key: quest.id, value: quest.name } })}
           label='Связанный квест'
           setKey={editedRecord.questID}
           entityEdit={{ handleFieldChange: handleQuestIDChange }}

@@ -1,4 +1,4 @@
-import type { SuggestionEntity } from "./suggestion";
+import type { SuggestionEntity, SuggestionEntityRender } from "./suggestion";
 
 export interface EntityEdit {
   fieldName?: string;
@@ -51,18 +51,20 @@ export type EntityFieldMetaData = {
 }
 
 export const formSuggestionRef = (suggestion: SuggestionEntity) => {
-  // Transfer to game settings on backend
+  var suggestionRef = '';
   switch (suggestion.type) {
     case 'char':
-      suggestion.ref = `${CharMetaData.Icon} ${suggestion.name}`;
+      suggestionRef = `${CharMetaData.Icon} ${suggestion.name}`;
       break;
     case 'npc':
-      suggestion.ref = `${NPCMetaData.Icon} ${suggestion.name}`;
+      suggestionRef = `${NPCMetaData.Icon} ${suggestion.name}`;
       break;
     case 'location':
-      suggestion.ref = `${LocationMetaData.Icon} ${suggestion.name}`;
+      suggestionRef = `${LocationMetaData.Icon} ${suggestion.name}`;
       break;
   }
+
+  return { ...suggestion, ref: suggestionRef } as SuggestionEntityRender
 }
 
 export interface Char extends Entity {

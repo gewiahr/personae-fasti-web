@@ -1,23 +1,22 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useApi } from '../hooks/useApi';
-import { useAuth } from '../hooks/useAuth';
 import { useEffect, useState } from 'react';
-import type { SuggestionData } from '../types/suggestion';
 import RichText from '../components/lib/RichText/RichText';
 import { RecordFeed } from '../components/RecordFeed';
-import { useRecords } from '../hooks/useRecords';
 import { QuestTaskType, type Quest, type QuestTask } from '../types/quest';
 import Icon from '../components/icons/Icon';
 import { ToggleSwitch } from '../components/lib/ToggleSwitch';
 import { NumericInputInline } from '../components/lib/Inputs/NumericInputInline';
 import { useNotifications } from '../context/NotificationContext';
 import { api } from '../utils/api';
+import { useAppSelector } from '../store';
+import { selectAuthorization } from '../reducers/PlayerSlice';
 
-interface QuestPageProp {
-  //metaData: string;
+type QuestPageProp = {
+
 }
 
-export const QuestPage = ({  } : QuestPageProp) => {
+export const QuestPage: React.FC<QuestPageProp> = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const newQuest = id ? false : true;
@@ -26,14 +25,10 @@ export const QuestPage = ({  } : QuestPageProp) => {
   const [tasks, setTasks] = useState<QuestTask[]>([]);
   const [isEditingTasks, setEditingTasks] = useState<boolean>(false);
 
-  const { authorization } = useAuth();
-  const { data, loading, error } = useApi.get(`/quest/${id}`, authorization, [], newQuest);
-  const { data: suggestionData } = useApi.get<SuggestionData>(`/suggestions`, authorization);
+  const auth = useAppSelector(selectAuthorization);
+  const { data, loading, error } = useApi.get(`/quest/${id}`, auth, [], newQuest);
 
   const { addNotification } = useNotifications();
-
-  // ** change to valid player request ** //
-  const { players } = useRecords();
 
   useEffect(() => {
     if (data) {
@@ -49,12 +44,12 @@ export const QuestPage = ({  } : QuestPageProp) => {
   const editTasks = () => {
     if (isEditingTasks) saveTasks();
     setEditingTasks(!isEditingTasks);
-    console.log(tasks);
   };
 
   const saveTasks = async () => {
     if (quest == null) return
-    const { data, error, status } = await api.patch(`/quest/tasks`, authorization, {"questID":quest.id, "tasks": tasks});
+
+    const { data, error, status } = await api.patch(`/quest/tasks`, auth, {"questID":quest.id, "tasks": tasks});
     if (status === 200) {
       addNotification("Задачи обновлены", 'success');
       setTasks(data);
@@ -102,7 +97,7 @@ export const QuestPage = ({  } : QuestPageProp) => {
             </div>
             <div className={`mb-6 w-[30%] `}>
               <button
-                className={`flex justify-center items-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded w-full`} //text-sm
+                className={`flex justify-center items-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded w-full`}
                 onClick={openEditing}
               >
                 {"Изменить"}
@@ -151,7 +146,7 @@ export const QuestPage = ({  } : QuestPageProp) => {
           {/* ++ Change to universal feed ++ */}
           {data && data.records.length > 0 && <div className=''>
             <h2 className='text-right text-xl text-bold pt-8 pb-2'>Упоминания</h2>
-            <RecordFeed key={1000} players={players} records={data.records} showQuests={false} suggestionData={suggestionData} />
+            <RecordFeed key={`questpage_recordfeed`} records={data.records} showQuests={false} />
           </div>}
         </>)
       }

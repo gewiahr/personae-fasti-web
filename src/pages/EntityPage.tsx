@@ -3,10 +3,8 @@ import type { Entity, EntityMetaData } from '../types/entities';
 import { useApi } from '../hooks/useApi';
 import { useAuth } from '../hooks/useAuth';
 import { useEffect, useState } from 'react';
-import type { SuggestionData } from '../types/suggestion';
 import RichText from '../components/lib/RichText/RichText';
 import { RecordFeed } from '../components/RecordFeed';
-import { useRecords } from '../hooks/useRecords';
 import useImage from '../hooks/useImage';
 import { LoadingPage } from './LoadingPage';
 import { ErrorPage } from './ErrorPage';
@@ -28,10 +26,6 @@ export const EntityPage = <T extends Entity>({ metaData } : EntityPageProp) => {
 
   const { authorization } = useAuth();
   const { data, loading, error } = useApi.get(`/${metaData.EntityType}/${id}`, authorization, [], newEntity);
-  const { data: suggestionData } = useApi.get<SuggestionData>(`/suggestions`, authorization);
-
-  // ** change to valid player request ** //
-  const { players } = useRecords();
 
   useEffect(() => {
     if (data) {
@@ -48,7 +42,7 @@ export const EntityPage = <T extends Entity>({ metaData } : EntityPageProp) => {
       {loading ? (
         <LoadingPage />
       ) : error || !entity ? (
-        <ErrorPage error={error} entityMeta={metaData}/>
+        <ErrorPage error={error || null} entityMeta={metaData}/>
       ) : (
         <>
           {image && <div className='relative pb-4 rounded-lg'>
@@ -94,7 +88,7 @@ export const EntityPage = <T extends Entity>({ metaData } : EntityPageProp) => {
           {/* ++ Change to universal feed ++ */}
           {data.records && data.records.length > 0 && <div className=''>
             <h2 className='text-right text-xl text-bold pt-8 pb-2'>Упоминания</h2>
-            <RecordFeed key={1000} players={players} records={data.records} suggestionData={suggestionData} />
+            <RecordFeed key={1000} records={data.records} />
           </div>}         
         </>)
       }

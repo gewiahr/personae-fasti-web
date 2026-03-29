@@ -1,34 +1,35 @@
 import React, { useCallback, useState, useRef, type KeyboardEvent, useEffect } from "react"
 import { SuggestionsTab } from "../../SuggestionsTab";
 import type { MentionContext } from "../../../types/mention";
-import type { SuggestionData, SuggestionEntity } from "../../../types/suggestion";
-import { formSuggestionRef } from "../../../types/entities";
+import type { SuggestionEntityRender } from "../../../types/suggestion";
 import type { TextInputProps } from "./InputProps";
 
 type RichInputProps = TextInputProps & {
-  fullSuggestionData?: SuggestionData | null;
+  suggestionData: SuggestionEntityRender[];
 };
 
-export const RichInput : React.FC<RichInputProps> = ({ label, value = "", entityEdit, fullSuggestionData = null }) => {
+export const RichInput: React.FC<RichInputProps> = ({ label, value = "", entityEdit, suggestionData }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [inputValue, setInputValue] = useState(value);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [suggestionData, setSuggestionData] = useState<SuggestionData | null>(fullSuggestionData);
+
+  //const [suggestionData, setSuggestionData] = useState<SuggestionEntityRender[]>([]);
+  //const [showSuggestions, setShowSuggestions] = useState(false);
+  const [suggestionDataShown, setSuggestionDataShown] = useState<SuggestionEntityRender[]>([]);
   const [suggestionTabPos] = useState({ top: 0, left: 0 });
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(0);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
+  //console.log('fullSuggestionData from Redux:', fullSuggestionData);
+
   useEffect(() => {
-    if (fullSuggestionData) {
-      let allowedSuggestionData = {entities: fullSuggestionData.entities.filter((suggestion) => !suggestion.hidden)} as SuggestionData
-      allowedSuggestionData.entities?.forEach((suggestion) => {
-        formSuggestionRef(suggestion);
-      });
-      setSuggestionData(allowedSuggestionData);
-    }
-  }, [fullSuggestionData]);
+    // if (fullSuggestionData.entities.length <= 0) return;
+    // var suggestionRender = fullSuggestionData.entities.filter((suggestion) => !suggestion.hidden).map((suggestion) => formSuggestionRef(suggestion));
+    // console.log(suggestionRender)
+    // setSuggestionData(suggestionRender);
+    // //setSuggestionDataShown(suggestionRender);
+  }, []);
 
   useEffect(() => {
     entityEdit?.handleFieldChange(inputValue, entityEdit?.fieldName || "", entityEdit.arrayIndex);
@@ -38,45 +39,56 @@ export const RichInput : React.FC<RichInputProps> = ({ label, value = "", entity
     const newValue = e.target.value;
     const cursorPos = e.target.selectionStart;
 
+    //console.log(newValue)
     setInputValue(newValue);
 
     const context = getMentionContext(newValue, cursorPos);
 
     if (!context) {
-      setShowSuggestions(false);
+      setSuggestionDataShown([]);
+      //setShowSuggestions(false);
       setSelectedSuggestionIndex(0);
       return;
     };
 
     const currentSuggestions = getFilteredSuggestions(context);
-    if (currentSuggestions && currentSuggestions.length) {
+    if (currentSuggestions && currentSuggestions.length > 0) {
       setSuggestionDataFromContext(currentSuggestions);
     } else {
-      setShowSuggestions(false);
+      setSuggestionDataShown([]);
+      //setShowSuggestions(false);
       setSelectedSuggestionIndex(0);
     };
 
   }, []);
 
-  const getFilteredSuggestions = (context: MentionContext) => {
+  const getFilteredSuggestions = useCallback((context: MentionContext) => {
     const textarea = textareaRef.current;
-    if (!textarea) return;
-    return suggestionData?.entities.filter(entity =>
+    if (!textarea) return [];
+    return suggestionData.filter(entity =>
       !entity.hidden && entity.name.toLowerCase().includes(context.query.toLowerCase())
     );
-  }
+  }, [suggestionData]);
+
+  // const getFilteredSuggestions = (context: MentionContext) => {
+  //   const textarea = textareaRef.current;
+  //   if (!textarea) return;
+  //   return suggestionData.filter(entity =>
+  //     !entity.hidden && entity.name.toLowerCase().includes(context.query.toLowerCase())
+  //   );
+  // }
 
   const setSuggestionDataFromContext = useCallback((
-    currentSuggestions: SuggestionEntity[],
+    currentSuggestions: SuggestionEntityRender[],
   ) => {
     if (selectedSuggestionIndex >= currentSuggestions.length) {
       setSelectedSuggestionIndex(Math.max(0, currentSuggestions.length - 1));
     };
 
-    setSuggestionData({ entities: currentSuggestions });
+    setSuggestionDataShown(currentSuggestions);
 
-    setShowSuggestions(true);
-  }, [fullSuggestionData?.entities]);
+    //setShowSuggestions(true);
+  }, [suggestionData]);
 
   const getMentionContext = useCallback((text: string, cursorPos: number): MentionContext | null => {
     const textBeforeCursor = text.substring(0, cursorPos);
@@ -93,12 +105,12 @@ export const RichInput : React.FC<RichInputProps> = ({ label, value = "", entity
 
   // Keyboard navigation for suggestions
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if (!showSuggestions || !suggestionData) return;
+    if (suggestionDataShown.length <= 0 || !suggestionData) return;
 
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        setSelectedSuggestionIndex(prev => Math.min(prev + 1, suggestionData.entities.length - 1));
+        setSelectedSuggestionIndex(prev => Math.min(prev + 1, suggestionDataShown.length - 1));
         break;
       case 'ArrowUp':
         e.preventDefault();
@@ -106,20 +118,21 @@ export const RichInput : React.FC<RichInputProps> = ({ label, value = "", entity
         break;
       case 'Enter':
         e.preventDefault();
-        if (selectedSuggestionIndex === suggestionData.entities.length) {
+        if (selectedSuggestionIndex === suggestionDataShown.length) {
         } else {
-          const selected = suggestionData.entities[selectedSuggestionIndex];
+          const selected = suggestionDataShown[selectedSuggestionIndex];
           selected && insertMention(selected);
         }
         break;
       case 'Escape':
         e.preventDefault();
-        setShowSuggestions(false);
+        setSuggestionDataShown([]);
+        //setShowSuggestions(false);
         break;
     }
-  }, [showSuggestions, suggestionData?.entities, selectedSuggestionIndex]);
+  }, [suggestionDataShown, suggestionData, suggestionDataShown, selectedSuggestionIndex]);
 
-  const insertMention = useCallback((entity: SuggestionEntity) => {
+  const insertMention = useCallback((entity: SuggestionEntityRender) => {
     const text = inputValue;
     const cursorPos = textareaRef.current?.selectionStart || 0;
     const context = getMentionContext(text, cursorPos);
@@ -132,7 +145,8 @@ export const RichInput : React.FC<RichInputProps> = ({ label, value = "", entity
       text.slice(context.position + context.query.length + 1);
 
     setInputValue(newText);
-    setShowSuggestions(false);
+    setSuggestionDataShown([]);
+    //setShowSuggestions(false);
 
     // Focus and position cursor
     setTimeout(() => {
@@ -173,10 +187,10 @@ export const RichInput : React.FC<RichInputProps> = ({ label, value = "", entity
         {label}
       </label>
 
-      {showSuggestions && suggestionData &&
+      {suggestionDataShown.length > 0 &&
         <SuggestionsTab
           tabPos={suggestionTabPos}
-          data={suggestionData}
+          entities={suggestionDataShown}
           selectionIndex={selectedSuggestionIndex}
           ref={suggestionsRef}
           insertMention={insertMention}

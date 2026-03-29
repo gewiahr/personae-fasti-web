@@ -1,32 +1,43 @@
-// pages/CharactersList.tsx
 import { Link } from 'react-router-dom';
 import { EntityCard } from './EntityCard';
-import { useEntities } from '../hooks/useEntities';
 import type { EntityMetaData } from '../types/entities';
 import { useEffect, useState } from 'react';
 import type { EntityInfo } from '../types/request';
-//import { useRecords } from '../hooks/useRecords';
+import { api } from '../utils/api';
+import { useAppSelector } from '../store';
+import { selectAuthorization } from '../reducers/PlayerSlice';
+import type { ApiError } from '../types/api';
+import { ErrorPage } from '../pages/ErrorPage';
+import LoadingLabel from './lib/LoadingLabel';
 
 interface EntitiesListProp {
   metaData: EntityMetaData;
 }
 
-interface EntityApiResponse<T> {
-  [key: string]: T[] | undefined;
-}
+export const EntitiesList = ({ metaData }: EntitiesListProp) => {
+  const [entities, setEntities] = useState<EntityInfo[]>([]);
+  const [error, setError] = useState<ApiError | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
-export const EntitiesList = ({ metaData } : EntitiesListProp) => {
-  const { data } = useEntities.fetch(metaData);
-  const [entities, setEntities] = useState<EntityInfo[]>();
-  //const { players } = useRecords();
+  const auth = useAppSelector(selectAuthorization);
 
   useEffect(() => {
-    if (data && typeof data === 'object' && data !== null) { // metaData.EntityTypePl in data) {
-      const response = data as EntityApiResponse<EntityInfo>;
-      const entitySet = response[metaData.EntityTypePl]; 
-      setEntities(Array.isArray(entitySet) ? entitySet : []);  
-    }
-  }, [data]); 
+    const fetchEntitiesInfo = async () => {
+      const { data, error } = await api.get<{ [metaData.EntityTypePl]: EntityInfo[] }>(`/${metaData.EntityTypePl}`, auth);
+      if (error) {
+        setError(error);
+      } else if (data) {
+        setEntities(data[metaData.EntityTypePl]);
+      }
+      setLoading(false);
+    };
+
+    fetchEntitiesInfo();
+  }, []);
+
+  //if (loading) return <LoadingPage />
+
+  if (error) return <ErrorPage error={error} entityMeta={metaData} />
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -40,21 +51,21 @@ export const EntitiesList = ({ metaData } : EntitiesListProp) => {
         </Link>
       </div>
 
-      
       {entities && entities.length > 0 ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {entities.map((entity) => (
           <EntityCard
             key={entity.id}
             entity={entity}
             metaData={metaData}
-            // Player Labels
-            // playerName={data?.players.find((player) => (player.id === char.playerID))?.username || ""}
-            //labelText={players.find((player) => (player.id === entity.playerID))?.username || ""}
+          // Player Labels
+          // playerName={data?.players.find((player) => (player.id === char.playerID))?.username || ""}
+          //labelText={players.find((player) => (player.id === entity.playerID))?.username || ""}
           />
         ))}
-      </div> : 
+      </div> :
+      loading ? <LoadingLabel /> :
       <div className='mt-8 text-center text-xl italic'>
-        <p>{`Пока что в этой кампании нет ни одного ${metaData.EntityNameAcc.toLowerCase()}. Пора создать парочку!`}</p>  
+        <p>{`Пока что в этой кампании нет ни одного ${metaData.EntityNameAcc.toLowerCase()}. Пора создать парочку!`}</p>
       </div>}
     </div>
   );

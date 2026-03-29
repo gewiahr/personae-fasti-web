@@ -1,31 +1,33 @@
 import { forwardRef, useEffect } from "react"
-import type { SuggestionData, SuggestionEntity, SuggestionTabPos } from "../types/suggestion";
+import type { SuggestionEntityRender, SuggestionTabPos } from "../types/suggestion";
 
 type SuggestionTabProps = {
   tabPos: SuggestionTabPos,
-  data?: SuggestionData,
+  entities?: SuggestionEntityRender[],
   selectionIndex: number,
-  insertMention: (entity: SuggestionEntity) => void,
+  insertMention: (entity: SuggestionEntityRender) => void,
 }
 
-export const SuggestionsTab = forwardRef<HTMLDivElement, SuggestionTabProps>(({ data, selectionIndex, insertMention }) => {
+export const SuggestionsTab = forwardRef<HTMLDivElement, SuggestionTabProps>(({ entities, selectionIndex, insertMention }) => {
 
   useEffect(() => {
 
   }, [selectionIndex])
 
+  if (!entities) return <></>
+
   return (
     // <div ref={ref} className="absolute z-50 w-48 bg-gray-900 border border-gray-600 rounded-lg shadow-lg py-1" style={tabPos}>
     <>
-      {data && <div
+      {entities.length > 0 && <div
         className={`absolute z-50 bg-gray-800 border border-gray-700 shadow-lg rounded-md overflow-y-auto max-h-60 w-48
-                        ${data ? 'block' : 'hidden'}`}
+                        ${entities.length > 0 ? 'block' : 'hidden'}`}
         style={{
           width: '100%',
           transform: 'translateY(0.25rem)' // Small offset from cursor
         }}
       >
-        {data.entities.map((entity, index) => (
+        {entities.map((entity, index) => (
           <button
             key={entity.sid}
             type="button"

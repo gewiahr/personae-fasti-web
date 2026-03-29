@@ -1,12 +1,21 @@
 import { Link } from 'react-router-dom';
-import type { GameQuests } from '../types/request';
-import { useAuth } from '../hooks/useAuth';
-import { useApi } from '../hooks/useApi';
 import { QuestCard } from './QuestCard';
+import { useAppDispatch, useAppSelector } from '../store';
+import { selectAuthorization } from '../reducers/PlayerSlice';
+import { loadCurrentGameQuests, selectCurrentGameQuests } from '../reducers/CurrentGameSlice';
+import { useEffect } from 'react';
+import { selectIsLoadingNew } from '../reducers/LoadingSlice';
+import LoadingLabel from './lib/LoadingLabel';
 
 export const QuestsList = () => {
-  const { authorization } = useAuth();
-  const { data } = useApi.get<GameQuests>(`/quests`, authorization);
+  const dispatch = useAppDispatch();
+  const auth = useAppSelector(selectAuthorization);
+  const quests = useAppSelector(selectCurrentGameQuests);
+  const questLoading = useAppSelector(selectIsLoadingNew(loadCurrentGameQuests.typePrefix));
+
+  useEffect(() => {
+    dispatch(loadCurrentGameQuests({ auth }));
+  }, []);
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -20,8 +29,8 @@ export const QuestsList = () => {
         </Link>
       </div>
 
-      {data && data.quests.length > 0 ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {data.quests.map((char) => (
+      {quests.length > 0 ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {quests.map((char) => (
           <QuestCard
             key={char.id}
             quest={char}
@@ -29,9 +38,10 @@ export const QuestsList = () => {
           />
         ))}
       </div> :
+      questLoading ? <LoadingLabel /> :
       <div className='mt-8 text-center text-xl italic'>
-        <p>Создайте первые квесты и отправьтесь навстречу приключениям!</p>  
-      </div>}  
+        <p>Создайте первые квесты и отправьтесь навстречу приключениям!</p>
+      </div>}
     </div>
   );
 };

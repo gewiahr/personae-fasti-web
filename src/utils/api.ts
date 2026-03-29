@@ -36,11 +36,11 @@ export const api = {
     return makeRequest<T>(endpoint, 'PATCH', authorization, body, imageBody);
   },
 
-  delete: async (
+  delete: async <T = any>(
     endpoint: string,
     authorization: string
-  ): Promise<ApiResponse<void>> => {
-    return makeRequest<void>(endpoint, 'DELETE', authorization);
+  ): Promise<ApiResponse<T>> => {
+    return makeRequest<T>(endpoint, 'DELETE', authorization);
   },
 
   fetch: async <T = any>(

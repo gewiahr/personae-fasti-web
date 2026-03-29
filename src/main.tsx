@@ -1,4 +1,4 @@
-import { StrictMode } from 'react'
+//import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import './styles/fonts.css';
@@ -35,9 +35,9 @@ const initializeTelegramSDK = async () => {
 initializeTelegramSDK();
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+  // <StrictMode>
     <Provider store={store}>
       <App />
     </Provider> 
-  </StrictMode>,
+  // </StrictMode>,
 )

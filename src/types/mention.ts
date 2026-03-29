@@ -1,6 +1,6 @@
 import { type Char, CharMetaData, type Entity, type EntityCreateUpdate, type EntityMetaData } from "./entities";
 import { QuestMetaData, QuestTaskMetaData } from "./quest";
-import type { SuggestionData, SuggestionEntity } from "./suggestion";
+import type { SuggestionData, SuggestionEntity, SuggestionEntityRender } from "./suggestion";
 
 export type MentionContext = {
   position: number;
@@ -14,13 +14,13 @@ export type Mention = {
   entitySID: string
 };
 
-export const enrichCharFieldsMentions = (editedChar: Char, suggestions: SuggestionData): Char => {
+export const enrichCharFieldsMentions = (editedChar: Char, suggestions: SuggestionEntityRender[]): Char => {
   // Enrich fields with rich input
   CharMetaData.RichInputFields.forEach((field) => {
     if (editedChar?.[field as keyof typeof editedChar]) {
       editedChar = {
         ...editedChar,
-        [field]: enrichMentionInput(`${editedChar?.[field as keyof typeof editedChar]}`, suggestions?.entities || [])
+        [field]: enrichMentionInput(`${editedChar?.[field as keyof typeof editedChar]}`, suggestions)
       };
     };
   });
@@ -28,13 +28,13 @@ export const enrichCharFieldsMentions = (editedChar: Char, suggestions: Suggesti
   return editedChar;
 }
 
-export const enrichEntityFieldsMentions = <T extends EntityCreateUpdate>(editedEntity: T, metaData: EntityMetaData, suggestions: SuggestionData): T => {
+export const enrichEntityFieldsMentions = <T extends EntityCreateUpdate>(editedEntity: T, metaData: EntityMetaData, suggestions: SuggestionEntityRender[]): T => {
   // Enrich fields with rich input
   metaData.RichInputFields.forEach((field) => {
     if (editedEntity?.[field as keyof typeof editedEntity]) {
       editedEntity = {
         ...editedEntity,
-        [field]: enrichMentionInput(`${editedEntity?.[field as keyof typeof editedEntity]}`, suggestions?.entities || [])
+        [field]: enrichMentionInput(`${editedEntity?.[field as keyof typeof editedEntity]}`, suggestions)
       };
     };
   });
@@ -42,13 +42,13 @@ export const enrichEntityFieldsMentions = <T extends EntityCreateUpdate>(editedE
   return editedEntity;
 }
 
-export const enrichQuestFieldsMentions = <Quest>(editedQuest: Quest, suggestions: SuggestionData): Quest => {
+export const enrichQuestFieldsMentions = <Quest>(editedQuest: Quest, suggestions: SuggestionEntityRender[]): Quest => {
   // Enrich fields with rich input
   QuestMetaData.RichInputFields.forEach((field) => {
     if (editedQuest?.[field as keyof typeof editedQuest]) {
       editedQuest = {
         ...editedQuest,
-        [field]: enrichMentionInput(`${editedQuest?.[field as keyof typeof editedQuest]}`, suggestions?.entities || [])
+        [field]: enrichMentionInput(`${editedQuest?.[field as keyof typeof editedQuest]}`, suggestions)
       };
     };
   });
@@ -56,7 +56,7 @@ export const enrichQuestFieldsMentions = <Quest>(editedQuest: Quest, suggestions
   return editedQuest;
 }
 
-export const enrichQuestTaskFieldsMentions = <QuestTask>(editedTasks: QuestTask[], suggestions: SuggestionData): QuestTask[] => {
+export const enrichQuestTaskFieldsMentions = <QuestTask>(editedTasks: QuestTask[], suggestions: SuggestionEntityRender[]): QuestTask[] => {
   let newTasks: QuestTask[] = editedTasks;
   
   QuestTaskMetaData.RichInputFields.forEach((field) => {
@@ -64,7 +64,7 @@ export const enrichQuestTaskFieldsMentions = <QuestTask>(editedTasks: QuestTask[
       if (task[field as keyof QuestTask]) {
         newTasks[i] = {
           ...task,
-          [field]: enrichMentionInput(`${task[field as keyof QuestTask]}`, suggestions?.entities || [])
+          [field]: enrichMentionInput(`${task[field as keyof QuestTask]}`, suggestions)
         };
       };
     });   
@@ -73,7 +73,7 @@ export const enrichQuestTaskFieldsMentions = <QuestTask>(editedTasks: QuestTask[
   return newTasks;
 }
 
-export const enrichMentionInput = (textInput: string, suggestions: SuggestionEntity[]) => {
+export const enrichMentionInput = (textInput: string, suggestions: SuggestionEntityRender[]) => {
   const suggestionMap = new Map(
     suggestions.map(item => [item.name.toLowerCase(), item])
   );

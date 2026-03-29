@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { SelectInput } from '../components/lib/Inputs/SelectInput';
-import { useAuth } from '../hooks/useAuth'
 import type { GameInfo, GameFullInfo } from '../types/request';
 import { api } from '../utils/api';
 import { useNavigate } from 'react-router-dom';
@@ -8,47 +7,51 @@ import { useNotifications } from '../context/NotificationContext';
 import FoldableCategory from '../components/lib/FoldableCategory';
 import { ToggleSwitch } from '../components/lib/ToggleSwitch';
 import "../styles/components.css";
-import { useSettings } from '../hooks/useSettings';
+import { useAppDispatch, useAppSelector } from '../store';
+import { loadPlayerGames, selectAuthorization, selectPlayerGames, selectPlayerInfo } from '../reducers/PlayerSlice';
+import { changeCurrentGame, selectCurrentGame, startNewSession } from '../reducers/CurrentGameSlice';
 
 const SettingsPage = () => {
   const navigate = useNavigate();
-  const { authorization } = useAuth();
-  const { game, setGame, player, playerGames, updateSettings } = useSettings();
+  //const { authorization } = useAuth();
   //const { data : settingsData } = useApi.get<PlayerSettings>("/player/settings", authorization);
   //const [ playerGames ] = useState<GameInfo[]>([]);
+
+
+  const dispatch = useAppDispatch();
+  const auth = useAppSelector(selectAuthorization);
+  const player = useAppSelector(selectPlayerInfo);
+  const playerGames = useAppSelector(selectPlayerGames);
+  const { game } = useAppSelector(selectCurrentGame);
+
   const [editedCurrentGame, setEditedCurrentGame] = useState<GameFullInfo | null>(game);
 
   const { addNotification } = useNotifications();
 
   useEffect(() => {
-    updateSettings();
+    dispatch(loadPlayerGames({ auth }));
   }, []);
 
   useEffect(() => {
     setEditedCurrentGame(game);
   })
 
-  const handleChangeCurrentGame = async (value: string) => {
-    const { data, error } = await api.put<GameFullInfo>("/player/game", authorization, { gameID: Number(value) });
-    if (error) {
-      addNotification(error.message, 'error')
-      return;
-    } else if (data) {
-      setGame(data);
-      navigate(0);
-    }
+  const handleChangeCurrentGame = (value: string) => {
+    dispatch(changeCurrentGame({ auth, gameID: Number(value) }))
+      .unwrap()
+      .catch((e: any) => {
+        addNotification(e.message, 'error');
+      });
   };
 
-  const handleNewSession = async () => {
-    const { error, status } = await api.post<GameInfo>("/game/session/new", authorization, null);
-    if (error) {
-      addNotification(error.message, 'error');
-      return;
-    }
-
-    if (status === 201) {
-      addNotification('Началась новая сессия', 'success');
-    }
+  const handleNewSession = () => {
+    dispatch(startNewSession({ auth }))
+      .unwrap()
+      .then(() => {
+        addNotification('Началась новая сессия', 'success');
+      }).catch((e: any) => {
+        addNotification(e.message, 'error');
+      });
   };
 
   const handleChangeGameOption = (value: any, field: string) => {
@@ -57,20 +60,18 @@ const SettingsPage = () => {
 
     var newGameSettings = { ...editedCurrentGame.settings }
     newGameSettings[field as keyof typeof editedCurrentGame.settings] = value
-    console.log(newGameSettings);
     setEditedCurrentGame({ ...editedCurrentGame, settings: newGameSettings } as GameFullInfo);
   };
 
   const handleSaveGameSettings = async () => {
     if (!editedCurrentGame) return
-    console.log(editedCurrentGame);
-    const { data, error } = await api.put<GameFullInfo>("/game/settings", authorization, { ...editedCurrentGame.settings, gameID: editedCurrentGame.id });
+    const { data, error } = await api.put<GameFullInfo>("/game/settings", auth, { ...editedCurrentGame.settings, gameID: editedCurrentGame.id });
     if (error) {
       addNotification(error.message, 'error');
       return;
     } else if (data) {
       addNotification("Настройки сохранены", 'success');
-      setGame(data)
+      //setGame(data)
       // await setCurrentGame(data);
       // await setLoginInfo({ ...loginInfo!, currentGame: data });
     }
@@ -83,24 +84,23 @@ const SettingsPage = () => {
 
         <div>
           <p className='text-sm'>Текущая игра:</p>
-          <div className='flex justify-between items-center'>
-            {game && <div className=''>
+          <div className='grid grid-cols-4 gap-2 justify-between items-center'>
+            {game && <div className='col-span-3'>
               {playerGames && playerGames.length > 1 ? <SelectInput
                 key={playerGames.length}
                 options={playerGames?.
                   filter((pg) => pg.id != game.id).
                   map((pg) => { return { key: pg.id, value: pg.title } }) || []}
-                label='Текущая игра'
+                //label='Текущая игра'
                 labelBGColor='bg-gray-900'
                 value={game.title}
                 entityEdit={{ handleFieldChange: handleChangeCurrentGame }}
+
               /> :
-                <>
-                  <h2 className='text-xl'>{game.title}</h2>
-                </>}
+              <h2 className='text-xl'>{game.title}</h2>}
             </div>}
-            <div className='flex gap-2'>
-              <button className='btn' onClick={() => navigate(`/game/${game ? game.id : 0 }`)}>
+            <div className='flex gap-2 justify-end'>
+              <button className='btn' onClick={() => navigate(`/game/${game ? game.id : 0}`)}>
                 Ред.
               </button>
               <button className='btn' onClick={() => navigate("/game/new")}>
@@ -110,14 +110,14 @@ const SettingsPage = () => {
           </div>
         </div>
 
-        {game?.gmID === player?.id && <FoldableCategory key="sessions_settings" title='Сессии' children={
+        {game?.gmID === player?.id && <FoldableCategory key="sessions_settings" title='Сессии'>
           <button
             className="w-full bg-blue-600 hover:bg-blue-700 text-white mt-2 py-2 px-4 rounded"
             onClick={handleNewSession}
           >
             {"Начать новую сессию"}
-          </button>}
-        />}
+          </button>
+        </FoldableCategory>}
 
         {game && game.settings && game.gmID === player?.id && <>
           <ToggleSwitch

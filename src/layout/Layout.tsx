@@ -1,38 +1,29 @@
 import { type ReactNode, useState } from 'react';
 import { BurgerMenu } from '../components/lib/BurgerMenu/BurgerMenu';
-import { useLocalStorage } from '../hooks/useLocalStorage';
-import type { GameFullInfo } from '../types/request';
 import { useAuth } from '../hooks/useAuth';
 import { NotificationProvider } from '../context/NotificationContext';
 import NotificationPopup from '../components/lib/NotificationPopup';
 import { burgerMenuItems } from '../assets/BurgerMenuContent';
 import { BurgerMenuItemCallable } from '../components/lib/BurgerMenu/BurgerMenuItems';
 import { miniApp } from '@tma.js/sdk-react';
-import { useSettings } from '../hooks/useSettings';
 import HeaderWeb from './HeaderWeb';
 import HeaderTMA from './HeaderTMA';
 import MenuButton from './MenuButton';
+import { useAppSelector } from '../store';
+import { selectPlayerInfo } from '../reducers/PlayerSlice';
+import { selectCurrentGameInfo } from '../reducers/CurrentGameSlice';
 
 export const Layout = ({ children }: { children: ReactNode }) => {
-  //const navigate = useNavigate();
   const { logout } = useAuth();
-  const { player } = useSettings();
-  const [currentGame] = useLocalStorage<GameFullInfo | null>('currentGame', null);
+
+  const player = useAppSelector(selectPlayerInfo);
+  const currentGame = useAppSelector(selectCurrentGameInfo);
+
   const [isMenuOpen, switchMenuOpen] = useState(false);
 
   const TMA = miniApp.ready.isAvailable();
 
-  const closeBurgerMenu = () => {
-    switchMenuOpen(false);
-  };
-
-  // const couldReturnToPreviousPage = window.location.pathname.split("/").length > 2;
-
-  // const returnToPreviousPage = () => {
-  //   var arrayPath = window.location.pathname.split("/");
-  //   arrayPath.pop();
-  //   navigate(arrayPath.join("/") + "s");
-  // };
+  const closeBurgerMenu = () => switchMenuOpen(false);
 
   return (<>
     <div className="min-h-screen flex flex-col bg-gray-900 text-gray-100">

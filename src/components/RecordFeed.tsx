@@ -1,23 +1,18 @@
-import type { GameFullInfo, PlayerInfo, PlayerGamesInfo, Record, Session } from '../types/request';
-import { useAuth } from '../hooks/useAuth';
-import type { SuggestionData } from '../types/suggestion';
+import type { Record, Session } from '../types/request';
 import RecordCard from './RecordCard';
 import { useEffect, useState } from 'react';
 import RecordEdit from './RecordEdit';
-import { useLocalStorage } from '../hooks/useLocalStorage';
-import { useApi } from '../hooks/useApi';
-import { useSettings } from '../hooks/useSettings';
-import { useAppSelector } from '../store';
-import { selectCurrentGameRecords } from '../reducers/CurrentGameSlice';
+import { useAppDispatch, useAppSelector } from '../store';
+import { loadCurrentGameRecords, selectCurrentGame } from '../reducers/CurrentGameSlice';
+import { selectAuthorization, selectPlayerInfo } from '../reducers/PlayerSlice';
+import { convertSuggestionDataToRender } from '../types/suggestion';
+import { selectIsLoadingNew } from '../reducers/LoadingSlice';
+import LoadingLabel from './lib/LoadingLabel';
 
 type RecordFeedProps = {
   records: Record[];
-  players: PlayerInfo[];
-  sessions?: Session[];
-  suggestionData?: SuggestionData | null;
   editable?: boolean;
   showQuests?: boolean;
-  onEdit?: () => void;
 };
 
 type RecordSession = {
@@ -25,16 +20,15 @@ type RecordSession = {
   records: Record[];
 }
 
-export const RecordFeed = ({ records: recordsOld, players, sessions, suggestionData = null, editable = false, showQuests = true, onEdit = () => {} }: RecordFeedProps) => {
-  const { authorization } = useAuth();
-  const { player, game } = useSettings();
+export const RecordFeed: React.FC<RecordFeedProps> = ({ records, editable = false, showQuests = true }) => {
+  const dispatch = useAppDispatch();
+  const { game, players, sessions, suggestions } = useAppSelector(selectCurrentGame);
+  const auth = useAppSelector(selectAuthorization);
+  const player = useAppSelector(selectPlayerInfo);
+  const recordsLoading = useAppSelector(selectIsLoadingNew(loadCurrentGameRecords.typePrefix));
+
   const [ editing, setEditing ] = useState<Record | null>(null);
-  const [ orderedRecords, setOrderedRecords ] = useState<RecordSession[] | null>();
-
-  const { data : playerSettingsData } = useApi.get<PlayerGamesInfo>("/player/settings", authorization);
-  const [ gameInfo, setGameInfo ] = useLocalStorage<GameFullInfo | null>('currentGame', playerSettingsData?.currentGame || null);
-
-  const records = useAppSelector(selectCurrentGameRecords);
+  const [ orderedRecords, setOrderedRecords ] = useState<RecordSession[]>([]);
 
   const onRecordEdit = (record : Record) => {
     setEditing(record);
@@ -42,7 +36,7 @@ export const RecordFeed = ({ records: recordsOld, players, sessions, suggestionD
 
   const onModalClose = () => {
     setEditing(null);
-    onEdit();
+    dispatch(loadCurrentGameRecords({auth}));
   };
 
   useEffect(() => {
@@ -52,9 +46,9 @@ export const RecordFeed = ({ records: recordsOld, players, sessions, suggestionD
     }; 
   }, [records, sessions]);
 
-  useEffect(() => {
-    setGameInfo(playerSettingsData?.currentGame || null);
-  }, [playerSettingsData])
+  // useEffect(() => {
+  //   setGameInfo(playerSettingsData?.currentGame || null);
+  // }, [playerSettingsData])
 
   const orderRecords = () => {
     if (!records || records.length === 0) {
@@ -103,7 +97,10 @@ export const RecordFeed = ({ records: recordsOld, players, sessions, suggestionD
     return sessionGroups.reverse();
   }
 
-  return (!orderedRecords || suggestionData == null ? //(records.length === 0 || suggestionData == null ?
+  return (orderedRecords.length <= 0 ? //|| suggestions == null ? //(records.length === 0 || suggestionData == null ?
+    recordsLoading ?
+    // Loading Records
+    <LoadingLabel /> :
     // No Records
     <div className='mt-8 text-center text-xl italic text-gray-400'>
       <p>Пока что нет ни одного события. Пора добавить несколько штрихов!</p>  
@@ -158,7 +155,7 @@ export const RecordFeed = ({ records: recordsOld, players, sessions, suggestionD
                   record={record}
                   label={players.find(p => p.id === record.playerID)?.username}
                   accented={record.playerID === player?.id}
-                  editable={editable && ((record.playerID === player?.id || gameInfo?.gmID === player?.id) || (gameInfo?.settings?.allowAllEditRecords))}
+                  editable={editable && ((record.playerID === player?.id || game?.gmID === player?.id) || (game?.settings?.allowAllEditRecords))}
                   showQuest={showQuests}
                   onEdit={onRecordEdit}
                 />
@@ -170,12 +167,12 @@ export const RecordFeed = ({ records: recordsOld, players, sessions, suggestionD
 
       {editing && player && game && 
         <RecordEdit 
-          key={990} 
+          key={`recordfeed_editmodal`} 
           record={editing}
           currentPlayer={player}
           currentGame={game} 
           onClose={onModalClose} 
-          fullSuggestionData={suggestionData}
+          suggestionData={convertSuggestionDataToRender(suggestions)}
         />
       }
     </>   

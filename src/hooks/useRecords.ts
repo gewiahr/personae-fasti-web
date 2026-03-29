@@ -4,7 +4,7 @@ import { useAuth } from './useAuth';
 import { api } from '../utils/api';
 import type { GameRecords, NewRecord } from '../types/request';
 import { useSettings } from './useSettings';
-import { getCurrentGameRecords } from '../reducers/CurrentGameSlice';
+import { loadCurrentGameRecords } from '../reducers/CurrentGameSlice';
 import { useAppDispatch } from '../store';
 
 export const useRecords = () => {
@@ -53,7 +53,7 @@ export const useRecords = () => {
 
       if (error) throw error;
       if (data) {
-        dispatch(getCurrentGameRecords({auth: authorization}));
+        dispatch(loadCurrentGameRecords({auth: authorization}));
         // setRecords(data.records);
         // setSessions(data.sessions);
         // setPlayers(data.players);

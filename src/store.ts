@@ -1,11 +1,13 @@
 import { combineSlices, configureStore, createAsyncThunk } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import CurrentGameSlice from "./reducers/CurrentGameSlice";
-import playerSlice from "./reducers/PlayerSlice";
+import PlayerSlice from "./reducers/PlayerSlice";
+import LoadingsSlice from "./reducers/LoadingSlice";
 
 const rootReducer = combineSlices(
   CurrentGameSlice,
-  playerSlice
+  PlayerSlice,
+  LoadingsSlice
 )
 
 const store = configureStore({

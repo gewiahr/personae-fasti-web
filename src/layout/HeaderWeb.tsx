@@ -11,13 +11,14 @@ const HeaderWeb: React.FC<HeaderWebProps> = ({ title = "НРИ", username = "use
   const navigate = useNavigate();
 
   return (
-    <div className="flex justify-between items-center ">
+    <div className="flex justify-between items-center">
       <div className='flex justify-between items-center gap-2'>
         {/* {couldReturnToPreviousPage && <p className='cursor-pointer' onClick={returnToPreviousPage}>
           {`<<`}
         </p>} */}
-        <div className='grid grid-cols-2 divide-x-2 items-center cursor-pointer' onClick={() => navigate("/")}>
+        <div className='flex flex-col items-start md:grid md:grid-cols-2 md:divide-x-2 md:items-center cursor-pointer' onClick={() => navigate("/")}>
           <p
+            // text-nowrap truncate
             className="px-4 text-xl font-bold">
             {title}
           </p>
