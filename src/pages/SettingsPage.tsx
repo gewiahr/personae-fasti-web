@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { SelectInput } from '../components/lib/Inputs/SelectInput';
-import type { GameInfo, GameFullInfo } from '../types/request';
+import type { GameFullInfo } from '../types/request';
 import { api } from '../utils/api';
 import { useNavigate } from 'react-router-dom';
 import { useNotifications } from '../context/NotificationContext';
@@ -10,6 +10,7 @@ import { ToggleSwitch } from '../components/lib/ToggleSwitch';
 import { useAppDispatch, useAppSelector } from '../store';
 import { loadPlayerGames, selectAuthorization, selectPlayerGames, selectPlayerInfo } from '../reducers/PlayerSlice';
 import { changeCurrentGame, selectCurrentGame, startNewSession } from '../reducers/CurrentGameSlice';
+import SubmitButton from '../components/lib/SubmitButton';
 
 const SettingsPage = () => {
   const navigate = useNavigate();
@@ -84,7 +85,7 @@ const SettingsPage = () => {
 
         <div>
           <p className='text-sm'>Текущая игра:</p>
-          <div className='grid grid-cols-4 gap-2 justify-between items-center'>
+          <div className='grid grid-cols-4 gap-8 justify-between items-center'>
             {game && <div className='col-span-3'>
               {playerGames && playerGames.length > 1 ? <SelectInput
                 key={playerGames.length}
@@ -100,23 +101,20 @@ const SettingsPage = () => {
               <h2 className='text-xl'>{game.title}</h2>}
             </div>}
             <div className='flex gap-2 justify-end'>
-              <button className='btn' onClick={() => navigate(`/game/${game ? game.id : 0}`)}>
+              <SubmitButton key={`settingspage_submitbutton_editgame`} onClick={() => navigate(`/game/${game ? game.id : 0}`)}>
                 Ред.
-              </button>
-              <button className='btn' onClick={() => navigate("/game/new")}>
+              </SubmitButton>
+              <SubmitButton key={`settingspage_submitbutton_newgame`} onClick={() => navigate("/game/new")}>
                 +
-              </button>
+              </SubmitButton>
             </div>
           </div>
         </div>
 
         {game?.gmID === player?.id && <FoldableCategory key="sessions_settings" title='Сессии'>
-          <button
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white mt-2 py-2 px-4 rounded"
-            onClick={handleNewSession}
-          >
+          <SubmitButton className='w-full mt-2' onClick={handleNewSession} >
             {"Начать новую сессию"}
-          </button>
+          </SubmitButton>
         </FoldableCategory>}
 
         {game && game.settings && game.gmID === player?.id && <>
@@ -127,9 +125,13 @@ const SettingsPage = () => {
             setValue={game.settings.allowAllEditRecords}
             entityEdit={{ handleFieldChange: (value) => handleChangeGameOption(value, 'allowAllEditRecords') }}
           />
-          <button className='w-full btn mt-4' onClick={handleSaveGameSettings}>
+          <SubmitButton
+            key={`settingspage_submitbutton_save`}
+            className='w-full mt-2' 
+            onClick={handleSaveGameSettings}
+          >
             Сохранить
-          </button>
+          </SubmitButton>
         </>}
       </div>
     </div>

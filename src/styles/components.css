@@ -12,20 +12,6 @@
 
   /* Buttons */
 
-/* .btn {
-  @apply text-white py-2 px-4 rounded cursor-pointer;
-  background-color: var(--color-button-primary);
-}
-
-.btn:hover {
-  background-color: var(--color-button-primary-hover);
-}
-
-.btn-unavailable {
-  @apply text-white py-2 px-4 rounded cursor-not-allowed;
-  background-color: var(--color-disabled);
-} */
-
 .submit-button-container {
   @apply py-2 px-4 rounded-md cursor-pointer;
 }

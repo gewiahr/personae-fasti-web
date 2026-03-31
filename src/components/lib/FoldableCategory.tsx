@@ -19,39 +19,28 @@ const FoldableCategory = ({ title, children }: FoldableCategoryProps) => {
       {/* Header with animated lines */}
       <div 
         ref={headerRef}
-        className={` transition-all duration-300 ${
-          isOpen ? '' : ''
-        }`}
+        className={`transition-all duration-300`}
         onClick={toggleOpen}
       >
         <div className='relative flex items-center justify-center p-4 cursor-pointer group'>
           {/* Left line */}
           <div 
-            className={`absolute left-0 top-1/2 h-px bg-gray-300 group-hover:bg-blue-500 transition-all duration-300 ${
+            className={`absolute left-0 top-1/2 h-px bg-(--color-gray) group-hover:bg-(--color-accent) transition-all duration-300 ${
               isOpen ? 'w-[25%] opacity-100' : 'w-[5%] opacity-100'
             }`}
             style={{ transform: 'translateY(-50%)' }}
           />
           
           {/* Title */}
-          <h3 className={`text-lg font-medium ${isOpen ? 'text-blue-500' : 'text-gray-500 group-hover:text-blue-500'}`}>{title}</h3>
+          <h3 className={`text-lg font-medium ${isOpen ? 'text-(--color-accent)' : 'text-(--color-gray) group-hover:text-(--color-accent)'}`}>{title}</h3>
           
           {/* Right line */}
           <div 
-            className={`absolute right-0 top-1/2 h-px bg-gray-300 group-hover:bg-blue-500 transition-all duration-300 ${
+            className={`absolute right-0 top-1/2 h-px bg-(--color-gray) group-hover:bg-(--color-accent) transition-all duration-300 ${
               isOpen ? 'w-[25%] opacity-100' : 'w-[5%] opacity-100'
             }`}
             style={{ transform: 'translateY(-50%)' }}
           />
-          
-          {/* Chevron icon */}
-          <div className="text-gray-500">
-            {/* {isOpen ? (
-              <FiChevronUp className="w-5 h-5" />
-            ) : (
-              <FiChevronDown className="w-5 h-5" />
-            )} */}
-          </div>
         </div>        
       </div>
 
@@ -71,7 +60,7 @@ const FoldableCategory = ({ title, children }: FoldableCategoryProps) => {
       </div>
 
       {<div 
-        className={`h-px bg-gray-300 transition-all duration-300 ${
+        className={`h-px bg-(--color-gray) transition-all duration-300 ${
           isOpen ? 'w-full opacity-100 my-6' : 'w-0 opacity-0'
         }`}
         style={{ transform: 'translateY(-50%)' }}
