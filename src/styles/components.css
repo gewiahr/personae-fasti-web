@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+  /* Auth Gate */
+
+.auth-gate-page {
+  @apply flex flex-col gap-4 p-6 text-center items-center justify-center h-screen;
+  background-color: var(--color-bg-primary);
+  color: var(--color-white);
+}
+
   /* Burger Menu */
 
 .burger-menu-container {
@@ -73,6 +81,24 @@
 
 .select-input-container-border-error {
   @apply border-red-500 focus:ring-red-200
+}
+
+.select-input-dropdown-container {
+  @apply absolute z-50 w-full border rounded-lg shadow-lg overflow-y-auto max-h-60;
+  background-color: var(--color-bg-secondary);
+  border-color: var(--color-gray-700);
+}
+
+.select-input-dropdown-option {
+  @apply px-4 py-2 rounded-lg cursor-pointer;
+}
+
+.select-input-dropdown-option:hover {
+  background-color: var(--color-blue-700);
+}
+
+.select-input-dropdown-option-selected {
+  background-color: var(--color-blue-800);
 }
 
   /* Floating Label */

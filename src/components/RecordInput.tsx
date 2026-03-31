@@ -19,7 +19,7 @@ export const RecordInput: React.FC<RecordInputProps> = () => {
   const [questID, setQuestID] = useState<number>(0);
   
   const [postHidden, setPostHidden] = useState<boolean>(false);
-  const [richInputKey, setRichInputKey] = useState<number>(0);
+  const [inputKey, setInputKey] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [postSettingsOpen, setPostSettingsOpen] = useState<boolean>(false);
 
@@ -37,12 +37,11 @@ export const RecordInput: React.FC<RecordInputProps> = () => {
 
   const handleSubmit = () => {
     if (input.trim() === '' || !suggestions) return;
-    console.log(game);
-    console.log(player);
     if (!game || !player) return;
+
     setIsSubmitting(true);
-    const enrichedText = enrichMentionInput(input, convertSuggestionDataToRender(suggestions))
-    //onSubmit(enrichedText, postHidden, questID);
+
+    const enrichedText = enrichMentionInput(input, convertSuggestionDataToRender(suggestions));
     dispatch(postNewRecord({
       auth,
       content: enrichedText,
@@ -51,8 +50,12 @@ export const RecordInput: React.FC<RecordInputProps> = () => {
       hidden: postHidden,
       questID
     }));
+
     setInput('');
-    setRichInputKey(prev => prev + 1);
+    setQuestID(0);
+    setPostHidden(false);
+    setInputKey(prev => prev + 1);
+
     setIsSubmitting(false);
   };
 
@@ -64,8 +67,8 @@ export const RecordInput: React.FC<RecordInputProps> = () => {
     <div className="mb-6">
       <div className="flex flex-col space-y-2">
         <RichInput 
-          key={richInputKey} 
-          label='Что нового?' 
+          key={inputKey} 
+          label='Что нового?'
           value={input} 
           entityEdit={{ handleFieldChange }} 
           suggestionData={convertSuggestionDataToRender(suggestions)}
@@ -73,18 +76,17 @@ export const RecordInput: React.FC<RecordInputProps> = () => {
       </div>
       {showPostSettings && postSettingsOpen && <div className='flex justify-between gap-6 items-center my-2'>
         {quests && quests.length > 0 && <SelectInput 
-          key={"recordinput_questselect"}
+          key={`recordinput_questselect_${inputKey}`}
           className='w-full'
           options={quests.map((quest) => { return { key: quest.id, value: quest.name } })} 
-          label='Связанный квест' 
-          labelBGColor='bg-gray-900'
+          label='Связанный квест'
           setKey={questID} 
-          entityEdit={{ handleFieldChange: (value) => {setQuestID(value)} }} 
+          entityEdit={{ handleFieldChange: (value) => setQuestID(value) }} 
           nullable={true}
         />}
         {player?.id === game?.gmID && <div className='w-62.5 justify-items-end'>
           <ToggleSwitch 
-            key={"recordinput_hiddenswitch"} 
+            key={`recordinput_hiddenswitch_${inputKey}`} 
             label='Скрыть пост' 
             labelPosition='left' 
             className=''

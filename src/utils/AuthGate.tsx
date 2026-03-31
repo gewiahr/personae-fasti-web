@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../store';
 import { loginTG as playerLoginTG, selectPlayerInfo, selectPlayerInfoLoading, setPlayerLoading } from '../reducers/PlayerSlice';
 import { selectCurrentGameInfo } from '../reducers/CurrentGameSlice';
 import { InputField } from '../components/lib/Inputs/InputField';
+import LoadingLabel from '../components/lib/LoadingLabel';
 //import { api } from './api';
 //import { useLocalStorage } from '../hooks/useLocalStorage';
 
@@ -93,34 +94,32 @@ export const AuthGate = ({ children }: { children: ReactNode }) => {
   // );
 
   if (isLoading) return (
-    <div className="flex flex-col gap-4 p-6 text-center items-center justify-center h-screen bg-gray-800 text-gray-100">
-      <p>Загрузка...</p>
+    <div className="auth-gate-page">
+      <LoadingLabel />
     </div>
   );
 
   // AuthGate 
   if (!isAuthenticated) return (
     <>
-      <div className="flex items-center justify-center h-screen bg-gray-800">
-        <div className="flex flex-col gap-4 p-6 bg-gray-900 rounded-lg shadow-lg max-w-sm text-white">
-          <h2 className="text-xl font-bold ">Приветствую в Personae App!</h2>
-          <p className="italic pb-4">
-            Это приложение для ведения летописи твоей настольной ролевой игры.
-            Оно ещё только тестируется, но ты уже можешь его опробовать.
-          </p>
-          {/* Всё что нужно это подписаться на мой канал.
+      <div className="auth-gate-page">
+        <h2 className="text-xl font-bold">Приветствую в Personae App!</h2>
+        <p className="italic pb-4">
+          Это приложение для ведения летописи твоей настольной ролевой игры.
+          Оно ещё только тестируется, но ты уже можешь его опробовать.
+        </p>
+        {/* Всё что нужно это подписаться на мой канал.
           </p>
           <a href='https://t.me/dierolled' className='italic text-center text-blue-300'>Ссылка на мой канал</a>
           <p className="italic">
             На канале я рассказываю о геймдизайне и о других своих интересных проектах.
             А после подписки ты сможешь войти и зарегистрироваться одной кнопкой внизу.
           </p> */}
-          {/* <button className='btn' onClick={() => loginTG(initDataRaw || "")}> */}
-          <InputField label='Имя пользователя' value={login} entityEdit={{ handleFieldChange: handleLoginInput }} />
-          <button className='btn' onClick={buttonLoginTG} >
-            Войти
-          </button>
-        </div>
+        {/* <button className='btn' onClick={() => loginTG(initDataRaw || "")}> */}
+        <InputField label='Имя пользователя' value={login} entityEdit={{ handleFieldChange: handleLoginInput }} />
+        <button className='btn' onClick={buttonLoginTG} >
+          Войти
+        </button>
       </div>
     </>
   );

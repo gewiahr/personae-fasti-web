@@ -30,7 +30,9 @@ const RecordCard = ({ record, label="", accented=false, editable=false, showQues
             {record.hiddenBy > 0 && <div className='pr-4'>
               <Icon 
                 key={`icon_hidden_${record.id}`} 
-                name='hidden'/>
+                name='hidden'
+                className='icon-status'
+              />
             </div>}
             {editable && onEdit && <button className='pr-4' onClick={() => onEdit(record)}>
               <Icon 

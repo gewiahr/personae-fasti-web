@@ -23,7 +23,7 @@ function useApiCore<T = any>(
   dependencies: any[] = [],
 ): ApiResponse<T> {
   const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!skip);
   const [error, setError] = useState<ApiError>();
   const [status, setStatus] = useState<number>(0);
 

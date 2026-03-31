@@ -8,6 +8,7 @@ import { useAppSelector } from '../store';
 import { selectAuthorization } from '../reducers/PlayerSlice';
 import type { GamePage } from '../types/request';
 import { LoadingPage } from './LoadingPage';
+import SubmitButton from '../components/lib/SubmitButton';
 
 const GameCreateEditPage: React.FC = () => {
   const { id } = useParams();
@@ -65,15 +66,13 @@ const GameCreateEditPage: React.FC = () => {
               entityEdit={({ fieldName: 'name', handleFieldChange })}
             />
 
-            <button
-              className={`${game.name == "" ?
-                `bg-gray-600 cursor-not-allowed` :
-                `bg-blue-600 hover:bg-blue-700 cursor-pointer`
-                } text-white mt-6 py-2 px-4 rounded `}
-              onClick={() => { if (game.name == "") return; saveEdited(game || {} as Game) }}
+            <SubmitButton 
+              className='mt-6'
+              disabled={game.name == ""}
+              onClick={() => { if (game.name == "") return; saveEdited(game || {} as Game) }}              
             >
               {game.name == "" ? "Введите название игры" : game.id ? "Применить" : "Создать"}
-            </button>
+            </SubmitButton>
           </div>
         </>
       )}

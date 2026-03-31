@@ -1,5 +1,5 @@
 type FloatingLabelProps = {
-  id: string;
+  id?: string;
   label: React.ReactNode;
   placeholder: boolean;
   labelBGColor: string; 

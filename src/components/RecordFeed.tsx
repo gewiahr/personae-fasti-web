@@ -13,6 +13,7 @@ type RecordFeedProps = {
   records: Record[];
   editable?: boolean;
   showQuests?: boolean;
+  showSessions?: boolean;
 };
 
 type RecordSession = {
@@ -20,7 +21,7 @@ type RecordSession = {
   records: Record[];
 }
 
-export const RecordFeed: React.FC<RecordFeedProps> = ({ records, editable = false, showQuests = true }) => {
+export const RecordFeed: React.FC<RecordFeedProps> = ({ records, editable = false, showQuests = false, showSessions = false }) => {
   const dispatch = useAppDispatch();
   const { game, players, sessions, suggestions } = useAppSelector(selectCurrentGame);
   const auth = useAppSelector(selectAuthorization);
@@ -55,7 +56,7 @@ export const RecordFeed: React.FC<RecordFeedProps> = ({ records, editable = fals
       return [];
     };
 
-    if (!sessions || sessions.length === 0) {
+    if (!sessions || sessions.length === 0 || !showSessions) {
       return [{ records: [...records].sort((a, b) => b.created.localeCompare(a.created)), session: null }] as RecordSession[]
     };
 

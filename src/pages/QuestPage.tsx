@@ -11,6 +11,8 @@ import { useNotifications } from '../context/NotificationContext';
 import { api } from '../utils/api';
 import { useAppSelector } from '../store';
 import { selectAuthorization } from '../reducers/PlayerSlice';
+import LoadingLabel from '../components/lib/LoadingLabel';
+import SubmitButton from '../components/lib/SubmitButton';
 
 type QuestPageProp = {
 
@@ -85,7 +87,7 @@ export const QuestPage: React.FC<QuestPageProp> = () => {
   return (
     <div className="max-w-4xl mx-auto p-4">
       {loading ? (
-        <p>Данные загружаются...</p>
+        <LoadingLabel />
       ) : error || !quest ? (
         <p>Данные недоступны</p>
       ) : (
@@ -96,12 +98,12 @@ export const QuestPage: React.FC<QuestPageProp> = () => {
               <h3 className="text-m text-gray-400 mb-4">{quest.title}</h3>
             </div>
             <div className={`mb-6 w-[30%]`}>
-              <button
-                className={`flex justify-center items-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded w-full`}
+              <SubmitButton
                 onClick={openEditing}
+                className='flex justify-center items-center w-full'
               >
-                {"Изменить"}
-              </button>
+                {"Изменить"} 
+              </SubmitButton>
             </div>
           </div>
           <RichText key={`questpage_richtext-${id ?? "newquest"}`} text={quest.description || ""} uid={`questpage-${id ?? "newquest"}`}/>
@@ -146,7 +148,7 @@ export const QuestPage: React.FC<QuestPageProp> = () => {
           {/* ++ Change to universal feed ++ */}
           {data && data.records.length > 0 && <div className=''>
             <h2 className='text-right text-xl text-bold pt-8 pb-2'>Упоминания</h2>
-            <RecordFeed key={`questpage_recordfeed`} records={data.records} showQuests={false} />
+            <RecordFeed key={`questpage_recordfeed`} records={data.records} />
           </div>}
         </>)
       }

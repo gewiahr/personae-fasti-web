@@ -8,7 +8,7 @@ type RichInputProps = TextInputProps & {
   suggestionData: SuggestionEntityRender[];
 };
 
-export const RichInput: React.FC<RichInputProps> = ({ label, value = "", entityEdit, suggestionData }) => {
+export const RichInput: React.FC<RichInputProps> = ({ label, labelBGColor = 'bg-(--color-bg-primary)', value = "", entityEdit, suggestionData }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [inputValue, setInputValue] = useState(value);
 
@@ -180,7 +180,7 @@ export const RichInput: React.FC<RichInputProps> = ({ label, value = "", entityE
                     ${isFocused || !!inputValue ?
             '-top-2 text-xs' :
             'top-3.5 text-gray-500'}
-                    peer-focus:-top-2 peer-focus:text-xs ${isFocused || !!inputValue ? "bg-gray-900" : ""}
+                    peer-focus:-top-2 peer-focus:text-xs ${isFocused || !!inputValue ? labelBGColor : ""}
 
                 `}
       >

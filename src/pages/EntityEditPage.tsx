@@ -1,19 +1,21 @@
 import type { EntityCreateUpdate, EntityMetaData } from '../types/entities';
 import { RichInput } from '../components/lib/Inputs/RichInput'
-import { convertSuggestionDataToRender, type SuggestionData } from '../types/suggestion';
+import { convertSuggestionDataToRender } from '../types/suggestion';
 import { useEffect, useState } from 'react';
 import { InputField } from '../components/lib/Inputs/InputField';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useApi } from '../hooks/useApi';
 import { enrichEntityFieldsMentions, simplerEntityFieldsMentions } from '../types/mention';
 import { api } from '../utils/api';
-import { useAuth } from '../hooks/useAuth';
 import { ToggleSwitch } from '../components/lib/ToggleSwitch';
 import ImageUpload from '../components/lib/ImageUpload';
 import FoldableCategory from '../components/lib/FoldableCategory';
 import { SelectInput } from '../components/lib/Inputs/SelectInput';
-import { useSettings } from '../hooks/useSettings';
-
+import { useAppSelector } from '../store';
+import { selectAuthorization, selectPlayerInfo } from '../reducers/PlayerSlice';
+import { selectCurrentGameInfo, selectCurrentGameSuggestions } from '../reducers/CurrentGameSlice';
+import SubmitButton from '../components/lib/SubmitButton';
+import LoadingLabel from '../components/lib/LoadingLabel';
 
 interface EntityEditPageProps {
   metaData: EntityMetaData;
@@ -21,15 +23,16 @@ interface EntityEditPageProps {
 
 const EntityEditPage = <T extends EntityCreateUpdate>({ metaData }: EntityEditPageProps) => {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const { authorization } = useAuth();
-  const { player, game } = useSettings();
-
   const newEntity = !id;
+  const navigate = useNavigate();
+
+  const auth = useAppSelector(selectAuthorization);
+  const suggestionData = useAppSelector(selectCurrentGameSuggestions);
+  const player = useAppSelector(selectPlayerInfo);
+  const game = useAppSelector(selectCurrentGameInfo);
   
   const [entity, setEntity] = useState<T | null>(newEntity ? {} as T : null);
-  const { data: pageData } = useApi.get(`/${metaData.EntityType}/${id}`, authorization, [], newEntity);
-  const { data: suggestionData } = useApi.get<SuggestionData>(`/suggestions`, authorization);
+  const { data: pageData, loading, error } = useApi.get(`/${metaData.EntityType}/${id}`, auth, [], newEntity);
   const [hidden, setHidden] = useState<boolean>(entity && entity?.hidden || false);
 
   // Sync data to state
@@ -54,19 +57,19 @@ const EntityEditPage = <T extends EntityCreateUpdate>({ metaData }: EntityEditPa
     const endpoint = `/${metaData.EntityType}`;
     const method = newEntity ? api.post : api.put;
 
-    const { data, error } = await method<T>(endpoint, authorization, enrichedEntity);
+    const { data, error } = await method<T>(endpoint, auth, enrichedEntity);
     if (!error) {
       navigate(data?.id ? `/${metaData.EntityType}/${data.id}` : `/${metaData.EntityType}`);
     }
   };
 
-  if (!newEntity && !entity || !suggestionData) {
-    return <div>Загрузка...</div>;
-  }
-
   return (
     <div className='max-w-4xl mx-auto p-4'>
-      <div className='flex flex-col'>
+      {loading ? (
+        <LoadingLabel />
+      ) : !newEntity && (error || !entity) ? (
+        <p>Данные недоступны</p>
+      ) : (<div className='flex flex-col'>
         { entity && metaData.Fields.map((field) => {
           if (field.EditType == 'input') {
               return (<InputField 
@@ -116,13 +119,13 @@ const EntityEditPage = <T extends EntityCreateUpdate>({ metaData }: EntityEditPa
           />
         </div>}
 
-        <button
-          className="bg-blue-600 hover:bg-blue-700 text-white mt-6 py-2 px-4 rounded cursor-pointer"
+        <SubmitButton
           onClick={() => saveEdited(entity)}
+          className='mt-6'  
         >
           {entity?.id ? "Применить" : "Создать"}
-        </button>
-      </div>
+        </SubmitButton>
+      </div>)}
     </div>
   );
 };

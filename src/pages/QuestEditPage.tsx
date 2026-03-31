@@ -15,6 +15,8 @@ import Icon from '../components/icons/Icon';
 import { selectAuthorization } from '../reducers/PlayerSlice';
 import { useAppSelector } from '../store';
 import { selectCurrentGameSuggestions } from '../reducers/CurrentGameSlice';
+import LoadingLabel from '../components/lib/LoadingLabel';
+import SubmitButton from '../components/lib/SubmitButton';
 
 
 const QuestEditPage = () => {
@@ -28,34 +30,35 @@ const QuestEditPage = () => {
   const [quest, setQuest] = useState<Quest | null>(newQuest ? {} as Quest : null);
   const [tasks, setTasks] = useState<QuestTask[]>([]);
 
-  const { data: questData } = useApi.get<QuestPageData>(`/quest/${id}`, auth, [], newQuest);
+  const { data: questData, loading, error } = useApi.get<QuestPageData>(`/quest/${id}`, auth, [], newQuest);
 
   const { addNotification } = useNotifications();
 
   useEffect(() => {
     if (!questData || !questData.quest) return;
-    if (!suggestions) return
+    if (!suggestions) return;
+
     setQuest(simplerQuestFieldsMentions(questData.quest, suggestions));
     setTasks(simplerQuestTaskFieldsMentions(questData.tasks.sort((a, b) => a.id - b.id), suggestions));
   }, [questData, suggestions]);
 
   const handleFieldChange = (value: any, field?: string) => {
-    if (!field) return
+    if (!field) return;
     setQuest(prev => prev ? { ...prev, [field]: value } : null);
   };
 
   const addTask = () => {
-    if (!quest) return
+    if (!quest) return;
     setTasks([...tasks, NewQuestTask(quest.id)]);
   };
 
   const deleteTask = (removeIndex: number) => {
-    if (!quest) return
+    if (!quest) return;
     setTasks(prev => prev.filter((_, i) => i !== removeIndex));
   };
 
   const handleTasksChange = (value: any, field?: string, index?: number) => {
-    if (!field || !tasks) return
+    if (!field || !tasks) return;
     setTasks(prev =>
       prev ? prev.map((task, i) =>
         i === index
@@ -95,13 +98,17 @@ const QuestEditPage = () => {
     };
   };
 
-  if (!newQuest && !quest || !suggestions) {
-    return <div>Loading...</div>;
-  };
+  // if (!newQuest && !quest || !suggestions) {
+  //   return <div>Loading...</div>;
+  // };
 
   return (
     <div className='max-w-4xl mx-auto p-4'>
-      <div className='flex flex-col'>
+      {loading ? (
+        <LoadingLabel />
+      ) : !newQuest && (error || !quest) ? (
+        <p>Данные недоступны</p>
+      ) : (<div className='flex flex-col'>
         <InputField
           className="mb-4"
           label='Название'
@@ -149,39 +156,39 @@ const QuestEditPage = () => {
             );
           })}
 
-          <button
-            className="bg-blue-600 hover:bg-blue-700 text-white my-2 py-2 px-4 rounded"
+          <SubmitButton
             onClick={() => addTask()}
+            className='my-2'
           >
             {"Добавить задачу"}
-          </button>
+          </SubmitButton>
         </div>}
 
         <div className="flex-1 border-t border-gray-700 my-2" />
 
         {quest?.id ? <div className='flex justify-between items-center'>
-          <button
-            className="w-[30%] bg-red-600 hover:bg-red-700 text-white mt-2 py-2 px-4 rounded"
+          <SubmitButton
             onClick={deleteQuest}
+            className='w-[30%] mt-2'
+            danger
           >
             {"Удалить"}
-          </button>
+          </SubmitButton>
 
-          <button
-            className="w-[65%] bg-blue-600 hover:bg-blue-700 text-white mt-2 py-2 px-4 rounded"
+          <SubmitButton
             onClick={() => saveEdited(quest, tasks)}
+            className='w-[65%] mt-2'
           >
             {"Сохранить"}
-          </button>
+          </SubmitButton>
         </div> :
-
-          <button
-            className="bg-blue-600 hover:bg-blue-700 text-white mt-2 py-2 px-4 rounded"
+          <SubmitButton
             onClick={() => saveEdited(quest, tasks)}
+            className='mt-2'
           >
-            {"Создать"}
-          </button>}
-      </div>
+            {"Сохранить"}
+          </SubmitButton>}
+      </div>)}
     </div>
   );
 };

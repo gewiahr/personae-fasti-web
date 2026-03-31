@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import type { SelectKeyValue } from '../../../types/utils';
 import Icon from '../../icons/Icon';
 import type { TextInputProps } from './InputProps';
+import FloatingLabel from './FloatingLabel';
 
 type SelectInputProps = TextInputProps & {
   options: SelectKeyValue[];
@@ -10,7 +11,7 @@ type SelectInputProps = TextInputProps & {
 };
 
 export const SelectInput: React.FC<SelectInputProps> = (
-  { options, setKey, value = '', nullable=false, label, entityEdit, className = '', labelBGColor='bg-gray-800', error }) => {
+  { options, setKey, value = '', nullable=false, label, entityEdit, className = '', labelBGColor='bg-(--color-bg-primary)', error }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const innerRef = useRef<HTMLDivElement>(null);
@@ -80,32 +81,21 @@ export const SelectInput: React.FC<SelectInputProps> = (
 
 
       {/* Floating label */}
-      <label
-        className={`
-            absolute left-4 px-1
-            transition-all duration-200 ease-in-out
-            pointer-events-none
-            ${isFocused || value ?
-            '-top-2 text-xs' :
-            'top-3.5 text-gray-500'}
-            ${error && (isFocused || value) ? 'text-red-600' : ''}
-            peer-focus:-top-2 peer-focus:text-xs 
-            ${(isFocused || value) ? labelBGColor : ""}
-          `}
-      >
-        {label}
-      </label>
+      <FloatingLabel
+        label={label}
+        labelBGColor={labelBGColor}
+        placeholder={isFocused || value != ""}
+      />
 
       {/* Dropdown options */}
       {isOpen && (
         <div
-          className="absolute z-50 w-full bg-gray-800 border border-gray-700 rounded-lg shadow-lg overflow-y-auto max-h-60"
+          className="select-input-dropdown-container"
           onClick={(e) => e.stopPropagation()} >
           {options.map((option) => (
             <div
               key={option.key}
-              className={`px-4 py-2 hover:bg-blue-700 rounded-lg cursor-pointer ${value === option.value ? 'bg-blue-800' : ''
-                }`}
+              className={`select-input-dropdown-option ${value === option.value ? 'select-input-dropdown-option-selected' : ''}`}
               onClick={() => handleChange(option.key)}
             >
               {option.value}

@@ -1,6 +1,6 @@
 import type { Char } from '../types/entities';
 import { RichInput } from '../components/lib/Inputs/RichInput'
-import type { SuggestionData } from '../types/suggestion';
+import { convertSuggestionDataToRender } from '../types/suggestion';
 import { useEffect, useState } from 'react';
 import { InputField } from '../components/lib/Inputs/InputField';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -8,25 +8,25 @@ import type { CharPageData } from '../types/request';
 import { useApi } from '../hooks/useApi';
 import { enrichCharFieldsMentions, simplerCharFieldsMentions } from '../types/mention';
 import { api } from '../utils/api';
-import { useAuth } from '../hooks/useAuth';
+import { useAppSelector } from '../store';
+import { selectAuthorization } from '../reducers/PlayerSlice';
+import LoadingLabel from '../components/lib/LoadingLabel';
+import { selectCurrentGameSuggestions } from '../reducers/CurrentGameSlice';
+import SubmitButton from '../components/lib/SubmitButton';
 
 
 const CharEditPage = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const { authorization } = useAuth();
-
-  // Derived state
   const newChar = !id;
+  const navigate = useNavigate();
   
-  // Simplified state
   const [char, setChar] = useState<Char | null>(newChar ? {} as Char : null);
-  
-  // API calls
-  const { data: apiData } = useApi.get<CharPageData>(`/char/${id}`, authorization, [], newChar);
-  const { data: suggestionData } = useApi.get<SuggestionData>(`/suggestions`, authorization);
 
-  // Sync data to state
+  const auth = useAppSelector(selectAuthorization);
+  const suggestionData = useAppSelector(selectCurrentGameSuggestions);
+  
+  const { data: apiData, loading, error } = useApi.get<CharPageData>(`/char/${id}`, auth, [], newChar);
+
   useEffect(() => {
     if (apiData?.char && suggestionData) {
       setChar(simplerCharFieldsMentions(apiData.char, suggestionData));
@@ -41,24 +41,28 @@ const CharEditPage = () => {
   const saveEdited = async (editedChar: Char | null) => {
     if (!editedChar || !suggestionData) return;
 
-    const enrichedChar = enrichCharFieldsMentions(editedChar, suggestionData);
+    const enrichedChar = enrichCharFieldsMentions(editedChar, convertSuggestionDataToRender(suggestionData));
     
-    const endpoint = '/char';//newChar ? '/char' : `/char/${id}`;
+    const endpoint = '/char'; //newChar ? '/char' : `/char/${id}`;
     const method = newChar ? api.post : api.put;
 
-    const { data, error } = await method<Char>(endpoint, authorization, enrichedChar);
+    const { data, error } = await method<Char>(endpoint, auth, enrichedChar);
     if (!error) {
       navigate(data?.id ? `/char/${data.id}` : '/chars');
     }
   };
 
-  if (!newChar && !char || !suggestionData) {
-    return <div>Loading...</div>; // Or skeleton UI
-  }
+  // if (!newChar && !char || !suggestionData) {
+  //   return <div>Loading...</div>; 
+  // }
 
   return (
     <div className='max-w-4xl mx-auto p-4'>
-      <div className='flex flex-col'>
+      {loading ? (
+        <LoadingLabel />
+      ) : !newChar && (error || !char) ? (
+        <p>Данные недоступны</p>
+      ) : (<div className='flex flex-col'>
         <InputField 
           className="mb-4" 
           label='Имя' 
@@ -75,7 +79,7 @@ const CharEditPage = () => {
           label='Описание' 
           value={char?.description} 
           entityEdit={{ fieldName: 'description', handleFieldChange }} 
-          fullSuggestionData={suggestionData}
+          suggestionData={convertSuggestionDataToRender(suggestionData)}
         />
         {/* <SelectInput
           label='Выбор'
@@ -84,13 +88,13 @@ const CharEditPage = () => {
           value={char?.title}
           key={123123}
         /> */}
-        <button
-          className="bg-blue-600 hover:bg-blue-700 text-white mt-6 py-2 px-4 rounded"
+        <SubmitButton 
           onClick={() => saveEdited(char)}
+          className='mt-6'
         >
-          {char?.id ? "Применить" : "Создать"}
-        </button>
-      </div>
+          {char?.id ? "Применить" : "Создать"}  
+        </SubmitButton>
+      </div>)}
     </div>  
   );
 };
