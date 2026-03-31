@@ -7,7 +7,9 @@
 
   --color-button-primary: oklch(54.6% 0.245 262.881);
   --color-button-primary-hover: oklch(48.8% 0.243 264.376);
-  --color-disabled: oklch(44.6% 0.03 256.802);
+  --color-button-danger: oklch(57.7% 0.245 27.325);
+  --color-button-danger-hover: oklch(50.5% 0.213 27.518);
+  --color-button-disabled: oklch(44.6% 0.03 256.802);
 
   --color-text-accent: oklch(62.3% 0.214 259.815);
   --color-text-gray: oklch(55.1% 0.027 264.364);
@@ -23,7 +25,9 @@
 
   --color-button-primary: oklch(0.363 0.138 165);
   --color-button-primary-hover: oklch(0.318 0.113 165);
-  --color-disabled: oklch(44.6% 0.03 256.802);
+  --color-button-danger: oklch(57.7% 0.245 27.325);
+  --color-button-danger-hover: oklch(50.5% 0.213 27.518);
+  --color-button-disabled: oklch(44.6% 0.03 256.802);
 
   --color-text-accent: oklch(0.566 0.202 165);
   --color-text-gray:oklch(55.1% 0.027 264.364);
@@ -39,7 +43,9 @@
 
   --color-button-primary: oklch(0.57 0.13 50);
   --color-button-primary-hover: oklch(48.795% 0.10851 51.054);
-  --color-disabled: oklch(44.6% 0.03 256.802);
+  --color-button-danger: oklch(57.7% 0.245 27.325);
+  --color-button-danger-hover: oklch(50.5% 0.213 27.518);
+  --color-button-disabled: oklch(44.6% 0.03 256.802);
 
   --color-text-accent: oklch(0.57 0.13 50);
   --color-text-gray: oklch(55.1% 0.027 264.364);
@@ -55,10 +61,12 @@
 
   --color-button-primary: oklch(0.435 0.151 25);
   --color-button-primary-hover: oklch(0.384 0.13 25);
-  --color-disabled: oklch(44.6% 0.03 256.802);
+  --color-button-danger: oklch(57.7% 0.245 27.325);
+  --color-button-danger-hover: oklch(50.5% 0.213 27.518);
+  --color-button-disabled: oklch(44.6% 0.03 256.802);
 
   --color-text-accent: oklch(0.435 0.151 25);
-  --color-text-gray: oklch(55.1% 0.027 264.364);
+  --color-text-dimmed: oklch(55.1% 0.027 264.364);
 
   --color-accent:oklch(0.435 0.151 25);
   --color-gray:oklch(87.2% 0.01 258.338);

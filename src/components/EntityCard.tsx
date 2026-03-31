@@ -10,30 +10,18 @@ type EntityCardProps = {
 };
 
 export const EntityCard = ({ entity, metaData, labelText }: EntityCardProps) => {
-  //const [ labelText, setLabelText ] = useState<string>();
 
-  // Helper function to truncate long descriptions
   const truncateDescription = (text: string, maxLength: number = 100) => {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + '...';
   };
 
-  // useEffect(() => {
-  //   // Set label text
-  //   switch (entityType) {
-  //     case 'char':
-  //       setLabelText(labelText);
-  //     //case 'npc':
-  //     //case 'location':
-  //   };
-  // });
-
   return (
     <Link
       to={`/${metaData.EntityType}/${entity.id}`}
-      className="block border border-gray-700 rounded-lg overflow-hidden hover:border-blue-500 transition-colors duration-200 bg-gray-800 hover:bg-gray-750"
+      className="entity-card-link-container"
     >
-      <div className="p-4 h-full flex flex-col">
+      <div className="flex flex-col h-full p-4">
         <div className=''>
           <h3 className="text-lg font-semibold text-white mb-1">{entity.name}</h3>
           
@@ -68,16 +56,15 @@ export const EntityCard = ({ entity, metaData, labelText }: EntityCardProps) => 
         {labelText && <>
           <div className='grow mt-3'></div>
 
-          <div className="flex justify-between items-end text-xs text-gray-400">
-            {/* <div className='flex-grow'></div> */}
-            <span>Обновлено: {new Date().toLocaleDateString()}</span>
-            {/* <span>Обновлено: {entity.updated}</span> */}
+          <div className="flex justify-between items-end">
+            <span className='datestamp-label'>Обновлено: {new Date().toLocaleDateString()}</span>
             <div className="flex items-center">
               {entity.hiddenBy > 0 && <Icon 
                 key={`icon_hidden_${entity.id}`} 
+                className='icon-status'
                 name='hidden'/>
               }
-              {labelText && <span className="bg-gray-700 px-2 py-1 rounded">
+              {labelText && <span className="card-label-container card-label-container-dimmed">
                 {labelText}
               </span>}
             </div>

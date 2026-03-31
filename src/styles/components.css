@@ -47,18 +47,18 @@
 .submit-button-container-danger {
   /* @apply bg-red-600 hover:bg-red-700 text-white; */
   color: var(--color-white);
-  background-color: var(--color-red-600);
+  background-color: var(--color-button-danger);
 }
 
 .submit-button-container-danger:hover {
   /* @apply bg-red-600 hover:bg-red-700 text-white; */
-  background-color: var(--color-red-700);
+  background-color: var(--color-button-danger-hover);
 }
 
 .submit-button-container-disabled {
   @apply cursor-not-allowed;
   color: var(--color-white);
-  background-color: var(--color-disabled);
+  background-color: var(--color-button-disabled);
 }
 
   /* Select Input */
@@ -151,13 +151,13 @@ input[type="number"] {
 .card-label-container-accented {
   /* @apply bg-blue-900 text-blue-200; */
   background-color: var(--color-accent); /* с лейблами надо что-то подумать -- в двухцветной они будут оттеняться от фона, так как цвет другой, а в одноцветной тяжко */
-  color: var(--color-gray);
+  color: var(--color-white);
 }
 
 .card-label-container-dimmed {
   /* @apply bg-gray-700 text-gray-300; */
-  background-color: var(--color-bg-secondary); /* здесь вообще непонятно какой цыет юзать */
-  color: var(--color-gray);
+  background-color: var(--color-gray-700); /* здесь вообще непонятно какой цвет юзать */
+  color: var(--color-white);
 }
 
   /* Record Card */
@@ -194,6 +194,19 @@ input[type="number"] {
   /* @apply border-gray-700 bg-gray-800; */
   background-color: var(--color-bg-secondary);
   border-color: var(--color-gray-700);
+}
+
+  /* Entity Card */
+
+.entity-card-link-container {
+  @apply block border rounded-lg overflow-hidden transition-colors duration-200;
+  background-color: var(--color-bg-secondary);
+  border-color: var(--color-gray-700);
+}
+
+.entity-card-link-container:hover {
+  /* @apply hover:border-blue-500 hover:bg-gray-750; */
+  border-color: var(--color-accent);
 }
 
   /* Modal */
@@ -265,6 +278,9 @@ input[type="number"] {
 
 
   /* Icon */
+.icon-status {
+  color: var(--color-text-gray);
+}
 
 .icon-button-accented {
   @apply hover:fill-current cursor-pointer;
@@ -272,5 +288,10 @@ input[type="number"] {
 }
 
 .icon-button-accented:hover {
+  color: var(--color-text-gray);
+}
+
+.datestamp-label {
+  @apply text-xs;
   color: var(--color-text-gray);
 }

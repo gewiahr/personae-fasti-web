@@ -24,8 +24,8 @@ const RecordCard = ({ record, label="", accented=false, editable=false, showQues
             <RichText key={`recordcard_richtext-${record.id}`} text={record.text} uid={`recordcard-${record.id}`} />
           </div>
         </div>
-        <div className="flex justify-between items-end text-xs text-gray-400 pt-2">
-          <span>Обновлено: {new Date(record.updated).toLocaleDateString()}</span>
+        <div className="flex justify-between items-end pt-2">
+          <span className='datestamp-label'>Обновлено: {new Date(record.updated).toLocaleDateString()}</span>
           <div className="flex items-center">
             {record.hiddenBy > 0 && <div className='pr-4'>
               <Icon 

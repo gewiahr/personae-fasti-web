@@ -13,10 +13,12 @@ export const QuestCard = ({ quest, labelText = null }: QuestCardProps) => {
     return text.substring(0, maxLength) + '...';
   };
 
+  const accented = !quest.finished || quest.finished && quest.successful;
+
   return (
     <Link
       to={`/quest/${quest.id}`}
-      className={`block border border-gray-700 rounded-lg overflow-hidden hover:border-blue-500 transition-colors duration-200 bg-gray-800 hover:bg-gray-750`}
+      className={`entity-card-link-container`}
     >
       <div className="p-4 h-full flex flex-col">
         <div className=''>
@@ -28,14 +30,8 @@ export const QuestCard = ({ quest, labelText = null }: QuestCardProps) => {
         </div>
 
         {labelText && <>
-          <div className='grow'></div>
-
           <div className="flex justify-end items-end text-xs text-gray-400">
-            <span className={`px-2 py-1 rounded 
-                ${!quest.finished || quest.finished && quest.successful
-                ? 'bg-blue-900 text-blue-200'
-                : 'bg-gray-700 text-gray-300'
-                }`}>
+            <span className={`card-label-container ${accented ? 'card-label-container-accented' : 'card-label-container-dimmed'}`}>
               {labelText}
             </span>
           </div>
