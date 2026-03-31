@@ -1,0 +1,70 @@
+# name: "Release"
+
+# on:
+#   push:
+#     tags:
+#       - 'v*'
+
+# jobs:
+#   build-and-deploy:
+#     name: "📦 Build and Deploy"
+#     runs-on: ubuntu-latest
+
+#     steps:
+#     #- name: Checkout Code
+#     - uses: actions/checkout@v4
+#       with:
+#           fetch-depth: 0 
+#     - uses: softprops/action-gh-release@v1
+#       with:
+#         name: Release ${{ github.ref_name }}
+#         draft: false
+#         prerelease: false
+#         generate_release_notes: true
+#       env:
+#         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+#     - name: Set up Node.js
+#       uses: actions/setup-node@v4
+#       with:
+#         node-version: 20
+#         cache: 'npm'
+
+#     - name: Install dependencies
+#       run: npm ci
+
+#     - name: Build production app
+#       run: npm run build
+
+#     - name: Verify build output
+#       run: |
+#         ls -la dist/
+#         [ -f dist/index.html ] || exit 1
+
+#     # - name: Set Access
+#     #   uses: shimataro/ssh-key-action@v2
+#     #   with:
+#     #     key: ${{ secrets.SSH_PRIVATE_KEY }}
+#     #     name: id_rsa
+#     #     known_hosts: unnecessary
+
+#     - name: Clean up fasti-web directory
+#       uses: appleboy/ssh-action@v1.2.2
+#       with:
+#         host: ${{ secrets.SSH_HOST }}
+#         username: ${{ secrets.SSH_USER }}
+#         key: ${{ secrets.SSH_PRIVATE_KEY }}
+#         port: 22
+#         script: rm -rf /apps/fasti-web/*
+
+#     - name: Copy dist
+#       uses: appleboy/scp-action@v0.1.7
+#       with:
+#         host: ${{ secrets.SSH_HOST }}
+#         username: ${{ secrets.SSH_USER }}
+#         key: ${{ secrets.SSH_PRIVATE_KEY }}
+#         port: 22
+#         source: "dist/"
+#         target: "${{ vars.DEPLOY_PATH }}"
+#         strip_components: 1
+
