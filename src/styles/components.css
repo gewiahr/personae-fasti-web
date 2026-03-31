@@ -159,7 +159,7 @@ input[type="number"] {
   /* Record Card */
 
 .record-card-container {
-  @apply p-4 rounded-lg border relative z-40
+  @apply p-4 rounded-lg border relative z-10
 }
 
 .record-card-container-accented {

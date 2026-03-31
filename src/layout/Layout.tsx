@@ -28,7 +28,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
   return (<>
     <div className="layout-main">
       {isMenuOpen && (
-        <div className="inset-0 z-40" />
+        <div className="fixed inset-0 bg-black/80 z-40" onClick={closeBurgerMenu} />
       )}
 
       <header className='layout-header'>
@@ -56,7 +56,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
           </div>}
       </header>
 
-      <main className={`grow p-2 ${isMenuOpen ? 'blur-xs' : 'blur-none'} transition-all duration-200`}>
+      <main className={`grow p-2 ${isMenuOpen ? 'pointer-events-none select-none' : ''} transition-all duration-200`}>
         <NotificationProvider>
           {children}
           <NotificationPopup />
