@@ -4,6 +4,7 @@ import GameCreateEditPage from '../pages/GameCreateEditPage';
 import { useApi } from '../hooks/useApi';
 import { useAuth } from '../hooks/useAuth';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import SubmitButton from '../components/lib/SubmitButton';
 
 type AuthGateNoGameProps = {
   player: PlayerFullInfo;
@@ -45,7 +46,7 @@ const AuthGateNoGame: React.FC<AuthGateNoGameProps> = ({ player }) => {
             <p className='text-2xl not-italic'>Вы ещё не участвуете ни в одной игре</p>
             <div>
               <p>Создайте игру и пригласите друзей</p>
-              <button className='btn mt-3 not-italic' onClick={() => switchNewGame(true)}>Создать игру</button>
+              <SubmitButton className='mt-3' onClick={() => switchNewGame(true)} >Создать игру</SubmitButton>
             </div>
             <div className='flex items-center justify-center gap-2'>
               <div 

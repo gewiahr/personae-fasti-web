@@ -7,6 +7,7 @@ import { loginTG as playerLoginTG, selectPlayerInfo, selectPlayerInfoLoading, se
 import { selectCurrentGameInfo } from '../reducers/CurrentGameSlice';
 import { InputField } from '../components/lib/Inputs/InputField';
 import LoadingLabel from '../components/lib/LoadingLabel';
+import SubmitButton from '../components/lib/SubmitButton';
 //import { api } from './api';
 //import { useLocalStorage } from '../hooks/useLocalStorage';
 
@@ -115,11 +116,10 @@ export const AuthGate = ({ children }: { children: ReactNode }) => {
             На канале я рассказываю о геймдизайне и о других своих интересных проектах.
             А после подписки ты сможешь войти и зарегистрироваться одной кнопкой внизу.
           </p> */}
-        {/* <button className='btn' onClick={() => loginTG(initDataRaw || "")}> */}
         <InputField label='Имя пользователя' value={login} entityEdit={{ handleFieldChange: handleLoginInput }} />
-        <button className='btn' onClick={buttonLoginTG} >
-          Войти
-        </button>
+        <SubmitButton onClick={buttonLoginTG}>
+          Войти  
+        </SubmitButton>
       </div>
     </>
   );
