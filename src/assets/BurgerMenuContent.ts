@@ -1,8 +1,8 @@
 import { BurgerMenuItem, BurgerMenuItemCallable, BurgerMenuItemCategory, type BurgerMenuItemLink } from "../components/lib/BurgerMenu/BurgerMenuItems";
 import { CharMetaData, LocationMetaData, NPCMetaData } from "../types/entities";
-import { config } from "../utils/config";
+//import { config } from "../utils/config";
 
-const compendiumPath = config.compendiumBaseUrl;
+//const compendiumPath = config.compendiumBaseUrl;
 const indent = '\xa0\xa0\xa0\xa0\xa0\xa0';
 
 export const burgerMenuItems: (BurgerMenuItem | BurgerMenuItemLink | BurgerMenuItemCategory | BurgerMenuItemCallable)[] = [
@@ -18,6 +18,6 @@ export const burgerMenuItems: (BurgerMenuItem | BurgerMenuItemLink | BurgerMenuI
 
   { name: `📜 Квесты`, path: '/quests', internal: true } as BurgerMenuItemLink,
   { name: `${indent}Настройки`, path: '/settings', internal: true } as BurgerMenuItemLink,
-  { name: `📚 Правила`, path: `${compendiumPath}/`, internal: false } as BurgerMenuItemLink,
-  { name: `🔨 Предметы`, path: `${compendiumPath}/things`, internal: false } as BurgerMenuItemLink,
+  // { name: `📚 Правила`, path: `${compendiumPath}/`, internal: false } as BurgerMenuItemLink,
+  // { name: `🔨 Предметы`, path: `${compendiumPath}/things`, internal: false } as BurgerMenuItemLink,
 ];
