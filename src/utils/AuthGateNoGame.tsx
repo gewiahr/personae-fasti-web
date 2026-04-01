@@ -36,12 +36,12 @@ const AuthGateNoGame: React.FC<AuthGateNoGameProps> = ({ player }) => {
 
     <>
       {newGameSwitch ?
-        <div className='grow min-h-screen items-center justify-center bg-gray-900 text-gray-100'>
+        <div className='auth-gate-page'>
           <GameCreateEditPage />
         </div>
          :
         // === Disclaimer === //
-        <div className='flex flex-col min-h-screen items-center justify-center bg-gray-900 text-gray-100'>
+        <div className='auth-gate-page'>
           <div className='flex flex-col gap-6 p-4 text-center italic'>
             <p className='text-2xl not-italic'>Вы ещё не участвуете ни в одной игре</p>
             <div>
@@ -49,13 +49,9 @@ const AuthGateNoGame: React.FC<AuthGateNoGameProps> = ({ player }) => {
               <SubmitButton className='mt-3' onClick={() => switchNewGame(true)} >Создать игру</SubmitButton>
             </div>
             <div className='flex items-center justify-center gap-2'>
-              <div 
-                className={`h-px bg-gray-300 w-[40%]`}
-              />
+              <div className={`h-px bg-gray-300 w-[40%]`} />
               <p>или</p>
-              <div 
-                className={`h-px bg-gray-300 w-[40%]`}
-              />
+              <div className={`h-px bg-gray-300 w-[40%]`} />
             </div>
             <div>
               <p className='mb-3'>Поделитесь своим ником чтобы вас могли пригласить</p>

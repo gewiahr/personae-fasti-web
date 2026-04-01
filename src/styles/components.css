@@ -5,7 +5,7 @@
 .auth-gate-page {
   @apply flex flex-col gap-4 p-6 text-center items-center justify-center h-screen;
   background-color: var(--color-bg-primary);
-  color: var(--color-white);
+  color: var(--color-text-regular);
 }
 
   /* Burger Menu */
