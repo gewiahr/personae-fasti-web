@@ -14,7 +14,7 @@ export type PlayerData = {
   theme: UITheme;
 };
 
-const initialState : PlayerData = {
+const initialState: PlayerData = {
   loading: true,
   info: null,
   token: window.localStorage.getItem('auth') || '',
@@ -24,32 +24,22 @@ const initialState : PlayerData = {
 
 export const loginTG = createAsyncThunk(
   'loginTG',
-  async (params: { rawData: string }, appThunk) => {    
+  async (params: { rawData: string }, appThunk) => {
     try {
-      const response = await api.post<LoginInfo>(`/login/tg`, "", { initDataRaw: params.rawData });
-      if (!response.data) throw response.error;
-      appThunk.dispatch(setPlayerInfo(response.data.player));
-      appThunk.dispatch(setAuthorizationToken(response.data.authorization));
-      appThunk.dispatch(setCurrentGame(response.data.currentGame));
+      const { data, error } = await api.post<LoginInfo>(`/login/tg`, "", { initDataRaw: params.rawData });
+      if (error) throw error;
+      if (data) {
+        appThunk.dispatch(setPlayerInfo(data.player));
+        appThunk.dispatch(setAuthorizationToken(data.authorization));
+        appThunk.dispatch(setCurrentGame(data.currentGame));
 
-      appThunk.dispatch(loadCurrentGameRecords({ auth: response.data.authorization }));
+        appThunk.dispatch(loadCurrentGameRecords({ auth: data.authorization }));
+      }
     } catch (e: any) {
       throw e;
     } finally {
       appThunk.dispatch(setPlayerInfoLoading(false));
     }
-
-    // const response = await api.post<LoginInfo>(`/login/tg`, "", { initDataRaw: params.rawData });
-    // if (response.data) {
-    //   appThunk.dispatch(setPlayerInfo(response.data.player));
-    //   appThunk.dispatch(setAuthorizationToken(response.data.authorization));
-
-    //   appThunk.dispatch(getCurrentGameRecords({ auth: response.data.authorization }));
-    // } else if (response.error) {
-    //   throw response.error;
-    // }
-
-    // appThunk.dispatch(setPlayerInfoLoading(false));
   }
 );
 
@@ -60,21 +50,9 @@ export const setPlayerLoading = createAsyncThunk(
   }
 );
 
-// export const getPlayerInfo = createAsyncThunk(
-//   'getPlayerInfo',
-//   async (params: { rawData: string }, appThunk) => {
-//     const response = await api.post<LoginInfo>(`/login/tg`, "", { initDataRaw: params.rawData });
-
-//     if (response.data) {
-//       appThunk.dispatch(setPlayerInfo(response.data.player));
-//       appThunk.dispatch(setAuthorizationToken(response.data.authorization));
-//     }
-//   }
-// );
-
 export const loadPlayerGames = createAsyncThunk(
   'loadPlayerGames',
-  async (params: { auth: string }, appThunk) => {    
+  async (params: { auth: string }, appThunk) => {
     try {
       const { data, error } = await api.get<PlayerGamesInfo>("/player/settings", params.auth);
       if (error) throw error;
@@ -88,7 +66,6 @@ export const loadPlayerGames = createAsyncThunk(
   }
 );
 
-// Create slice
 const PlayerSlice = createSlice({
   name: 'player',
   initialState,
@@ -104,25 +81,24 @@ const PlayerSlice = createSlice({
     },
     setPlayerGames: (state, action: PayloadAction<GameInfo[]>) => {
       state.games = action.payload;
-    }
+    },
+    resetPlayer: () => initialState
   },
 });
 
-// Export actions
 export const {
   setPlayerInfo,
   setAuthorizationToken,
   setPlayerInfoLoading,
-  setPlayerGames
+  setPlayerGames,
+  resetPlayer
 } = PlayerSlice.actions;
 
-// Export selectors
-export const selectPlayer = (state: RootState): PlayerData | null  => state.player;
+export const selectPlayer = (state: RootState): PlayerData | null => state.player;
 export const selectPlayerInfoLoading = (state: RootState) => state.player.loading;
 export const selectPlayerInfo = (state: RootState): PlayerFullInfo | null => state.player.info;
 export const selectPlayerGames = (state: RootState): GameInfo[] => state.player.games;
 export const selectAuthorization = (state: RootState): string => state.player.token;
 export const selectPlayerTheme = (state: RootState): UITheme => state.player.theme;
 
-// Export reducer
 export default PlayerSlice;

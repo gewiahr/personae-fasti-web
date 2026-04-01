@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { InputField } from '../components/lib/Inputs/InputField';
 import { useAuth } from '../hooks/useAuth';
 import { api } from './api';
-//import { useNotifications } from '../context/NotificationContext';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import type { PlayerFullInfo } from '../types/request';
 import { useNavigate } from 'react-router-dom';

@@ -18,7 +18,7 @@ const store = configureStore({
 
 export default store;
 
-// export type AppStore = typeof store;
+export type AppStore = typeof store;
 export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>()

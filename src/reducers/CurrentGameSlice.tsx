@@ -156,6 +156,14 @@ export const loadCurrentGameSuggestions = createAsyncThunk(
   }
 );
 
+// export const resetCurrentGame = createAsyncThunk(
+//   'resetCurrentGame',
+//   async (_, appThunk) => {
+//     const state = appThunk.getState() as RootState;
+//     state.currentGame = initialState;
+//   }
+// )
+
 const currentGameSlice = createSlice({
   name: 'currentGame',
   initialState,
@@ -178,6 +186,7 @@ const currentGameSlice = createSlice({
     setCurrentGameSuggestions: (state, action: PayloadAction<SuggestionData>) => {
       state.suggestions = action.payload;
     },
+    resetCurrentGame: () => initialState
   },
 });
 
@@ -189,7 +198,8 @@ export const {
   setCurrentGameSessions,
   setCurrentGamePlayers,
   setCurrentGameQuests,
-  setCurrentGameSuggestions
+  setCurrentGameSuggestions,
+  resetCurrentGame
 } = currentGameSlice.actions;
 
 export const selectCurrentGame = (state: RootState) => state.currentGame;
