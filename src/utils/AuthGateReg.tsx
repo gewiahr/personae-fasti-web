@@ -1,28 +1,31 @@
 import React, { useState } from 'react';
 import { InputField } from '../components/lib/Inputs/InputField';
-import { useAuth } from '../hooks/useAuth';
 import { api } from './api';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import type { PlayerFullInfo } from '../types/request';
 import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../store';
+import { selectAuthorization, selectPlayerInfo } from '../reducers/PlayerSlice';
 
 type AuthGateRegUsernameInputState = 'check' | 'accept' | 'loading';
 type AuthGateRegUsernameInputCheck = 'none' | 'valid' | 'invalid';
 
 const AuthGateReg: React.FC = () => {
+  const auth = useAppSelector(selectAuthorization);
+  const player = useAppSelector(selectPlayerInfo);
+
   const initInputTip = 'Выберите имя пользователя, (пока что) его нельзя будет сменить';
   const [inputState, setInputState] = useState<AuthGateRegUsernameInputState>('check');
   const [inputTip, setInputTip] = useState<string>(initInputTip);
   const [inputCheck, setInputCheck] = useState<AuthGateRegUsernameInputCheck>('none');
-  const { playerInfo, authorization } = useAuth();
   const [_, setPlayerInfoLS] = useLocalStorage<PlayerFullInfo | null>('playerInfo', null);
-  const [newUsername, setNewUsername] = useState<string>(playerInfo?.username || "");
+  const [newUsername, setNewUsername] = useState<string>(player?.username || "");
   const navigate = useNavigate();
   //const { addNotification } = useNotifications();
 
   const checkUsername = async () => {
     setInputState('loading');
-    var { data, error } = await api.get(`/player/username/checkAvailability/${newUsername}`, authorization);
+    var { data, error } = await api.get(`/player/username/checkAvailability/${newUsername}`, auth);
     if (error) {
       //addNotification(error.message, 'error');
       setInputState('check');
@@ -46,7 +49,7 @@ const AuthGateReg: React.FC = () => {
 
   const acceptUsername = async () => {
     setInputState('loading');
-    var { data, error } = await api.patch<PlayerFullInfo>(`/player/username`, authorization, { "newUsername": newUsername }); 
+    var { data, error } = await api.patch<PlayerFullInfo>(`/player/username`, auth, { "newUsername": newUsername }); 
     if (error) {
       setInputTip('Имя недоступно! Попробуйте другое!');
       setInputState('check');

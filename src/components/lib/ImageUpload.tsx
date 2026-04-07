@@ -1,8 +1,9 @@
 import { useState, useRef } from 'react';
 import { FiUpload, FiX } from 'react-icons/fi';
 import { useNotifications } from '../../context/NotificationContext';
-import { useAuth } from '../../hooks/useAuth';
 import { api } from '../../utils/api';
+import { useAppSelector } from '../../store';
+import { selectAuthorization } from '../../reducers/PlayerSlice';
 
 interface ImageUploadProps {
   entityType: string;
@@ -17,7 +18,8 @@ export const ImageUpload = ({ entityType, entityID } : ImageUploadProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { addNotification } = useNotifications();
-  const { authorization } = useAuth();
+  
+  const auth = useAppSelector(selectAuthorization);
 
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,7 +86,7 @@ export const ImageUpload = ({ entityType, entityID } : ImageUploadProps) => {
     if (file === null) return
     const formData = new FormData();
     formData.append('file', file.file);
-    const response = await api.post(`/image/${entityType}/${entityID}`, authorization, formData, true);
+    const response = await api.post(`/image/${entityType}/${entityID}`, auth, formData, true);
     if (response.error) {
       addNotification(`Ошибка загрузки изображения: ${response.error.message}`, "error");
     } else if (response.status === 201) {
@@ -178,4 +180,4 @@ export const ImageUpload = ({ entityType, entityID } : ImageUploadProps) => {
   );
 }
 
-export default ImageUpload
+export default ImageUpload;
