@@ -10,6 +10,8 @@ export const InputField: React.FC<InputFieldProps> = ({ label = '', value = "", 
   const [isFocused, setIsFocused] = useState(false);
   const id = useId();
 
+  const shortError = error && error.length <= 25 ? error : undefined;
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (entityEdit) {
       entityEdit?.handleFieldChange(e.target.value, entityEdit?.fieldName, entityEdit.arrayIndex);
@@ -37,7 +39,8 @@ export const InputField: React.FC<InputFieldProps> = ({ label = '', value = "", 
         id={id}
         label={label}
         placeholder={isFocused || value.length > 0} 
-        labelBGColor={labelBGColor}        
+        labelBGColor={labelBGColor}    
+        error={shortError}    
       />
 
       {/* <label
@@ -57,7 +60,7 @@ export const InputField: React.FC<InputFieldProps> = ({ label = '', value = "", 
         {label}
       </label> */}
 
-      {error && (
+      {error && !shortError && (
         <p className="mt-1 text-sm text-red-600">{error}</p>
       )}
     </div>

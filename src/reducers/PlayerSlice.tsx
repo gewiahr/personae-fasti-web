@@ -19,8 +19,56 @@ const initialState: PlayerData = {
   info: null,
   token: window.localStorage.getItem('auth') || '',
   games: [],
-  theme: 'mint'
+  theme: 'blue'
 };
+
+export const loginToken = createAsyncThunk(
+  'loginToken',
+  async (params: { token: string }, appThunk) => {
+    try {
+      const { data, error } = await api.get<LoginInfo>(`/login`, params.token);
+
+      if (error) throw error;
+      if (data) {
+        appThunk.dispatch(setPlayerInfo(data.player));
+        appThunk.dispatch(setCurrentGame(data.currentGame));
+
+        appThunk.dispatch(setAuthorizationToken(data.authorization));
+        window.localStorage.setItem('auth', data.authorization);
+
+        if (data.currentGame) appThunk.dispatch(loadCurrentGameRecords({ auth: data.authorization }));
+      }
+    } catch (e: any) {
+      throw e;
+    } finally {
+      appThunk.dispatch(setPlayerInfoLoading(false));
+    }
+  }
+);
+
+export const loginWeb = createAsyncThunk(
+  'loginWeb',
+  async (params: { username: string, password: string }, appThunk) => {
+    try {
+      const { data, error } = await api.post<LoginInfo>(`/login`, "", { username: params.username, loginData: params.password, loginSource: "Web" });
+
+      if (error) throw error;
+      if (data) {
+        appThunk.dispatch(setPlayerInfo(data.player));
+        appThunk.dispatch(setCurrentGame(data.currentGame));
+
+        appThunk.dispatch(setAuthorizationToken(data.authorization));
+        window.localStorage.setItem('auth', data.authorization);
+
+        if (data.currentGame) appThunk.dispatch(loadCurrentGameRecords({ auth: data.authorization }));
+      }
+    } catch (e: any) {
+      throw e;
+    } finally {
+      appThunk.dispatch(setPlayerInfoLoading(false));
+    }
+  }
+);
 
 export const loginTG = createAsyncThunk(
   'loginTG',
@@ -30,10 +78,35 @@ export const loginTG = createAsyncThunk(
       if (error) throw error;
       if (data) {
         appThunk.dispatch(setPlayerInfo(data.player));
-        appThunk.dispatch(setAuthorizationToken(data.authorization));
         appThunk.dispatch(setCurrentGame(data.currentGame));
 
+        appThunk.dispatch(setAuthorizationToken(data.authorization));
+        window.localStorage.setItem('auth', data.authorization);
+
         appThunk.dispatch(loadCurrentGameRecords({ auth: data.authorization }));
+      }
+    } catch (e: any) {
+      throw e;
+    } finally {
+      appThunk.dispatch(setPlayerInfoLoading(false));
+    }
+  }
+);
+
+export const signup = createAsyncThunk(
+  'signup',
+  async (params: { username: string, password: string, email: string }, appThunk) => {
+    try {
+      const { data, error } = await api.post<LoginInfo>("/signup", "", params);
+      if (error) throw error;
+      if (data) {
+        appThunk.dispatch(setPlayerInfo(data.player));
+        appThunk.dispatch(setCurrentGame(data.currentGame));
+
+        appThunk.dispatch(setAuthorizationToken(data.authorization));
+        window.localStorage.setItem('auth', data.authorization);
+
+        if (data.currentGame) appThunk.dispatch(loadCurrentGameRecords({ auth: data.authorization }));
       }
     } catch (e: any) {
       throw e;

@@ -1,13 +1,11 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import useTelegram from '../hooks/useTelegram';
-import AuthGateReg from './AuthGateReg';
 import AuthGateNoGame from './AuthGateNoGame';
 import { useAppDispatch, useAppSelector } from '../store';
-import { loginTG as playerLoginTG, selectPlayerInfo, selectPlayerInfoLoading, setPlayerLoading } from '../reducers/PlayerSlice';
+import { loginTG, loginToken, selectAuthorization, selectPlayerInfo, selectPlayerInfoLoading, setPlayerLoading } from '../reducers/PlayerSlice';
 import { selectCurrentGameInfo } from '../reducers/CurrentGameSlice';
-import { InputField } from '../components/lib/Inputs/InputField';
 import LoadingLabel from '../components/lib/LoadingLabel';
-import SubmitButton from '../components/lib/SubmitButton';
+import LoginComponent from './LoginComponent';
 //import { api } from './api';
 //import { useLocalStorage } from '../hooks/useLocalStorage';
 
@@ -17,7 +15,7 @@ export const AuthGate = ({ children }: { children: ReactNode }) => {
   const dispatch = useAppDispatch();
 
   const playerInfo = useAppSelector(selectPlayerInfo);
-  //const auth = useAppSelector(selectAuthorization);
+  const auth = useAppSelector(selectAuthorization);
   const currentGame = useAppSelector(selectCurrentGameInfo);
   const isAuthenticated = !!playerInfo;
 
@@ -26,60 +24,38 @@ export const AuthGate = ({ children }: { children: ReactNode }) => {
 
   // const [localAuth, setLocalAuth] = useLocalStorage('auth', '');
   // const localAuth = window.localStorage.getItem('auth');
-  // const noToken = localAuth == null || localAuth == '';
+  // const noToken = localAuth == null || l`ocalAuth == '';
 
-  const [login, setLogin] = useState<string>('');
   //const [error, setError] = useState<string>('');
 
-  const handleLoginInput = (value: string) => {
-    setLogin(value.trim().replace(" ", ""));
-  };
-
   useEffect(() => {
-    // if (!isAuthenticated) {
-    //   if (noToken) {
-    //     if (!TMA) {
-    //       try {
-    //         dispatch(playerLoginTG({ rawData: initDataRaw })).unwrap();
-    //       }
-    //       catch (e) {
-    //         console.log(e);
-    //       }
-    //     }
-    //   } else {
-    //     try {
-    //       dispatch(playerLogin({ token: localAuth })).unwrap();
-    //     }
-    //     catch (e) {
-    //       console.log(e);
-    //     }
-    //   }
-    // }
-
-    if (!TMA && !isAuthenticated) {
-      dispatch(playerLoginTG({ rawData: initDataRaw })).unwrap();
+    if (!isAuthenticated) {
+      if (TMA) dispatch(loginTG({ rawData: initDataRaw })).unwrap();
+      else dispatch(loginToken({ token: auth }))
     } else {
       dispatch(setPlayerLoading(false));
     }
 
-    const handleEnterPress = (event: KeyboardEvent) => {
-      if (event.key === 'Enter') {
-        buttonLoginTG();
-      }
-    };
+    // dispatch(playerLogin({ token: localAuth })).unwrap();
 
-    window.addEventListener('keydown', handleEnterPress);
-    return () => window.removeEventListener('keydown', handleEnterPress);
+    // const handleEnterPress = (event: KeyboardEvent) => {
+    //   if (event.key === 'Enter') {
+    //     buttonLoginTG();
+    //   }
+    // };
+
+    // window.addEventListener('keydown', handleEnterPress);
+    // return () => window.removeEventListener('keydown', handleEnterPress);
   }, []);
 
-  const buttonLoginTG = async () => {
-    try {
-      //await dispatch(playerLoginTG({ rawData: initDataRaw })).unwrap();
-      //const response = await api.get(`/login/${login}`, auth);
-    } catch (e) {
-      console.log(e);
-    }
-  }
+  // const buttonLoginTG = async () => {
+  //   try {
+  //     //await dispatch(playerLoginTG({ rawData: initDataRaw })).unwrap();
+  //     //const response = await api.get(`/login/${login}`, auth);
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // }
 
   // const falseAttemptInput = () => {
   //   return Boolean(attempts) && !input;
@@ -102,34 +78,15 @@ export const AuthGate = ({ children }: { children: ReactNode }) => {
 
   // AuthGate 
   if (!isAuthenticated) return (
-    <>
-      <div className="auth-gate-page">
-        <h2 className="text-xl font-bold">Приветствую в Personae App!</h2>
-        <p className="italic pb-4">
-          Это приложение для ведения летописи твоей настольной ролевой игры.
-          Оно ещё только тестируется, но ты уже можешь его опробовать.
-        </p>
-        {/* Всё что нужно это подписаться на мой канал.
-          </p>
-          <a href='https://t.me/dierolled' className='italic text-center text-blue-300'>Ссылка на мой канал</a>
-          <p className="italic">
-            На канале я рассказываю о геймдизайне и о других своих интересных проектах.
-            А после подписки ты сможешь войти и зарегистрироваться одной кнопкой внизу.
-          </p> */}
-        <InputField label='Имя пользователя' value={login} entityEdit={{ handleFieldChange: handleLoginInput }} />
-        <SubmitButton onClick={buttonLoginTG}>
-          Войти  
-        </SubmitButton>
-      </div>
-    </>
+   <LoginComponent />
   );
 
-  if (playerInfo?.settings == null) return (
-    <AuthGateReg />
-  );
+  // if (playerInfo?.settings == null) return (
+  //   <AuthGateReg />
+  // );
 
   if (currentGame == null) return (
-    <AuthGateNoGame player={playerInfo} />
+    <AuthGateNoGame />
   );
 
   // Everything is OK, show page
@@ -162,3 +119,4 @@ export const AuthGate = ({ children }: { children: ReactNode }) => {
   </>
   );
 };
+

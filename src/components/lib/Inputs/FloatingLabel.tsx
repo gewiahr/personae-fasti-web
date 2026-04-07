@@ -22,7 +22,7 @@ const FloatingLabel: React.FC<FloatingLabelProps> = ({
             ${placeholder ? labelBGColor : ""}
           `}
   >
-    {label}
+    {error ? error : label}
   </label>);
 };
 

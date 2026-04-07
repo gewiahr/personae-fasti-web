@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { InputField } from '../components/lib/Inputs/InputField';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useApi } from '../hooks/useApi';
 import { api } from '../utils/api';
 import type { Game } from '../types/game';
@@ -12,8 +12,6 @@ import SubmitButton from '../components/lib/SubmitButton';
 
 const GameCreateEditPage: React.FC = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
-  //const { authorization } = useAuth();
 
   const newGame = !id;
 
@@ -21,6 +19,7 @@ const GameCreateEditPage: React.FC = () => {
 
   const [game, setGame] = useState<Game>({ name: "" } as Game);
   const [loading, setLoading] = useState<boolean>(!newGame);
+  const [error, setError] = useState<string>("");
   const { data: pageData } = useApi.get<GamePage>(`/game/${id}`, auth, [], newGame);
 
   useEffect(() => {
@@ -37,6 +36,7 @@ const GameCreateEditPage: React.FC = () => {
   const handleFieldChange = (value: string, field?: string) => {
     if (!field) return
     setGame(prev => prev ? { ...prev, [field]: value } : { name: "" } as Game);
+    setError("");
   };
 
   const saveEdited = async (editedGame: Game) => {
@@ -46,9 +46,10 @@ const GameCreateEditPage: React.FC = () => {
     setLoading(true);
 
     const method = newGame ? api.post : api.put;
-    const { data, error } = await method<Game>("/game", auth, game);
-    if (!error) navigate(data?.id ? `/settings` : `/`);
-
+    const { error } = await method<Game>("/game", auth, game);
+    if (!error) window.location.href = `/settings`; //id ? `/settings` : `/`; //navigate(data?.id ? `/settings` : `/`);
+    else setError(error.message);
+    
     setLoading(false);
   };
 
@@ -64,6 +65,7 @@ const GameCreateEditPage: React.FC = () => {
               label={`Название игры`}
               value={game.name}
               entityEdit={({ fieldName: 'name', handleFieldChange })}
+              error={error || ""}
             />
 
             <SubmitButton 
