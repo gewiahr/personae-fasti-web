@@ -9,6 +9,7 @@ import { selectAuthorization } from '../reducers/PlayerSlice';
 import type { GamePage } from '../types/request';
 import { LoadingPage } from './LoadingPage';
 import SubmitButton from '../components/lib/SubmitButton';
+import { ListInput } from '../components/lib/Inputs/ListInput';
 
 const GameCreateEditPage: React.FC = () => {
   const { id } = useParams();
@@ -66,6 +67,12 @@ const GameCreateEditPage: React.FC = () => {
               value={game.name}
               entityEdit={({ fieldName: 'name', handleFieldChange })}
               error={error || ""}
+            />
+
+            <ListInput
+              label='Игроки'
+              addLabel='Добавить игрока'
+              setOptions={[ { key: 1, value: 'gewiahr'} ]}
             />
 
             <SubmitButton 
