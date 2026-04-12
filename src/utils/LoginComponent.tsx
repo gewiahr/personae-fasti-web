@@ -111,9 +111,9 @@ const LoginComponent = () => {
 
         {mayRegister && <>
           <InputField label='Почта' value={email} entityEdit={{ handleFieldChange: (value) => setEmail(value.trim().replace(" ", "")) }} />
-          <InputField label='Пароль' value={password} entityEdit={{ handleFieldChange: handlePasswordInput }} error={passwordError} />
+          <InputField label='Пароль' htmlType="password" value={password} entityEdit={{ handleFieldChange: handlePasswordInput }} error={passwordError} />
         </>}
-        {mayLogin && <InputField label='Пароль' value={password} entityEdit={{ handleFieldChange: handlePasswordInput }} error={passwordError} />}
+        {mayLogin && <InputField label='Пароль' htmlType="password" value={password} entityEdit={{ handleFieldChange: handlePasswordInput }} error={passwordError} />}
 
         {mayRegister ? <SubmitButton className='w-full' onClick={handleSignUpButton}>
           Зарегистрироваться
