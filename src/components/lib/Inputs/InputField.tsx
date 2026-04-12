@@ -3,10 +3,10 @@ import type { TextInputProps } from './InputProps';
 import FloatingLabel from './FloatingLabel';
 
 type InputFieldProps = TextInputProps & {
-
+  htmlType?: React.HTMLInputTypeAttribute;
 };
 
-export const InputField: React.FC<InputFieldProps> = ({ label = '', value = "", entityEdit, error, labelBGColor = 'bg-(--color-bg-primary)', className = '' }) => {
+export const InputField: React.FC<InputFieldProps> = ({ label = '', value = "", entityEdit, error, labelBGColor = 'bg-(--color-bg-primary)', className = '', htmlType = undefined }) => {
   const [isFocused, setIsFocused] = useState(false);
   const id = useId();
 
@@ -21,6 +21,7 @@ export const InputField: React.FC<InputFieldProps> = ({ label = '', value = "", 
   return (
     <div className={`relative ${className}`}>
       <input
+        type={htmlType}
         id={id}
         className={`input-field peer ${error ? 'input-field-border-error' : 'input-field-border'} `}
         onFocus={() => setIsFocused(true)}
