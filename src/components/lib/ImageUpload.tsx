@@ -4,6 +4,7 @@ import { useNotifications } from '../../context/NotificationContext';
 import { api } from '../../utils/api';
 import { useAppSelector } from '../../store';
 import { selectAuthorization } from '../../reducers/PlayerSlice';
+import SubmitButton from './SubmitButton';
 
 interface ImageUploadProps {
   entityType: string;
@@ -144,37 +145,55 @@ export const ImageUpload = ({ entityType, entityID } : ImageUploadProps) => {
 
       {/* Action buttons */}
       <div className="flex space-x-2">
-        {file && (
-          <button
-            type="button"
-            onClick={removeFile}
-            className="flex-1 py-2 px-4 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors flex items-center justify-center space-x-2"
-          >
-            <FiX className="w-4 h-4" />
-            <span>Удалить</span>
-          </button>
+        {file && (<SubmitButton
+          className="flex flex-1 items-center justify-center space-x-2"
+          onClick={removeFile}
+          danger
+        >
+          <FiX className="w-4 h-4" />
+          <span>Удалить</span>
+        </SubmitButton>
+          // <button
+          //   type="button"
+          //   onClick={removeFile}
+          //   className="flex-1 py-2 px-4 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors flex items-center justify-center space-x-2"
+          // >
+          //   <FiX className="w-4 h-4" />
+          //   <span>Удалить</span>
+          // </button>
         )}
-        {file && (
-          <button
-            type="button"
-            onClick={triggerFileInput}
-            className="flex-1 py-2 px-4 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition-colors flex items-center justify-center space-x-2"
-          >
-            <FiUpload className="w-4 h-4" />
-            <span>Заменить</span>
-          </button>
+        {file && (<SubmitButton
+          className="flex flex-1 items-center justify-center space-x-2"
+          onClick={triggerFileInput}
+        >
+          <FiUpload className="w-4 h-4" />
+          <span>Заменить</span>  
+        </SubmitButton>
+          // <button
+          //   type="button"
+          //   onClick={triggerFileInput}
+          //   className="flex-1 py-2 px-4 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition-colors flex items-center justify-center space-x-2"
+          // >
+          //   <FiUpload className="w-4 h-4" />
+          //   <span>Заменить</span>
+          // </button>
         )}
       </div>
 
       {/* Upload button (example) */}
-      {file && (
-        <button
-          type="button"
-          className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-          onClick={uploadImage}
-        >
-          Загрузить
-        </button>
+      {file && (<SubmitButton
+        className='w-full'
+        onClick={uploadImage}
+      >
+        Загрузить
+      </SubmitButton>
+        // <button
+        //   type="button"
+        //   className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+        //   onClick={uploadImage}
+        // >
+        //   Загрузить
+        // </button>
       )}
     </div>
   );
