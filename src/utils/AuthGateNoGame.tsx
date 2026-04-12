@@ -3,6 +3,7 @@ import GameCreateEditPage from '../pages/GameCreateEditPage';
 import SubmitButton from '../components/lib/SubmitButton';
 import { /* useAppDispatch ,*/ useAppSelector } from '../store';
 import { /* selectAuthorization ,*/ selectPlayer } from '../reducers/PlayerSlice';
+import CopyText from '../components/lib/CopyText';
 
 type AuthGateNoGameProps = {
 
@@ -14,13 +15,6 @@ const AuthGateNoGame: React.FC<AuthGateNoGameProps> = ({ }) => {
   const player = useAppSelector(selectPlayer);
 
   const [newGameSwitch, switchNewGame] = useState<boolean>(false);
-  const [usernameCopied, setUsernameCopied] = useState<boolean>(false);
-
-  const copyUsername = () => {
-    navigator.clipboard.writeText(player!.info!.username);
-    setUsernameCopied(true);
-    setTimeout(() => setUsernameCopied(false), 1500);
-  };
 
   useEffect(() => {
     //setGameInfo(playerSettingsData?.currentGame || null)
@@ -53,12 +47,7 @@ const AuthGateNoGame: React.FC<AuthGateNoGameProps> = ({ }) => {
             </div>
             <div>
               <p className='mb-3'>Поделитесь своим ником чтобы вас могли пригласить</p>
-              <p className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg text-md transition-colors select-none cursor-pointer ${
-                  usernameCopied 
-                    ? 'bg-green-100 text-green-700 border border-green-200' 
-                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200 not-italic'
-                }`} 
-                onClick={copyUsername}>{usernameCopied ? `Скопировано` : player!.info!.username}</p>
+              <CopyText text={player!.info!.username} />
             </div>
           </div>
         </div>

@@ -148,7 +148,7 @@ const QuestEditPage = () => {
                       <Icon
                         key={`icon_edit_${task.id}`}
                         name='trash'
-                        className='text-red-500 hover:fill-current hover:text-gray-400 cursor-pointer' />
+                        className='icon-button-danger' />
                     </button>
                   </div>
                 </div>

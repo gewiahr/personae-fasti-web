@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 
-interface FoldableCategoryProps {
+type FoldableCategoryProps = {
   title: string;
   children: React.ReactNode;
 }

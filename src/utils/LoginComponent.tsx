@@ -100,7 +100,7 @@ const LoginComponent = () => {
             На канале я рассказываю о геймдизайне и о других своих интересных проектах.
             А после подписки ты сможешь войти и зарегистрироваться одной кнопкой внизу.
           </p> */}
-      <div className='flex flex-col gap-4 min-w-[340px] w-[25%]'>
+      <div className='flex flex-col gap-4 min-w-85 w-[25%]'>
 
         <div className="flex flex-1 gap-2 w-full">
           <InputField label='Имя пользователя' value={login} className="flex-1" entityEdit={{ handleFieldChange: handleLoginInput }} error={error} />

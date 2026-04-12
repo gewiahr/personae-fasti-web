@@ -75,7 +75,7 @@ export const SelectInput: React.FC<SelectInputProps> = (
         {nullable && value && <button onClick={(e) => { e.stopPropagation(); handleClearSelect(); setIsFocused(false); }} >
           <Icon
             name='trash'
-            className='text-red-500 hover:fill-current hover:text-gray-400 cursor-pointer' />
+            className='icon-button-danger' />
         </button>}
       </div>
 

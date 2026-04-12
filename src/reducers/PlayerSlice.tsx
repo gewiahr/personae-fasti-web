@@ -11,6 +11,7 @@ export type PlayerData = {
   info: PlayerFullInfo | null;
   token: string;
   games: GameInfo[];
+  invites: GameInfo[];
   theme: UITheme;
 };
 
@@ -19,7 +20,8 @@ const initialState: PlayerData = {
   info: null,
   token: window.localStorage.getItem('auth') || '',
   games: [],
-  theme: 'tomato'
+  invites: [],
+  theme: 'blue'
 };
 
 export const loginToken = createAsyncThunk(
@@ -130,6 +132,7 @@ export const loadPlayerGames = createAsyncThunk(
       const { data, error } = await api.get<PlayerGamesInfo>("/player/settings", params.auth);
       if (error) throw error;
       appThunk.dispatch(setPlayerGames(data?.playerGames || []));
+      appThunk.dispatch(setPlayerInvites(data?.playerInvites || []));
       appThunk.dispatch(setCurrentGame(data?.currentGame || null));
     } catch (e: any) {
       throw e;
@@ -155,6 +158,9 @@ const PlayerSlice = createSlice({
     setPlayerGames: (state, action: PayloadAction<GameInfo[]>) => {
       state.games = action.payload;
     },
+    setPlayerInvites: (state, action: PayloadAction<GameInfo[]>) => {
+      state.invites = action.payload;
+    },
     resetPlayer: () => initialState
   },
 });
@@ -164,6 +170,7 @@ export const {
   setAuthorizationToken,
   setPlayerInfoLoading,
   setPlayerGames,
+  setPlayerInvites,
   resetPlayer
 } = PlayerSlice.actions;
 
@@ -171,6 +178,7 @@ export const selectPlayer = (state: RootState): PlayerData | null => state.playe
 export const selectPlayerInfoLoading = (state: RootState) => state.player.loading;
 export const selectPlayerInfo = (state: RootState): PlayerFullInfo | null => state.player.info;
 export const selectPlayerGames = (state: RootState): GameInfo[] => state.player.games;
+export const selectPlayerInvites = (state: RootState): GameInfo[] => state.player.invites;
 export const selectAuthorization = (state: RootState): string => state.player.token;
 export const selectPlayerTheme = (state: RootState): UITheme => state.player.theme;
 

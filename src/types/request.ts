@@ -55,6 +55,7 @@ export type PlayerSettings = {
 export type PlayerGamesInfo = {
   currentGame: GameFullInfo;
   playerGames: GameInfo[];
+  playerInvites: GameInfo[];
 };
 
 export type PlayerInfo = {
@@ -80,6 +81,7 @@ export type GameFullInfo = {
 export type GamePage = {
   game: GameFullInfo;
   players: PlayerInfo[];
+  invites: PlayerInfo[];
 }
 
 export type GameSettings = {

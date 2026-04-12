@@ -9,7 +9,8 @@ import { selectAuthorization } from '../reducers/PlayerSlice';
 import type { GamePage } from '../types/request';
 import { LoadingPage } from './LoadingPage';
 import SubmitButton from '../components/lib/SubmitButton';
-import { ListInput } from '../components/lib/Inputs/ListInput';
+import { ListInput, type ListInputItem } from '../components/lib/Inputs/ListInput';
+import { useNotifications } from '../context/NotificationContext';
 
 const GameCreateEditPage: React.FC = () => {
   const { id } = useParams();
@@ -18,10 +19,12 @@ const GameCreateEditPage: React.FC = () => {
 
   const auth = useAppSelector(selectAuthorization);
 
+  const { addNotification } = useNotifications();
+
   const [game, setGame] = useState<Game>({ name: "" } as Game);
   const [loading, setLoading] = useState<boolean>(!newGame);
   const [error, setError] = useState<string>("");
-  const { data: pageData } = useApi.get<GamePage>(`/game/${id}`, auth, [], newGame);
+  const { data: pageData, refetch: refetchPageData } = useApi.get<GamePage>(`/game/${id}`, auth, [], newGame);
 
   useEffect(() => {
     if (pageData) {
@@ -54,6 +57,17 @@ const GameCreateEditPage: React.FC = () => {
     setLoading(false);
   };
 
+  const handleInvite = async (username: string) => {
+    const { error } = await api.post(`/game/invite/${username}`, auth, null);  
+    if (error) {
+      addNotification(error.message, 'error');      
+      return "ошибка";
+    };
+
+    refetchPageData();
+    return "приглашен(a)"; 
+  };
+
   return (
     <div className='max-w-4xl mx-auto p-4'>
       {loading ? (
@@ -71,8 +85,13 @@ const GameCreateEditPage: React.FC = () => {
 
             <ListInput
               label='Игроки'
-              addLabel='Добавить игрока'
-              setOptions={[ { key: 1, value: 'gewiahr'} ]}
+              addButtonLabel='Добавить игрока'
+              setOptions={pageData?.players.map((p) => { return { key: p.id, value: p.username } as ListInputItem })
+                                           .concat(pageData?.invites.map((i) => { return { key: i.id, value: i.username, status: "приглашен(-а)" } as ListInputItem }))
+                                           .sort((a, b) => a.key - b.key)}
+              onAdd={(username) => handleInvite(username)}
+              onAddLabel='Пригласить'
+              onAddStatus='отправка...'
             />
 
             <SubmitButton 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { SelectInput } from '../components/lib/Inputs/SelectInput';
-import type { GameFullInfo } from '../types/request';
+import type { GameFullInfo, GameInfo } from '../types/request';
 import { api } from '../utils/api';
 import { useNavigate } from 'react-router-dom';
 import { useNotifications } from '../context/NotificationContext';
@@ -8,9 +8,11 @@ import FoldableCategory from '../components/lib/FoldableCategory';
 import { ToggleSwitch } from '../components/lib/ToggleSwitch';
 //import "../styles/components.css";
 import { useAppDispatch, useAppSelector } from '../store';
-import { loadPlayerGames, selectAuthorization, selectPlayerGames, selectPlayerInfo } from '../reducers/PlayerSlice';
+import { loadPlayerGames, selectAuthorization, selectPlayerGames, selectPlayerInfo, selectPlayerInvites, setPlayerInvites } from '../reducers/PlayerSlice';
 import { changeCurrentGame, selectCurrentGame, startNewSession } from '../reducers/CurrentGameSlice';
 import SubmitButton from '../components/lib/SubmitButton';
+import CopyText from '../components/lib/CopyText';
+import Icon from '../components/icons/Icon';
 
 const SettingsPage = () => {
   const navigate = useNavigate();
@@ -23,6 +25,7 @@ const SettingsPage = () => {
   const auth = useAppSelector(selectAuthorization);
   const player = useAppSelector(selectPlayerInfo);
   const playerGames = useAppSelector(selectPlayerGames);
+  const playerInvites = useAppSelector(selectPlayerInvites);
   const { game } = useAppSelector(selectCurrentGame);
 
   const [editedCurrentGame, setEditedCurrentGame] = useState<GameFullInfo | null>(game);
@@ -78,16 +81,53 @@ const SettingsPage = () => {
     }
   };
 
+  const handleInviteAccept = async (invite: GameInfo) => {
+    const { error, status } = await api.post(`/player/invite/accept/${invite.id}`, auth, null);
+    if (error) {
+      addNotification(`Ошибка: ${error.message}`, 'error');
+      return;
+    } else if (status === 200) {
+      addNotification(`Вы приняли приглашение на игру "${invite.title}"`, 'success');
+      dispatch(loadPlayerGames({ auth }));
+    };   
+  };
+
+  const handleInviteRefuse = async (invite: GameInfo) => {
+    const { error, status } = await api.post(`/player/invite/refuse/${invite.id}`, auth, null);
+    if (error) {
+      addNotification(`Ошибка: ${error.message}`, 'error');
+      return;
+    } else if (status === 200) {
+      addNotification(`Вы отклонили приглашение на игру "${invite.title}"`, 'warning');
+      dispatch(loadPlayerGames({ auth }));
+    };   
+  };
+
   return (
     <div className='max-w-4xl mx-auto p-4'>
       <div className='flex flex-col gap-y-6'>
-        <h2 className='text-xl'>{player?.username}</h2>
+        {/* <h2 className='text-xl'>{player?.username}</h2> */}
+
+        <FoldableCategory key="game_invites" title={`Приглашений: ${playerInvites.length}`}>
+          {playerInvites.length <= 0 ? <div className='flex flex-col gap-4 justify-center items-center text-center'>
+            <p className='italic'>Вы не приглашены ни в одну игру. Поделитесь своим именем пользователя чтобы мастер игры мог вас пригласить</p>
+            <CopyText text={player!.username} />
+          </div> : <div className='flex flex-col gap-6'>
+            {playerInvites.map((invite) => <div className='flex flex-1 gap-6 justify-between items-center'>
+              <p>{invite.title}</p>
+              <div className='flex gap-6'>
+                <Icon name='submit' className='icon-button-accented' onClick={() => handleInviteAccept(invite)} />
+                <Icon name='trash' className='icon-button-danger' onClick={() => handleInviteRefuse(invite)} />
+              </div>
+            </div>)}  
+          </div>}
+        </FoldableCategory>
 
         <div>
           <p className='text-sm'>Текущая игра:</p>
           <div className='grid grid-cols-4 gap-8 justify-between items-center'>
             {game && <div className='col-span-3'>
-              {playerGames && playerGames.length > 1 ? <SelectInput
+              {playerGames && playerGames.length > 0 ? <SelectInput
                 key={playerGames.length}
                 options={playerGames?.
                   filter((pg) => pg.id != game.id).

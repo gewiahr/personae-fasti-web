@@ -417,12 +417,21 @@ input[type="number"] {
 }
 
 .icon-button-accented {
-  @apply hover:fill-current cursor-pointer;
+  @apply cursor-pointer;
   color: var(--color-text-accent);
 }
 
 .icon-button-accented:hover {
   color: var(--color-text-gray);
+}
+
+.icon-button-danger {
+  @apply cursor-pointer;
+  color: var(--color-button-danger);
+}
+
+.icon-button-danger:hover {
+  color: var(--color-button-danger-hover);
 }
 
 .datestamp-label {
