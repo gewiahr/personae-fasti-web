@@ -3,6 +3,7 @@ import { SuggestionsTab } from "../../SuggestionsTab";
 import type { MentionContext } from "../../../types/mention";
 import type { SuggestionEntityRender } from "../../../types/suggestion";
 import type { TextInputProps } from "./InputProps";
+import FloatingLabel from "./FloatingLabel";
 
 type RichInputProps = TextInputProps & {
   suggestionData: SuggestionEntityRender[];
@@ -166,26 +167,15 @@ export const RichInput: React.FC<RichInputProps> = ({ label, labelBGColor = 'bg-
         onKeyDown={handleKeyDown}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        className={`w-full min-h-25 max-h-[40vh] field-sizing-content px-4 py-3 border rounded-lg
-                    focus:outline-none focus:ring-2
-                    peer
-                    'border-gray-300 focus:ring-blue-200 focus:border-blue-500'
-                    bg-transparent`}
+        className={`rich-input-textarea peer rich-input-textarea-border`}
       />
-      <label
-        className={`
-                    absolute left-4 px-1
-                    transition-all duration-200 ease-in-out
-                    pointer-events-none
-                    ${isFocused || !!inputValue ?
-            '-top-2 text-xs' :
-            'top-3.5 text-gray-500'}
-                    peer-focus:-top-2 peer-focus:text-xs ${isFocused || !!inputValue ? labelBGColor : ""}
-
-                `}
-      >
-        {label}
-      </label>
+      
+      {/* Floating label */}
+      <FloatingLabel
+        label={label}
+        labelBGColor={labelBGColor}
+        placeholder={isFocused || value != ""}
+      />
 
       {suggestionDataShown.length > 0 &&
         <SuggestionsTab

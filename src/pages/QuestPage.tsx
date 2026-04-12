@@ -95,7 +95,7 @@ export const QuestPage: React.FC<QuestPageProp> = () => {
           <div className='flex justify-between'>
             <div className='items-center'>
               <h1 className="text-2xl font-bold">{quest.name}</h1>
-              <h3 className="text-m text-gray-400 mb-4">{quest.title}</h3>
+              <h3 className="text-m text-(--color-text-gray) mb-4">{quest.title}</h3>
             </div>
             <div className={`mb-6 w-[30%]`}>
               <SubmitButton
@@ -109,7 +109,7 @@ export const QuestPage: React.FC<QuestPageProp> = () => {
           <RichText key={`questpage_richtext-${id ?? "newquest"}`} text={quest.description || ""} uid={`questpage-${id ?? "newquest"}`}/>
 
           {tasks && tasks.length > 0 && <div className='flex flex-col mt-8'>
-            <div className="flex-1 border-t border-gray-700 mb-4"/>
+            <div className="flex-1 border-t divider-dimmed mb-4"/>
             <div className='flex justify-between content-center mb-4'>
               <h2 className='text-2xl'>
                 Задачи
@@ -133,7 +133,7 @@ export const QuestPage: React.FC<QuestPageProp> = () => {
                         <NumericInputInline value={task.current} entityEdit={{ fieldName: 'current', arrayIndex: i, handleFieldChange: handleTasksChange}} /> : 
                         <ToggleSwitch label='Выполнено' key={`task_completion_${task.id}`} setValue={task.current > 0 ? true : false} entityEdit={{ fieldName: 'current', arrayIndex: i, handleFieldChange: handleToggleTasksChange }}/> : 
                         /* preview mode */
-                        <p className={`text-md ${task.finished ? 'text-blue-500' : 'text-gray-500'}`}>
+                        <p className={`text-md ${task.finished ? 'text-(--color-text-accent)' : 'text-(--color-text-gray)'}`}>
                           {task.type == QuestTaskType.Decimal ? `${task.current} / ${task.capacity}` : task.current > 0 ? `Выполнено` : `-`}
                         </p>
                       }

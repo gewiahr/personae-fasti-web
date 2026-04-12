@@ -16,11 +16,11 @@
   sm:right-14 sm:top-14 sm:w-65;
   color: var(--color-white);
   background-color: var(--color-bg-secondary);
-  border-color: var(--color-gray-700);
+  border-color: var(--color-dimmed);
+  z-index: 100;
 }
 
 .burger-menu-container:focus {
-  @apply ring-blue-200; /* нужно добавить лёгкий акцент?, например focus:ring-blue-200 */
   border-color: var(--color-accent);
 }
 
@@ -76,11 +76,11 @@
 }
 
 .list-input-container-border {
-  @apply border-gray-300 focus:ring-blue-200 focus:border-blue-500
+  @apply border-gray-300 focus:ring-blue-200 focus:border-blue-500 /* пока не трогать */
 }
 
 .list-input-container-border-error {
-  @apply border-red-500 focus:ring-red-200
+  @apply border-red-500 focus:ring-red-200  /* пока не трогать */
 }
 
 .list-input-item-list {
@@ -99,37 +99,83 @@
   background-color: var(--color-accent);
 }
 
+  /* Input Field */
+
+.input-field {
+  @apply w-full px-4 py-3 border rounded-lg bg-transparent;
+  background-color: var(--color-bg-primary);
+}
+
+.input-field-border {
+  border-color: var(--color-white)
+}
+
+.input-field-border:focus {
+  @apply accent-(--color-accent);
+  outline: var(--color-accent);
+  border-color: var(--color-accent)
+}
+
+.input-field-border-error {
+  color: var(--color-button-danger);
+  border-color: var(--color-button-danger)
+}
+
+  /* Rich Input */
+
+.rich-input-textarea {
+  @apply w-full min-h-25 max-h-[40vh] field-sizing-content px-4 py-3 border rounded-lg bg-transparent;
+  background-color: var(--color-bg-primary);
+}
+
+.rich-input-textarea-border {
+  border-color: var(--color-white)
+}
+
+.rich-input-textarea-border:focus {
+  @apply accent-(--color-accent);
+  outline: var(--color-accent);
+  border-color: var(--color-accent)
+} 
+
+
   /* Select Input */
 
 .select-input-container {
-  @apply flex justify-between items-center w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 cursor-pointer bg-transparent
+  @apply flex justify-between items-center w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 cursor-pointer bg-transparent;
+  background-color: var(--color-bg-primary);
+
 }
 
 .select-input-container-border {
-  @apply border-gray-300 focus:ring-blue-200 focus:border-blue-500
+  @apply border-white
 }
 
 .select-input-container-border-error {
-  @apply border-red-500 focus:ring-red-200
+  /* @apply focus:ring-red-200; */
+  border-color: var(--color-text-danger);
+  color: var(--color-text-danger)
+
 }
 
 .select-input-dropdown-container {
   @apply absolute z-50 w-full border rounded-lg shadow-lg overflow-y-auto max-h-60;
   background-color: var(--color-bg-secondary);
-  border-color: var(--color-gray-700);
+  border-color: var(--color-dimmed);
 }
 
 .select-input-dropdown-option {
-  @apply px-4 py-2 rounded-lg cursor-pointer;
+  @apply px-4 py-2 rounded-md cursor-pointer;
 }
 
 .select-input-dropdown-option:hover {
-  background-color: var(--color-blue-700);
+  /* background-color: var(--color-blue-700); */
+  background-color: var(--color-button-primary-hover);
 }
 
-.select-input-dropdown-option-selected {
+/* .select-input-dropdown-option-selected {
   background-color: var(--color-blue-800);
-}
+} */
 
   /* Floating Label */
 
@@ -142,11 +188,13 @@
 }
 
 .floating-label-container-position-label {
-  @apply top-3.5 text-gray-500
+  @apply top-3.5;
+  color: var(--color-text-gray)
 }
 
 .floating-label-container-placeholder-error {
-  @apply text-red-600
+  /* @apply text-red-600 */
+  color: var(--color-text-danger)
 }
 
   /* Numeric Input */
@@ -177,7 +225,8 @@ input[type="number"] {
 }
 
 .number-input-arrow:hover {
-  color: #3b82f6;
+  /* color: #3b82f6; */
+  color: var(--colo-accent)
 }
 
 .number-input-arrow:focus {
@@ -212,7 +261,7 @@ input[type="number"] {
 
 .card-label-container-dimmed {
   /* @apply bg-gray-700 text-gray-300; */
-  background-color: var(--color-gray-700); /* здесь вообще непонятно какой цвет юзать */
+  background-color: var(--color-bg-dimmed);
   color: var(--color-white);
 }
 
@@ -229,7 +278,7 @@ input[type="number"] {
 
 .record-card-container-dimmed {
   background-color: var(--color-bg-secondary);
-  border-color: var(--color-gray-700);
+  border-color: var(--color-dimmed);
 }
 
 .record-card-quest-container {
@@ -249,7 +298,7 @@ input[type="number"] {
 .record-card-quest-container-dimmed {
   /* @apply border-gray-700 bg-gray-800; */
   background-color: var(--color-bg-secondary);
-  border-color: var(--color-gray-700);
+  border-color: var(--color-dimmed);
 }
 
   /* Entity Card */
@@ -257,7 +306,7 @@ input[type="number"] {
 .entity-card-link-container {
   @apply block border rounded-lg overflow-hidden transition-colors duration-200;
   background-color: var(--color-bg-secondary);
-  border-color: var(--color-gray-700);
+  border-color: var(--color-dimmed);
 }
 
 .entity-card-link-container:hover {
@@ -290,17 +339,46 @@ input[type="number"] {
 .layout-main {
   @apply min-h-screen flex flex-col text-gray-100;
   background-color: var(--color-bg-primary);
+  position: relative;
+}
+
+.layout-overlay {
+  @apply fixed inset-0 bg-black/80;
+  z-index: 30;
 }
 
 .layout-header {
   @apply sticky top-0 z-50 p-4;
   background-color: var(--color-header);
+  position: sticky;
+  z-index: 50;
 }
 
 .layout-footer {
   @apply p-4 text-center text-sm;
   background-color: var(--color-header);
   color: var(--color-gray);
+}
+
+/* BG-Pattern */
+
+.layout-main::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--pattern-color);
+  mask-image: var(--pattern-url);
+  mask-repeat: repeat;
+  mask-size: var(--pattern-size);
+  pointer-events: none;
+}
+
+.layout-main > *:not(.layout-header) {
+  position: relative;
+  z-index: 1;
 }
 
   /* Switch */
@@ -350,4 +428,22 @@ input[type="number"] {
 .datestamp-label {
   @apply text-xs;
   color: var(--color-text-gray);
+}
+
+  /* Divider */
+
+.divider-dimmed {
+  border-color: var(--color-dimmed)
+}
+
+/* Drag and drop area */
+
+.drag-area {
+  @apply border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors;
+  background-color: var(--color-bg-primary);
+}
+
+.drag-area-active {
+  border-color: var(--color-accent);
+  background-color: white;
 }

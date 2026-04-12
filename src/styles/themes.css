@@ -1,8 +1,13 @@
 @import "tailwindcss";
 
 [twtheme='blue'] {
+  --pattern-url: url('../assets/bg-pattern-blue.svg');
+  --pattern-size: 50px;
+  --pattern-color: oklch(23.709% 0.04318 264.051);
+  
   --color-bg-primary: oklch(21% 0.034 264.665); 
   --color-bg-secondary: oklch(27.8% 0.033 256.848);
+  --color-bg-dimmed: oklch(37.3% 0.034 259.733);
   --color-header: oklch(27.8% 0.033 256.848);
 
   --color-button-primary: oklch(54.6% 0.245 262.881);
@@ -17,12 +22,18 @@
   --color-text-danger: oklch(57.7% 0.245 27.325);
 
   --color-accent:oklch(62.3% 0.214 259.815);
+  --color-dimmed: oklch(37.3% 0.034 259.733);  
   --color-gray:oklch(87.2% 0.01 258.338);
 }
 
 [twtheme='mint'] {
+  --pattern-url: url('../assets/bg-pattern-mint.svg');
+  --pattern-size: 70px;
+  --pattern-color: oklch(19.799% 0.03971 162.257);
+
   --color-bg-primary: oklch(0.175 0.032 165);
   --color-bg-secondary: oklch(0.269 0.083 165);
+  --color-bg-dimmed: oklch(44.6% 0.03 256.802);
   --color-header: oklch(0.206 0.045 165);
 
   --color-button-primary: oklch(0.363 0.138 165);
@@ -33,36 +44,50 @@
 
   --color-text-regular: oklch(96.7% 0.003 264.542);
   --color-text-accent: oklch(0.566 0.202 165);
-  --color-text-gray:oklch(55.1% 0.027 264.364);
+  --color-text-gray:oklch(70.7% 0.022 261.325);
   --color-text-danger: oklch(57.7% 0.245 27.325);
 
-  --color-accent:oklch(0.566 0.202 165);
+  --color-accent:oklch(0.48 0.183 165);
+  --color-dimmed: oklch(0.318 0.113 165);
   --color-gray:oklch(87.2% 0.01 258.338);
 }
 
 [twtheme='olive'] {
+  --pattern-url: url('../assets/bg-pattern-olive.svg');
+  --pattern-size: 70px;
+  --pattern-color: oklch(26.757% 0.03589 115.556);
+  
   --color-bg-primary: oklch(0.24 0.03 115); 
-  --color-bg-secondary: oklch(0.45 0.06 110);
-  --color-header: oklch(0.45 0.06 110);
+  --color-bg-secondary: oklch(37.83% 0.04795 108.51);
+  --color-bg-dimmed: oklch(0.45 0.06 110);
+  --color-header: oklch(37.83% 0.04795 108.51);
 
-  --color-button-primary: oklch(0.57 0.13 50);
+  --color-button-primary: oklch(62.111% 0.1415 50.312);
   --color-button-primary-hover: oklch(48.795% 0.10851 51.054);
   --color-button-danger: oklch(57.7% 0.245 27.325);
   --color-button-danger-hover: oklch(50.5% 0.213 27.518);
-  --color-button-disabled: oklch(44.6% 0.03 256.802);
+  --color-button-disabled: oklch(39.4% 0.023 107.4);
 
   --color-text-regular: oklch(96.7% 0.003 264.542);
-  --color-text-accent: oklch(0.57 0.13 50);
-  --color-text-gray: oklch(55.1% 0.027 264.364);
+  --color-text-accent: oklch(62.111% 0.1415 50.312);
+  --color-text-gray: oklch(88% 0.011 106.6);
   --color-text-danger: oklch(57.7% 0.245 27.325);
 
-  --color-accent:oklch(0.57 0.13 50);
-  --color-gray:oklch(87.2% 0.01 258.338);
+  --color-accent:oklch(62.111% 0.1415 50.312);
+  --color-dimmed: oklch(58% 0.031 107.3); 
+  --color-gray:oklch(88% 0.011 106.6); 
+
+
 }
 
 [twtheme='tomato'] {
+  --pattern-url: url('../assets/bg-pattern-tomato.svg');
+  --pattern-size: 90px;
+  --pattern-color: oklch(21.881% 0.04208 28.08);
+
   --color-bg-primary: oklch(0.191 0.029 25); 
-  --color-bg-secondary: oklch(0.45 0.06 110);
+  --color-bg-secondary:oklch(0.287 0.076 25);
+  --color-bg-dimmed: oklch(44.6% 0.03 256.802);
   --color-header: oklch(0.287 0.076 25);
 
   --color-button-primary: oklch(0.435 0.151 25);
@@ -72,10 +97,11 @@
   --color-button-disabled: oklch(44.6% 0.03 256.802);
 
   --color-text-regular: oklch(96.7% 0.003 264.542);
-  --color-text-accent: oklch(0.435 0.151 25);
-  --color-text-gray: oklch(55.1% 0.027 264.364);
+  --color-text-accent: oklch(0.591 0.192 25);
+  --color-text-gray: oklch(70.7% 0.022 261.325);
   --color-text-danger: oklch(57.7% 0.245 27.325);
 
-  --color-accent:oklch(0.435 0.151 25);
+  --color-accent:oklch(0.503 0.172 25);
+  --color-dimmed: oklch(0.384 0.13 25);
   --color-gray:oklch(87.2% 0.01 258.338);
 }

@@ -19,7 +19,7 @@ const initialState: PlayerData = {
   info: null,
   token: window.localStorage.getItem('auth') || '',
   games: [],
-  theme: 'blue'
+  theme: 'tomato'
 };
 
 export const loginToken = createAsyncThunk(

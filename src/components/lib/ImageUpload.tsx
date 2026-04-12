@@ -110,8 +110,8 @@ export const ImageUpload = ({ entityType, entityID } : ImageUploadProps) => {
 
       {/* Drag and drop area */}
       <div
-        className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
-          isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400'
+        className={`drag-area ${
+          isDragging ? 'drag-area-active' : 'border-gray-300 hover:border-gray-400'
         }`}
         onClick={triggerFileInput}
         onDragOver={handleDragOver}

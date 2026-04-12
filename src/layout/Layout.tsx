@@ -9,12 +9,12 @@ export const Layout = ({ children }: { children: ReactNode }) => {
   const closeBurgerMenu = () => switchMenuOpen(false);
 
   return (<>
-    <div className="layout-main">
-      {isMenuOpen && (
-        <div className="fixed inset-0 bg-black/80 z-40" onClick={closeBurgerMenu} />
-      )}
+    {isMenuOpen && (
+      <div className="layout-overlay" onClick={closeBurgerMenu} />
+    )}
 
-      <Header 
+    <div className="layout-main">
+      <Header
         isMenuOpen={isMenuOpen}
         switchMenuOpen={() => switchMenuOpen(!isMenuOpen)}
         closeMenu={closeBurgerMenu}

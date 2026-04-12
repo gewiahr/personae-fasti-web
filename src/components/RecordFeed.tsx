@@ -122,7 +122,7 @@ export const RecordFeed: React.FC<RecordFeedProps> = ({ records, editable = fals
               {group.session && (
                 <div className='z-10 py-2'>
                   <div className="flex items-center gap-4 sticky top-0 backdrop-blur-sm"> {/* bg-gray-900/80 */}
-                    <div className="flex-1 border-t border-gray-700"/>
+                    <hr className="flex-1 w-1 divider-dimmed"/>
                     <span className="text-sm font-medium text-gray-400">
                       {isCurrentSession ? (
                         <>
@@ -141,7 +141,7 @@ export const RecordFeed: React.FC<RecordFeedProps> = ({ records, editable = fals
                         </span>
                       )}
                     </span>
-                    <div className="flex-1 border-t border-gray-700"/>
+                    <hr className="flex-1 w-1 divider-dimmed "/>
                   </div>
                   <div className='text-md record-feed-session-title'>
                     <p>{group.session?.name}</p>
