@@ -5,21 +5,15 @@ import { api } from '../utils/api';
 import { useNavigate } from 'react-router-dom';
 import { useNotifications } from '../context/NotificationContext';
 import FoldableCategory from '../components/lib/FoldableCategory';
-import { ToggleSwitch } from '../components/lib/ToggleSwitch';
-//import "../styles/components.css";
 import { useAppDispatch, useAppSelector } from '../store';
-import { loadPlayerGames, selectAuthorization, selectPlayerGames, selectPlayerInfo, selectPlayerInvites, setPlayerInvites } from '../reducers/PlayerSlice';
+import { loadPlayerGames, selectAuthorization, selectPlayerGames, selectPlayerInfo, selectPlayerInvites } from '../reducers/PlayerSlice';
 import { changeCurrentGame, selectCurrentGame, startNewSession } from '../reducers/CurrentGameSlice';
 import SubmitButton from '../components/lib/SubmitButton';
 import CopyText from '../components/lib/CopyText';
 import Icon from '../components/icons/Icon';
 
 const SettingsPage = () => {
-  const navigate = useNavigate();
-  //const { authorization } = useAuth();
-  //const { data : settingsData } = useApi.get<PlayerSettings>("/player/settings", authorization);
-  //const [ playerGames ] = useState<GameInfo[]>([]);
-
+  const navigate = useNavigate();;
 
   const dispatch = useAppDispatch();
   const auth = useAppSelector(selectAuthorization);
@@ -28,7 +22,9 @@ const SettingsPage = () => {
   const playerInvites = useAppSelector(selectPlayerInvites);
   const { game } = useAppSelector(selectCurrentGame);
 
-  const [editedCurrentGame, setEditedCurrentGame] = useState<GameFullInfo | null>(game);
+  const [_, setEditedCurrentGame] = useState<GameFullInfo | null>(game);
+  const [newSessionLoading, setNewSessionLoading] = useState<boolean>(false);
+  const [newSessionRequested, setNewSessionRequested] = useState<boolean>(false);
 
   const { addNotification } = useNotifications();
 
@@ -49,37 +45,25 @@ const SettingsPage = () => {
   };
 
   const handleNewSession = () => {
+    setNewSessionLoading(true);
     dispatch(startNewSession({ auth }))
       .unwrap()
       .then(() => {
         addNotification('Началась новая сессия', 'success');
+        setNewSessionRequested(false);
       }).catch((e: any) => {
         addNotification(e.message, 'error');
       });
+    setNewSessionLoading(false);
   };
 
-  const handleChangeGameOption = (value: any, field: string) => {
-    if (!editedCurrentGame) return
-    if (!(field in editedCurrentGame?.settings)) return
-
-    var newGameSettings = { ...editedCurrentGame.settings }
-    newGameSettings[field as keyof typeof editedCurrentGame.settings] = value
-    setEditedCurrentGame({ ...editedCurrentGame, settings: newGameSettings } as GameFullInfo);
-  };
-
-  const handleSaveGameSettings = async () => {
-    if (!editedCurrentGame) return
-    const { data, error } = await api.put<GameFullInfo>("/game/settings", auth, { ...editedCurrentGame.settings, gameID: editedCurrentGame.id });
-    if (error) {
-      addNotification(error.message, 'error');
-      return;
-    } else if (data) {
-      addNotification("Настройки сохранены", 'success');
-      //setGame(data)
-      // await setCurrentGame(data);
-      // await setLoginInfo({ ...loginInfo!, currentGame: data });
-    }
-  };
+  const handleNewSessionRequest = () => {
+    setNewSessionLoading(true);
+    setNewSessionRequested(true);
+    setTimeout(() => {
+      setNewSessionLoading(false);
+    }, 500) 
+  };handleNewSessionRequest
 
   const handleInviteAccept = async (invite: GameInfo) => {
     const { error, status } = await api.post(`/player/invite/accept/${invite.id}`, auth, null);
@@ -151,28 +135,24 @@ const SettingsPage = () => {
           </div>
         </div>
 
-        {game?.gmID === player?.id && <FoldableCategory key="sessions_settings" title='Сессии'>
-          <SubmitButton className='w-full mt-2' onClick={handleNewSession} >
-            {"Начать новую сессию"}
-          </SubmitButton>
-        </FoldableCategory>}
+        { /* ** Add button states ** */}
+        {game?.gmID === player?.id && newSessionLoading ? <SubmitButton className='w-full mt-2' onClick={() => {}} disabled>
+          {"Загрузка..."}
+        </SubmitButton> : newSessionRequested ? <SubmitButton className='w-full mt-2' onClick={handleNewSession} danger>
+          {"Подтвердить"}
+        </SubmitButton> : <SubmitButton className='w-full mt-2' onClick={handleNewSessionRequest} >
+          {"Начать новую сессию"}
+        </SubmitButton>}
 
-        {game && game.settings && game.gmID === player?.id && <>
-          <ToggleSwitch
-            key={"gamesettings_alloweditrecord"}
-            label='Разрешить редактировать записи всем игрокам'
-            labelPosition='right'
-            setValue={game.settings.allowAllEditRecords}
-            entityEdit={{ handleFieldChange: (value) => handleChangeGameOption(value, 'allowAllEditRecords') }}
-          />
-          <SubmitButton
-            key={`settingspage_submitbutton_save`}
-            className='w-full mt-2' 
-            onClick={handleSaveGameSettings}
-          >
-            Сохранить
-          </SubmitButton>
-        </>}
+        {/* <SelectItems
+          items={[
+            { key: 1, value: 'red', content: <div className="w-16 h-8 bg-red-500 border-2 border-white rounded" /> },
+            { key: 2, value: 'blue', content: <div className="w-16 h-8 bg-blue-500 border-2 border-white rounded" /> },
+            { key: 3, value: 'green', content: <div className="w-16 h-8 bg-green-500 border-2 border-white rounded" /> },
+          ]}
+          borderWidth={4}
+          animationDuration={200}
+        /> */}
       </div>
     </div>
   )

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { GameFullInfo, GameInfo, GameQuests, GameRecords, NewRecord, PlayerInfo, QuestInfo, Record, Session } from '../types/request';
+import type { GameFullInfo, GameInfo, GameQuests, GameRecords, GameSettings, NewRecord, PlayerInfo, QuestInfo, Record, Session } from '../types/request';
 import { type RootState } from '../store';
 import { api } from '../utils/api';
 import type { SuggestionData } from '../types/suggestion';
@@ -155,6 +155,18 @@ export const loadCurrentGameSuggestions = createAsyncThunk(
     appThunk.dispatch(setCurrentGameSuggestions(response.data || { entities: [] } as SuggestionData));
   }
 );
+
+export const updateGameSettings = createAsyncThunk(
+  'updateGameSettings',
+  async (params: { auth: string, gameID: number, settings: GameSettings }) => {
+    try {
+      const { error } = await api.put<GameFullInfo>("/game/settings", params.auth, { gameID: params.gameID, allowAllEditRecords: params.settings.allowAllEditRecords });
+      if (error) throw error;
+    } catch (e) {
+      throw e;
+    }
+  }
+)
 
 // export const resetCurrentGame = createAsyncThunk(
 //   'resetCurrentGame',
