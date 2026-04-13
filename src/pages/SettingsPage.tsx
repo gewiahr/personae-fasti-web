@@ -8,11 +8,12 @@ import FoldableCategory from '../components/lib/FoldableCategory';
 import { ToggleSwitch } from '../components/lib/ToggleSwitch';
 //import "../styles/components.css";
 import { useAppDispatch, useAppSelector } from '../store';
-import { loadPlayerGames, selectAuthorization, selectPlayerGames, selectPlayerInfo, selectPlayerInvites, setPlayerInvites } from '../reducers/PlayerSlice';
+import { loadPlayerGames, selectAuthorization, selectPlayerGames, selectPlayerInfo, selectPlayerInvites } from '../reducers/PlayerSlice';
 import { changeCurrentGame, selectCurrentGame, startNewSession } from '../reducers/CurrentGameSlice';
 import SubmitButton from '../components/lib/SubmitButton';
 import CopyText from '../components/lib/CopyText';
 import Icon from '../components/icons/Icon';
+//import { SelectItems } from '../components/lib/SelectItems';
 
 const SettingsPage = () => {
   const navigate = useNavigate();
@@ -173,6 +174,16 @@ const SettingsPage = () => {
             Сохранить
           </SubmitButton>
         </>}
+
+        {/* <SelectItems
+          items={[
+            { key: 1, value: 'red', content: <div className="w-16 h-8 bg-red-500 border-2 border-white rounded" /> },
+            { key: 2, value: 'blue', content: <div className="w-16 h-8 bg-blue-500 border-2 border-white rounded" /> },
+            { key: 3, value: 'green', content: <div className="w-16 h-8 bg-green-500 border-2 border-white rounded" /> },
+          ]}
+          borderWidth={4}
+          animationDuration={200}
+        /> */}
       </div>
     </div>
   )
