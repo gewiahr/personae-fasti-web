@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
-[twtheme='blue'] {
-  --pattern-url: url('../assets/bg-pattern-blue.svg');
-  --pattern-size: 50px;
+[colortheme='blue'] {
+  /* --pattern-url: url('../assets/bg-pattern-blue.svg');
+  --pattern-size: 50px; */
   --pattern-color: oklch(23.709% 0.04318 264.051);
   
   --color-bg-primary: oklch(21% 0.034 264.665); 
@@ -26,7 +26,7 @@
   --color-gray:oklch(87.2% 0.01 258.338);
 }
 
-[twtheme='mint'] {
+[colortheme='mint'] {
   --pattern-url: url('../assets/bg-pattern-mint.svg');
   --pattern-size: 70px;
   --pattern-color: oklch(19.799% 0.03971 162.257);
@@ -52,7 +52,7 @@
   --color-gray:oklch(87.2% 0.01 258.338);
 }
 
-[twtheme='olive'] {
+[colortheme='olive'] {
   --pattern-url: url('../assets/bg-pattern-olive.svg');
   --pattern-size: 70px;
   --pattern-color: oklch(26.757% 0.03589 115.556);
@@ -80,7 +80,7 @@
 
 }
 
-[twtheme='tomato'] {
+[colortheme='tomato'] {
   --pattern-url: url('../assets/bg-pattern-tomato.svg');
   --pattern-size: 90px;
   --pattern-color: oklch(21.881% 0.04208 28.08);
@@ -104,4 +104,14 @@
   --color-accent:oklch(0.503 0.172 25);
   --color-dimmed: oklch(0.384 0.13 25);
   --color-gray:oklch(87.2% 0.01 258.338);
+}
+
+[patterntheme='none'] {
+  --pattern-url: url('');
+  --pattern-size: 0;
+}
+
+[patterntheme='space'] {
+  --pattern-url: url('../assets/bg-pattern-blue.svg');
+  --pattern-size: 50px;
 }

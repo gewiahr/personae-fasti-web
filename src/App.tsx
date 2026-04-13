@@ -12,7 +12,8 @@ export const App = () => {
   const theme = useAppSelector(selectPlayerTheme);
 
   useEffect(() => {
-    document.documentElement.setAttribute('twtheme', theme);
+    document.documentElement.setAttribute('colortheme', theme.color);
+    document.documentElement.setAttribute('patterntheme', theme.pattern);
   }, [theme]);
 
   return (

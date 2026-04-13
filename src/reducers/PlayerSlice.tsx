@@ -4,7 +4,10 @@ import { type RootState } from '../store';
 import { api } from '../utils/api';
 import { loadCurrentGameRecords, setCurrentGame } from './CurrentGameSlice';
 
-type UITheme = 'blue' | 'mint' | 'olive' | 'tomato';
+type UITheme = {
+  color: 'blue' | 'mint' | 'olive' | 'tomato';
+  pattern: 'none' | 'space';
+};
 
 export type PlayerData = {
   loading: boolean;
@@ -13,6 +16,7 @@ export type PlayerData = {
   games: GameInfo[];
   invites: GameInfo[];
   theme: UITheme;
+
 };
 
 const initialState: PlayerData = {
@@ -21,7 +25,10 @@ const initialState: PlayerData = {
   token: window.localStorage.getItem('auth') || '',
   games: [],
   invites: [],
-  theme: 'blue'
+  theme: {
+    color: 'blue',
+    pattern: 'none',
+  }
 };
 
 export const loginToken = createAsyncThunk(
