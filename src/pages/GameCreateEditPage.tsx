@@ -4,57 +4,63 @@ import { useParams } from 'react-router-dom';
 import { useApi } from '../hooks/useApi';
 import { api } from '../utils/api';
 import type { Game } from '../types/game';
-import { useAppSelector } from '../store';
+import { useAppDispatch, useAppSelector } from '../store';
 import { selectAuthorization } from '../reducers/PlayerSlice';
-import type { GamePage } from '../types/request';
+import type { GameFullInfo, GamePage } from '../types/request';
 import { LoadingPage } from './LoadingPage';
 import SubmitButton from '../components/lib/SubmitButton';
 import { ListInput, type ListInputItem } from '../components/lib/Inputs/ListInput';
 import { useNotifications } from '../context/NotificationContext';
+import FoldableCategory from '../components/lib/FoldableCategory';
+import { ToggleSwitch } from '../components/lib/ToggleSwitch';
+import { updateGameSettings } from '../reducers/CurrentGameSlice';
 
 const GameCreateEditPage: React.FC = () => {
   const { id } = useParams();
 
   const newGame = !id;
 
+  const dispatch = useAppDispatch();
   const auth = useAppSelector(selectAuthorization);
 
   const { addNotification } = useNotifications();
 
-  const [game, setGame] = useState<Game>({ name: "" } as Game);
+  const [game, setGame] = useState<GameFullInfo>({} as GameFullInfo);
   const [loading, setLoading] = useState<boolean>(!newGame);
   const [error, setError] = useState<string>("");
   const { data: pageData, refetch: refetchPageData } = useApi.get<GamePage>(`/game/${id}`, auth, [], newGame);
 
   useEffect(() => {
     if (pageData) {
-      setGame({
-        id: pageData.game.id,
-        gmID: pageData.game.gmID,
-        name: pageData.game.title,
-      });
+      console.log(pageData)
+      setGame(pageData.game);
       setLoading(false);
     };
   }, [pageData]);
 
   const handleFieldChange = (value: string, field?: string) => {
     if (!field) return
-    setGame(prev => prev ? { ...prev, [field]: value } : { name: "" } as Game);
+    setGame(prev => prev ? { ...prev, [field]: value } : { title: "" } as GameFullInfo);
     setError("");
   };
 
-  const saveEdited = async (editedGame: Game) => {
-    if (!editedGame || editedGame.name == "") return;
-    //if (editedGame.name == "") return;
+  const saveEdited = async (editedGame: GameFullInfo) => {
+    if (!editedGame || editedGame.title == "") return;
 
+    // ** Join in one endpoint call ** //
     setLoading(true);
-
+    
     const method = newGame ? api.post : api.put;
     const { error } = await method<Game>("/game", auth, game);
     if (!error) window.location.href = `/settings`; //id ? `/settings` : `/`; //navigate(data?.id ? `/settings` : `/`);
     else setError(error.message);
+
+    if (!newGame) dispatch(updateGameSettings({ auth, gameID: game.id, settings: game.settings }))
+      .catch((e) => addNotification(e.message, 'error'))
+      .then(() =>  addNotification("Настройки сохранены", 'success'));
     
     setLoading(false);
+    // ** Join in one endpoint call ** //
   };
 
   const handleInvite = async (username: string) => {
@@ -78,8 +84,8 @@ const GameCreateEditPage: React.FC = () => {
             <InputField
               className="mb-4"
               label={`Название игры`}
-              value={game.name}
-              entityEdit={({ fieldName: 'name', handleFieldChange })}
+              value={game.title}
+              entityEdit={({ fieldName: 'title', handleFieldChange })}
               error={error || ""}
             />
 
@@ -94,12 +100,31 @@ const GameCreateEditPage: React.FC = () => {
               onAddStatus='отправка...'
             />
 
+            <FoldableCategory key="sessions_settings" title={`Сессии: ${game.sessions.length}`}>
+              {/* <SubmitButton className='w-full mt-2' onClick={handleNewSession} >
+                {"Начать новую сессию"}
+              </SubmitButton> */}
+              <div>
+
+              </div>
+            </FoldableCategory>
+
+            {!newGame && <>
+              <ToggleSwitch
+                key={"gamesettings_alloweditrecord"}
+                label='Разрешить редактировать записи всем игрокам'
+                labelPosition='right'
+                setValue={game.settings.allowAllEditRecords}
+                entityEdit={{ handleFieldChange: (value) => setGame({ ...game, settings: { ...game.settings, allowAllEditRecords: value as boolean } }) }}
+              />
+            </>}
+
             <SubmitButton 
               className='mt-6'
-              disabled={game.name == ""}
-              onClick={() => { if (game.name == "") return; saveEdited(game || {} as Game) }}              
+              disabled={game.title == ""}
+              onClick={() => { if (game.title == "") return; saveEdited(game) }}              
             >
-              {game.name == "" ? "Введите название игры" : game.id ? "Применить" : "Создать"}
+              {game.title == "" ? "Введите название игры" : game.id ? "Применить" : "Создать"}
             </SubmitButton>
           </div>
         </>
