@@ -6,7 +6,7 @@ import { loadCurrentGameRecords, setCurrentGame } from './CurrentGameSlice';
 
 type UITheme = {
   color: 'blue' | 'mint' | 'olive' | 'tomato';
-  pattern: 'none' | 'space';
+  pattern: 'none' | 'space' | 'fantasy';
 };
 
 export type PlayerData = {
@@ -27,7 +27,7 @@ const initialState: PlayerData = {
   invites: [],
   theme: {
     color: 'blue',
-    pattern: 'none',
+    pattern: 'fantasy',
   }
 };
 

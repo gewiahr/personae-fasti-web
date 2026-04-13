@@ -1,9 +1,7 @@
 @import "tailwindcss";
 
 [colortheme='blue'] {
-  /* --pattern-url: url('../assets/bg-pattern-blue.svg');
-  --pattern-size: 50px; */
-  --pattern-color: oklch(23.709% 0.04318 264.051);
+  --pattern-color: oklch(27.8% 0.033 256.848);
   
   --color-bg-primary: oklch(21% 0.034 264.665); 
   --color-bg-secondary: oklch(27.8% 0.033 256.848);
@@ -27,9 +25,7 @@
 }
 
 [colortheme='mint'] {
-  --pattern-url: url('../assets/bg-pattern-mint.svg');
-  --pattern-size: 70px;
-  --pattern-color: oklch(19.799% 0.03971 162.257);
+  --pattern-color: oklch(0.269 0.083 165);
 
   --color-bg-primary: oklch(0.175 0.032 165);
   --color-bg-secondary: oklch(0.269 0.083 165);
@@ -53,9 +49,7 @@
 }
 
 [colortheme='olive'] {
-  --pattern-url: url('../assets/bg-pattern-olive.svg');
-  --pattern-size: 70px;
-  --pattern-color: oklch(26.757% 0.03589 115.556);
+  --pattern-color: oklch(37.83% 0.04795 108.51);
   
   --color-bg-primary: oklch(0.24 0.03 115); 
   --color-bg-secondary: oklch(37.83% 0.04795 108.51);
@@ -81,9 +75,7 @@
 }
 
 [colortheme='tomato'] {
-  --pattern-url: url('../assets/bg-pattern-tomato.svg');
-  --pattern-size: 90px;
-  --pattern-color: oklch(21.881% 0.04208 28.08);
+  --pattern-color: oklch(0.287 0.076 25);
 
   --color-bg-primary: oklch(0.191 0.029 25); 
   --color-bg-secondary:oklch(0.287 0.076 25);
@@ -112,6 +104,26 @@
 }
 
 [patterntheme='space'] {
-  --pattern-url: url('../assets/bg-pattern-blue.svg');
-  --pattern-size: 50px;
+  --pattern-url: url('../assets/patterns/space.svg');
+  --pattern-size: 200px;
+}
+
+[patterntheme='shapes'] {
+  --pattern-url: url('../assets/patterns/shapes.svg');
+  --pattern-size: 120px;
+}
+
+[patterntheme='spots'] {
+  --pattern-url: url('../assets/patterns/spots.svg');
+  --pattern-size: 80px;
+}
+
+[patterntheme='leaves'] {
+  --pattern-url: url('../assets/patterns/leaves.svg');
+  --pattern-size: 60px;
+}
+
+[patterntheme='fantasy'] {
+  --pattern-url: url('../assets/patterns/fantasy.svg');
+  --pattern-size: 300px;
 }
