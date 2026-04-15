@@ -5,8 +5,8 @@ import { useApi } from '../hooks/useApi';
 import { api } from '../utils/api';
 import type { Game } from '../types/game';
 import { useAppDispatch, useAppSelector } from '../store';
-import { selectAuthorization } from '../reducers/PlayerSlice';
-import type { GameFullInfo, GamePage } from '../types/request';
+import { selectAuthorization, selectPlayerInfo } from '../reducers/PlayerSlice';
+import type { GameFullInfo, GamePage, PlayerInfo } from '../types/request';
 import { LoadingPage } from './LoadingPage';
 import SubmitButton from '../components/lib/SubmitButton';
 import { ListInput, type ListInputItem } from '../components/lib/Inputs/ListInput';
@@ -22,13 +22,14 @@ const GameCreateEditPage: React.FC = () => {
 
   const dispatch = useAppDispatch();
   const auth = useAppSelector(selectAuthorization);
+  const player = useAppSelector(selectPlayerInfo);
 
   const { addNotification } = useNotifications();
 
-  const [game, setGame] = useState<GameFullInfo>({} as GameFullInfo);
+  const [game, setGame] = useState<GameFullInfo>();
   const [loading, setLoading] = useState<boolean>(!newGame);
   const [error, setError] = useState<string>("");
-  const { data: pageData, refetch: refetchPageData } = useApi.get<GamePage>(`/game/${id}`, auth, [], newGame);
+  const { data: pageData, refetch: refetchPageData, error: pageError } = useApi.get<GamePage>(`/game/${id}`, auth, [], newGame);
 
   useEffect(() => {
     if (pageData) {
@@ -55,7 +56,7 @@ const GameCreateEditPage: React.FC = () => {
     if (!error) window.location.href = `/settings`; //id ? `/settings` : `/`; //navigate(data?.id ? `/settings` : `/`);
     else setError(error.message);
 
-    if (!newGame) dispatch(updateGameSettings({ auth, gameID: game.id, settings: game.settings }))
+    if (game) dispatch(updateGameSettings({ auth, gameID: game.id, settings: game.settings }))
       .catch((e) => addNotification(e.message, 'error'))
       .then(() =>  addNotification("Настройки сохранены", 'success'));
     
@@ -74,17 +75,23 @@ const GameCreateEditPage: React.FC = () => {
     return "приглашен(a)"; 
   };
 
+  const handleOnDeleteFromPlayersList = async (player: PlayerInfo, invite: boolean = false) => {
+    
+  }
+
   return (
     <div className='max-w-4xl mx-auto p-4'>
       {loading ? (
         <LoadingPage />
+      ) : !newGame && (pageError || !game) ? (
+        <p>Данные недоступны</p>
       ) : (
         <>
           <div className='flex flex-col'>
             <InputField
               className="mb-4"
               label={`Название игры`}
-              value={game.title}
+              value={game?.title}
               entityEdit={({ fieldName: 'title', handleFieldChange })}
               error={error || ""}
             />
@@ -92,24 +99,24 @@ const GameCreateEditPage: React.FC = () => {
             <ListInput
               label='Игроки'
               addButtonLabel='Добавить игрока'
-              setOptions={pageData?.players.map((p) => { return { key: p.id, value: p.username } as ListInputItem })
-                                           .concat(pageData?.invites.map((i) => { return { key: i.id, value: i.username, status: "приглашен(-а)" } as ListInputItem }))
+              setOptions={pageData?.players.map((p) => { return { key: p.id, value: p.username, onDelete: p.id === player?.id ? undefined : () => handleOnDeleteFromPlayersList(p) } as ListInputItem })
+                                           .concat(pageData?.invites.map((i) => { return { key: i.id, value: i.username, status: "приглашен(-а)", onDelete: () => handleOnDeleteFromPlayersList(i, true) } as ListInputItem }))
                                            .sort((a, b) => a.key - b.key)}
               onAdd={(username) => handleInvite(username)}
               onAddLabel='Пригласить'
               onAddStatus='отправка...'
             />
 
-            <FoldableCategory key="sessions_settings" title={`Сессии: ${game.sessions.length}`}>
-              {/* <SubmitButton className='w-full mt-2' onClick={handleNewSession} >
-                {"Начать новую сессию"}
-              </SubmitButton> */}
-              <div>
+            {game && <>
+              <FoldableCategory key="sessions_settings" title={`Сессии: ${game.sessions.length}`}>
+                {/* <SubmitButton className='w-full mt-2' onClick={handleNewSession} >
+                  {"Начать новую сессию"}
+                </SubmitButton> */}
+                <div>
 
-              </div>
-            </FoldableCategory>
+                </div>
+              </FoldableCategory>
 
-            {!newGame && <>
               <ToggleSwitch
                 key={"gamesettings_alloweditrecord"}
                 label='Разрешить редактировать записи всем игрокам'
@@ -121,10 +128,10 @@ const GameCreateEditPage: React.FC = () => {
 
             <SubmitButton 
               className='mt-6'
-              disabled={game.title == ""}
-              onClick={() => { if (game.title == "") return; saveEdited(game) }}              
+              disabled={game?.title == ""}
+              onClick={() => { if (!game || game?.title == "") return; saveEdited(game) }}              
             >
-              {game.title == "" ? "Введите название игры" : game.id ? "Применить" : "Создать"}
+              {game?.title == "" ? "Введите название игры" : game?.id ? "Применить" : "Создать"}
             </SubmitButton>
           </div>
         </>

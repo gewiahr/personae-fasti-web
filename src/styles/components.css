@@ -88,11 +88,11 @@
 }
 
 .list-input-item {
-  @apply flex w-full px-4 py-3 bg-transparent rounded-lg justify-between
+  @apply flex w-full px-4 py-3 rounded-lg justify-between
 }
 
 .list-input-item-add {
-  @apply cursor-pointer justify-center
+  @apply cursor-pointer justify-center bg-transparent
 }
 
 .list-input-item-add:hover {
