@@ -14,6 +14,7 @@ import { useNotifications } from '../context/NotificationContext';
 import FoldableCategory from '../components/lib/FoldableCategory';
 import { ToggleSwitch } from '../components/lib/ToggleSwitch';
 import { updateGameSettings } from '../reducers/CurrentGameSlice';
+import Icon from '../components/icons/Icon';
 
 const GameCreateEditPage: React.FC = () => {
   const { id } = useParams();
@@ -109,9 +110,29 @@ const GameCreateEditPage: React.FC = () => {
 
             {game && <>
               <FoldableCategory key="sessions_settings" title={`Сессии: ${game.sessions.length}`}>
-                {/* <SubmitButton className='w-full mt-2' onClick={handleNewSession} >
-                  {"Начать новую сессию"}
-                </SubmitButton> */}
+                <div className='flex gap-2'>
+                  <SubmitButton className='w-full mb-6' onClick={() => {}} >
+                    {"Новая сессия"}
+                  </SubmitButton>
+                  <SubmitButton className='w-full mb-6' onClick={() => {}} danger >
+                    {"Удалить"}
+                  </SubmitButton>
+                </div>
+                {game.sessions.length <= 0 ? <div className='flex flex-col gap-4 justify-center items-center text-center'>
+                  <p className='italic'>В игре пока нет ни одной сессии</p>
+                </div> : <div className='flex flex-col gap-4'>
+                  {game.sessions.sort((a, b) => b.number - a.number).map((session, i) => <div className='flex flex-1 gap-6 justify-between items-center'>
+                    <div className='flex gap-2 items-center'>
+                      <p className='w-4'>{session.number}</p>
+                      <p className={`${session.name == "" ? 'italic text-(--color-text-gray)' : '' }`}>{session.name == "" ? `Сессия #${session.number}` : session.name}</p>
+                    </div> 
+                    <div className='flex gap-6'>
+                      <p>{game.sessions[i+1]?.endTime != null ? new Date(game.sessions[i+1].endTime).toLocaleDateString(undefined, { day: '2-digit', month: '2-digit', year: '2-digit' }) : ''}</p>
+                      <Icon name='edit' className='icon-button-accented' onClick={() => {}} />
+                      {/* <Icon name='trash' className='icon-button-danger' onClick={() => {}} /> */}
+                    </div>
+                  </div>)}  
+                </div>}
                 <div>
 
                 </div>
