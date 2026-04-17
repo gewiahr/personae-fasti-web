@@ -41,6 +41,7 @@ export const ListInput: React.FC<ListInputProps> = ({
 
   const [addValue, setAddValue] = useState<string>("");
   const [_, setAddingFocused] = useState<boolean>(false);
+  const [removingItem, setRemovingItem] = useState<ListInputItem | null>(null);
 
   const [listItems, setListItems] = useState<ListInputItem[]>(setOptions);
   //const [constainerFocused, setContainerFocused] = useState(false);
@@ -118,10 +119,10 @@ export const ListInput: React.FC<ListInputProps> = ({
 
           {listItems.map((item) => <>
             <div className='list-input-item'>
-              <p>{item.value}</p> 
+              <p className={`${removingItem?.key == item.key ? 'text-red-600 line-through' : ''}`}>{item.value}</p> 
               <div className='flex gap-4'>
                 <p className='text-(--color-text-gray) italic'>{item.status}</p>
-                {item.onDelete ? <Icon name='trash' className='icon-button-danger' size={24} onClick={() => setState('remove')} /> : <div className='w-6' ></div>}
+                {item.onDelete && state === 'view' ? <Icon name='trash' className='icon-button-danger' size={24} onClick={() => { setState('remove'); setRemovingItem(item) }} /> : <div className='w-6' ></div>}
               </div>     
             </div>
             <hr className='px-1 items-center w-full text-gray-600' />      
@@ -142,8 +143,18 @@ export const ListInput: React.FC<ListInputProps> = ({
               {onAddLabel}
             </button>
           </div> : state === 'remove' ? <div className='flex'>
-            <button className='flex-1 px-4 py-3 rounded-bl-lg text-(--color-text) bg-(--color-button-danger)'>Удалить</button>
-            <button className='flex-1 px-4 py-3 rounded-br-lg text-(--color-text) bg-(--color-button-primary)'>Отменить</button>
+            <button 
+              onClick={() => { setState('view'); removingItem?.onDelete?.(); setRemovingItem(null) }}
+              className='list-input-button-delete'
+            >
+              Удалить
+            </button>
+            <button 
+              onClick={() => { setState('view'); setRemovingItem(null) }}
+              className='list-input-button-reject'
+            >
+              Отменить
+            </button>
           </div> : <button className='list-input-item list-input-item-add'
             onClick={() => setState('add')}
             // onFocus={() => setContainerFocused(true)}
