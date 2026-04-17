@@ -24,7 +24,7 @@ const NotificationPopup: React.FC = () => {
   };
 
   return (
-    <div className={`fixed ${!TMA ? "top-4" : "top-[calc(var(--tg-viewport-content-safe-area-inset-top)+48px)]"} right-4 z-50 space-y-3 w-80`}>
+    <div className={`fixed ${!TMA ? "top-4" : "top-[calc(var(--tg-viewport-content-safe-area-inset-top)+48px)]"} right-4 z-60 space-y-3 w-80`}>
       {notifications.map((notification) => (
         <div
           key={notification.id}
