@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { GameFullInfo, GameInfo, GameQuests, GameRecords, GameSettings, NewRecord, PlayerInfo, QuestInfo, Record, Session } from '../types/request';
+import type { GameFullInfo, GameInfo, GameQuests, GameRecords, GameSettings, NewRecord, PlayerInfo, QuestInfo, Record, Session, SessionEdit } from '../types/request';
 import { type RootState } from '../store';
 import { api } from '../utils/api';
 import type { SuggestionData } from '../types/suggestion';
 import { addLoading, removeLoading } from './LoadingSlice';
+import dayjs from 'dayjs';
 
 export type CurrentGameData = {
   game: GameFullInfo | null;
@@ -41,6 +42,30 @@ export const startNewSession = createAsyncThunk(
   async (params: { auth: string }, _) => {
     try {
       const { error } = await api.post<GameInfo>("/game/session/new", params.auth, null);
+      if (error) throw error
+    } catch (e) {
+      throw e
+    }
+  }
+);
+
+export const removeLastSession = createAsyncThunk(
+  'removeLastSession',
+  async (params: { auth: string }, _) => {
+    try {
+      const { error } = await api.delete<GameInfo>("/game/session/remove", params.auth);
+      if (error) throw error
+    } catch (e) {
+      throw e
+    }
+  }
+);
+
+export const editSession = createAsyncThunk(
+  'editSession',
+  async (params: { auth: string, sessionUpdate: SessionEdit }, _) => {
+    try {
+      const { error } = await api.patch<GameInfo>("/game/session", params.auth, { name: params.sessionUpdate.name, number: params.sessionUpdate.number, startTime: dayjs(params.sessionUpdate.startTime).utc().toISOString() } as SessionEdit);
       if (error) throw error
     } catch (e) {
       throw e

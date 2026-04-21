@@ -11,6 +11,7 @@ import { changeCurrentGame, selectCurrentGame, startNewSession } from '../reduce
 import SubmitButton from '../components/lib/SubmitButton';
 import CopyText from '../components/lib/CopyText';
 import Icon from '../components/icons/Icon';
+import ConfirmButton from '../components/lib/ConfirmButton';
 
 const SettingsPage = () => {
   const navigate = useNavigate();;
@@ -23,8 +24,7 @@ const SettingsPage = () => {
   const { game } = useAppSelector(selectCurrentGame);
 
   const [_, setEditedCurrentGame] = useState<GameFullInfo | null>(game);
-  const [newSessionLoading, setNewSessionLoading] = useState<boolean>(false);
-  const [newSessionRequested, setNewSessionRequested] = useState<boolean>(false);
+
 
   const { addNotification } = useNotifications();
 
@@ -34,7 +34,7 @@ const SettingsPage = () => {
 
   useEffect(() => {
     setEditedCurrentGame(game);
-  })
+  });
 
   const handleChangeCurrentGame = (value: string) => {
     dispatch(changeCurrentGame({ auth, gameID: Number(value) }))
@@ -45,25 +45,14 @@ const SettingsPage = () => {
   };
 
   const handleNewSession = () => {
-    setNewSessionLoading(true);
     dispatch(startNewSession({ auth }))
       .unwrap()
       .then(() => {
         addNotification('Началась новая сессия', 'success');
-        setNewSessionRequested(false);
       }).catch((e: any) => {
         addNotification(e.message, 'error');
       });
-    setNewSessionLoading(false);
   };
-
-  const handleNewSessionRequest = () => {
-    setNewSessionLoading(true);
-    setNewSessionRequested(true);
-    setTimeout(() => {
-      setNewSessionLoading(false);
-    }, 500) 
-  };handleNewSessionRequest
 
   const handleInviteAccept = async (invite: GameInfo) => {
     const { error, status } = await api.post(`/player/invite/accept/${invite.id}`, auth, null);
@@ -133,14 +122,7 @@ const SettingsPage = () => {
           </div>
         </div>
 
-        { /* ** Add button states ** */}
-        {game?.gmID === player?.id && newSessionLoading ? <SubmitButton className='w-full mt-2' onClick={() => {}} disabled>
-          {"Загрузка..."}
-        </SubmitButton> : newSessionRequested ? <SubmitButton className='w-full mt-2' onClick={handleNewSession} danger>
-          {"Подтвердить"}
-        </SubmitButton> : <SubmitButton className='w-full mt-2' onClick={handleNewSessionRequest} >
-          {"Начать новую сессию"}
-        </SubmitButton>}
+        {game?.gmID === player?.id && <ConfirmButton className='w-full mt-2' children={"Начать новую сессию"} onClickConfirm={() => handleNewSession()} />}
 
         {/* <SelectItems
           items={[

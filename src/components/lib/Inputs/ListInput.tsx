@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import Icon from '../../icons/Icon';
 import type { TextInputProps } from './InputProps';
-import SubmitButton from '../SubmitButton';
 
 type ListInputProps = TextInputProps & {
   addButtonLabel?: string;

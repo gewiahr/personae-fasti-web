@@ -1,6 +1,6 @@
 import type { EntityEdit } from "../../../types/entities";
 
-type InputProps = {
+export type InputProps = {
   entityEdit?: EntityEdit;
   label?: string;
   labelBGColor?: string;
@@ -10,6 +10,8 @@ type InputProps = {
 
 export type TextInputProps = InputProps & {
   value?: string;
+  min?: string;
+  max?: string;
 }
 
 export type NumericInputProps = InputProps & {

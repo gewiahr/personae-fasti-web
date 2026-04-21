@@ -41,6 +41,12 @@ export type Session = {
   endTime: string;
 };
 
+export type SessionEdit = {
+  number: number;
+  name: string;
+  startTime: string;
+};
+
 export type PlayerFullInfo = {
   id: number;
   username: string;

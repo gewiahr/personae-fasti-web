@@ -5,11 +5,16 @@ import AppRouter from './Router';
 import { useAppSelector } from './store';
 import { selectPlayerTheme } from './reducers/PlayerSlice';
 import { useEffect } from 'react';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 
 
 export const App = () => {
 
   const theme = useAppSelector(selectPlayerTheme);
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
 
   useEffect(() => {
     document.documentElement.setAttribute('colortheme', theme.color);
