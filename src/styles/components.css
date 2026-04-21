@@ -72,7 +72,8 @@
   /* List Input */
 
 .list-input-container {
-  @apply flex w-full border rounded-lg focus:outline-none focus:ring-2 bg-transparent
+  @apply flex w-full border rounded-lg focus:outline-none focus:ring-2;
+  background-color: var(--color-bg-primary);
 }
 
 .list-input-container-border {
@@ -88,15 +89,35 @@
 }
 
 .list-input-item {
-  @apply flex w-full px-4 py-3 bg-transparent rounded-lg justify-between
+  @apply flex w-full px-4 py-3 rounded-lg justify-between
 }
 
 .list-input-item-add {
-  @apply cursor-pointer justify-center
+  @apply cursor-pointer justify-center bg-transparent
 }
 
 .list-input-item-add:hover {
   background-color: var(--color-accent);
+}
+
+.list-input-button-delete {
+  @apply flex-1 px-4 py-3 rounded-bl-lg cursor-pointer;
+  color: var(--color-text);
+  background-color: var(--color-button-danger);
+}
+
+.list-input-button-delete:hover {
+  background-color: var(--color-button-danger-hover)
+}
+
+.list-input-button-reject {
+  @apply flex-1 px-4 py-3 rounded-br-lg cursor-pointer;
+  color: var(--color-text);
+  background-color: var(--color-button-primary);
+}
+
+.list-input-button-reject:hover {
+  background-color: var(--color-button-primary-hover)
 }
 
   /* Input Field */

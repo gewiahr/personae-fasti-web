@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Icon from '../../icons/Icon';
 import type { TextInputProps } from './InputProps';
+import SubmitButton from '../SubmitButton';
 
 type ListInputProps = TextInputProps & {
   addButtonLabel?: string;
@@ -15,6 +16,7 @@ export type ListInputItem = {
   key: any;
   value: string;
   status?: string;
+  onDelete?: () => void;
 }
 
 export const ListInput: React.FC<ListInputProps> = ({ 
@@ -32,9 +34,15 @@ export const ListInput: React.FC<ListInputProps> = ({
   onAddStatus = ""
 }) => {
 
-  const [isAdding, setAdding] = useState<boolean>(false);
-  const [_, setAddingFocused] = useState<boolean>(false);
+  // const [isAdding, setAdding] = useState<boolean>(false);
+  
+
+  const [state, setState] = useState<'view' | 'add' | 'remove'>('view');
+
   const [addValue, setAddValue] = useState<string>("");
+  const [_, setAddingFocused] = useState<boolean>(false);
+  const [removingItem, setRemovingItem] = useState<ListInputItem | null>(null);
+
   const [listItems, setListItems] = useState<ListInputItem[]>(setOptions);
   //const [constainerFocused, setContainerFocused] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -49,7 +57,7 @@ export const ListInput: React.FC<ListInputProps> = ({
         setAddingFocused(false);
       }
 
-      if (addValue == "") setAdding(false); 
+      if (addValue == "") setState('view'); 
     };
 
     if (isOpen) {
@@ -62,11 +70,11 @@ export const ListInput: React.FC<ListInputProps> = ({
   }, [isOpen, addValue]);
 
   useEffect(() => {
-    if (isAdding && inputRef.current) {
+    if (state === 'add' && inputRef.current) {
       inputRef.current.focus();
     }
     setAddValue("");
-  }, [isAdding]);
+  }, [state]);
 
   // if (setKey != null || setKey != undefined) {
   //   let foundOptionByKey = options.find((option) => (option.key == setKey));
@@ -85,7 +93,7 @@ export const ListInput: React.FC<ListInputProps> = ({
   const handleAdd = async () => {
     const newKey = listItems.at(-1);
     setListItems([...listItems, { key: newKey, value: addValue, status: onAddStatus } ]);
-    setAdding(false);
+    setState('view');
     setAddingFocused(false);
     setAddValue("");
     const added = await onAdd?.(addValue);
@@ -111,14 +119,16 @@ export const ListInput: React.FC<ListInputProps> = ({
 
           {listItems.map((item) => <>
             <div className='list-input-item'>
-              <p>{item.value}</p> 
-              <p className='text-(--color-text-gray) italic'>{item.status}</p>
-              <Icon name='trash' className='icon-button-danger' size={24}/>      
+              <p className={`${removingItem?.key == item.key ? 'text-red-600 line-through' : ''}`}>{item.value}</p> 
+              <div className='flex gap-4'>
+                <p className='text-(--color-text-gray) italic'>{item.status}</p>
+                {item.onDelete && state === 'view' ? <Icon name='trash' className='icon-button-danger' size={24} onClick={() => { setState('remove'); setRemovingItem(item) }} /> : <div className='w-6' ></div>}
+              </div>     
             </div>
             <hr className='px-1 items-center w-full text-gray-600' />      
           </>)}
 
-          {isAdding ? <div className={`list-input-item`}>
+          {state === 'add' ? <div className={`list-input-item`}>
             <input
               ref={inputRef}
               className='flex flex-1 outline-0'
@@ -132,8 +142,21 @@ export const ListInput: React.FC<ListInputProps> = ({
             <button className='icon-button-accented' onClick={handleAdd}>
               {onAddLabel}
             </button>
+          </div> : state === 'remove' ? <div className='flex'>
+            <button 
+              onClick={() => { setState('view'); removingItem?.onDelete?.(); setRemovingItem(null) }}
+              className='list-input-button-delete'
+            >
+              Удалить
+            </button>
+            <button 
+              onClick={() => { setState('view'); setRemovingItem(null) }}
+              className='list-input-button-reject'
+            >
+              Отменить
+            </button>
           </div> : <button className='list-input-item list-input-item-add'
-            onClick={() => setAdding(true)}
+            onClick={() => setState('add')}
             // onFocus={() => setContainerFocused(true)}
             // onBlur={() => {
             //   setContainerFocused(false);

@@ -26,8 +26,8 @@ const initialState: PlayerData = {
   games: [],
   invites: [],
   theme: {
-    color: 'purple',
-    pattern: 'fantasy',
+    color: 'blue',
+    pattern: 'none',
   }
 };
 

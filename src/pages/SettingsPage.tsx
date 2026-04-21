@@ -109,27 +109,25 @@ const SettingsPage = () => {
 
         <div>
           <p className='text-sm'>Текущая игра:</p>
-          <div className='grid grid-cols-4 gap-8 justify-between items-center'>
-            {game && <div className='col-span-3'>
+          <div className='flex gap-4 max-sm:flex-col justify-between items-center'>
+            {game && <div className='w-full'>
               {playerGames && playerGames.length > 0 ? <SelectInput
                 key={playerGames.length}
                 options={playerGames?.
                   filter((pg) => pg.id != game.id).
                   map((pg) => { return { key: pg.id, value: pg.title } }) || []}
-                //label='Текущая игра'
-                labelBGColor='bg-gray-900'
                 value={game.title}
                 entityEdit={{ handleFieldChange: handleChangeCurrentGame }}
 
               /> :
               <h2 className='text-xl'>{game.title}</h2>}
             </div>}
-            <div className='flex gap-2 justify-end'>
-              <SubmitButton key={`settingspage_submitbutton_editgame`} onClick={() => navigate(`/game/${game ? game.id : 0}`)}>
-                Ред.
-              </SubmitButton>
+            <div className='flex gap-2 max-xs:flex-1 xs:justify-end'>
+              {game?.gmID === player?.id && <SubmitButton key={`settingspage_submitbutton_editgame`} className='flex' onClick={() => navigate(`/game/${game ? game.id : 0}`)}>
+                Редактировать
+              </SubmitButton>}
               <SubmitButton key={`settingspage_submitbutton_newgame`} onClick={() => navigate("/game/new")}>
-                +
+                Создать
               </SubmitButton>
             </div>
           </div>
