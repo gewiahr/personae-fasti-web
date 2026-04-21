@@ -98,6 +98,31 @@
   --color-gray:oklch(87.2% 0.01 258.338);
 }
 
+[colortheme='purple'] {
+  --pattern-color: oklch(0.279 0.075 295);
+
+  --color-bg-primary: oklch(0.183 0.027 295); 
+  --color-bg-secondary:oklch(0.279 0.075 295);
+  --color-bg-dimmed: oklch(44.6% 0.03 256.802);
+  --color-header: oklch(0.279 0.075 295);
+
+  --color-button-primary: oklch(0.376 0.129 295);
+  --color-button-primary-hover: oklch(0.33 0.105 295);
+  --color-button-danger: oklch(57.7% 0.245 27.325);
+  --color-button-danger-hover: oklch(50.5% 0.213 27.518);
+  --color-button-disabled: oklch(44.6% 0.03 256.802);
+
+  --color-text-regular: oklch(96.7% 0.003 264.542);
+  --color-text-accent: oklch(0.495 0.172 295);
+  --color-text-gray: oklch(70.7% 0.022 261.325);
+  --color-text-danger: oklch(57.7% 0.245 27.325);
+
+  --color-accent:oklch(0.376 0.129 295);
+  --color-dimmed: oklch(0.33 0.105 295);
+  --color-gray:oklch(87.2% 0.01 258.338);
+}
+
+
 [patterntheme='none'] {
   --pattern-url: url('');
   --pattern-size: 0;
