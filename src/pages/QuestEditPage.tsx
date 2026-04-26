@@ -17,6 +17,7 @@ import { useAppSelector } from '../store';
 import { selectCurrentGameSuggestions } from '../reducers/CurrentGameSlice';
 import LoadingLabel from '../components/lib/LoadingLabel';
 import SubmitButton from '../components/lib/SubmitButton';
+import Divider from '../components/lib/Divider';
 
 
 const QuestEditPage = () => {
@@ -129,8 +130,8 @@ const QuestEditPage = () => {
         />
 
         {tasks && <div className='flex flex-col mt-8'>
-          <div className="flex-1 border-t border-gray-700 mb-4" />
-          <h2 className='text-2xl mb-4'>
+          <Divider />
+          <h2 className='text-2xl my-4'>
             Задачи
           </h2>
           {tasks.map((task, i) => {
@@ -164,7 +165,7 @@ const QuestEditPage = () => {
           </SubmitButton>
         </div>}
 
-        <div className="flex-1 border-t border-gray-700 my-2" />
+        <Divider className='my-2' />
 
         {quest?.id ? <div className='flex justify-between items-center'>
           <SubmitButton

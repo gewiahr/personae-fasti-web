@@ -8,6 +8,7 @@ import { selectAuthorization, selectPlayerInfo } from '../reducers/PlayerSlice';
 import { convertSuggestionDataToRender } from '../types/suggestion';
 import { selectIsLoadingNew } from '../reducers/LoadingSlice';
 import LoadingLabel from './lib/LoadingLabel';
+import Divider from './lib/Divider';
 
 type RecordFeedProps = {
   records: Record[];
@@ -121,8 +122,7 @@ export const RecordFeed: React.FC<RecordFeedProps> = ({ records, editable = fals
               {/* Session header - only show if there are multiple sessions */}
               {group.session && (
                 <div className='z-10 py-2'>
-                  <div className="flex items-center gap-4 sticky top-0 backdrop-blur-sm"> {/* bg-gray-900/80 */}
-                    <hr className="flex-1 w-1 divider-dimmed"/>
+                  <Divider>
                     <span className="text-sm font-medium text-gray-400">
                       {isCurrentSession ? (
                         <>
@@ -141,8 +141,7 @@ export const RecordFeed: React.FC<RecordFeedProps> = ({ records, editable = fals
                         </span>
                       )}
                     </span>
-                    <hr className="flex-1 w-1 divider-dimmed "/>
-                  </div>
+                  </Divider>
                   <div className='text-md record-feed-session-title'>
                     <p>{group.session?.name}</p>
                   </div>

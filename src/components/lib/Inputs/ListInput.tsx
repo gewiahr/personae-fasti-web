@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import type { TextInputProps } from './InputProps';
 import { LuTrash } from 'react-icons/lu';
+import Divider from '../Divider';
 
 type ListInputProps = TextInputProps & {
   addButtonLabel?: string;
@@ -125,7 +126,7 @@ export const ListInput: React.FC<ListInputProps> = ({
                 {item.onDelete && state === 'view' ? <LuTrash className='icon-button-danger' size={24} onClick={() => { setState('remove'); setRemovingItem(item) }} /> : <div className='w-6' ></div>}
               </div>     
             </div>
-            <hr className='px-1 items-center w-full text-gray-600' />      
+            <Divider />      
           </>)}
 
           {state === 'add' ? <div className={`list-input-item`}>

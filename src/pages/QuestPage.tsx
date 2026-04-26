@@ -13,6 +13,7 @@ import { useAppSelector } from '../store';
 import { selectAuthorization } from '../reducers/PlayerSlice';
 import LoadingLabel from '../components/lib/LoadingLabel';
 import SubmitButton from '../components/lib/SubmitButton';
+import Divider from '../components/lib/Divider';
 
 type QuestPageProp = {
 
@@ -109,8 +110,8 @@ export const QuestPage: React.FC<QuestPageProp> = () => {
           <RichText key={`questpage_richtext-${id ?? "newquest"}`} text={quest.description || ""} uid={`questpage-${id ?? "newquest"}`}/>
 
           {tasks && tasks.length > 0 && <div className='flex flex-col mt-8'>
-            <div className="flex-1 border-t divider-dimmed mb-4"/>
-            <div className='flex justify-between content-center mb-4'>
+            <Divider />
+            <div className='flex justify-between content-center my-4'>
               <h2 className='text-2xl'>
                 Задачи
               </h2>    
