@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import Icon from '../../icons/Icon';
 import type { TextInputProps } from './InputProps';
+import { LuTrash } from 'react-icons/lu';
 
 type ListInputProps = TextInputProps & {
   addButtonLabel?: string;
@@ -121,7 +121,8 @@ export const ListInput: React.FC<ListInputProps> = ({
               <p className={`${removingItem?.key == item.key ? 'text-red-600 line-through' : ''}`}>{item.value}</p> 
               <div className='flex gap-4'>
                 <p className='text-(--color-text-gray) italic'>{item.status}</p>
-                {item.onDelete && state === 'view' ? <Icon name='trash' className='icon-button-danger' size={24} onClick={() => { setState('remove'); setRemovingItem(item) }} /> : <div className='w-6' ></div>}
+                {/* {item.onDelete && state === 'view' ? <Icon name='trash' className='icon-button-danger' size={24} onClick={() => { setState('remove'); setRemovingItem(item) }} /> : <div className='w-6' ></div>} */}
+                {item.onDelete && state === 'view' ? <LuTrash className='icon-button-danger' size={24} onClick={() => { setState('remove'); setRemovingItem(item) }} /> : <div className='w-6' ></div>}
               </div>     
             </div>
             <hr className='px-1 items-center w-full text-gray-600' />      
@@ -134,8 +135,7 @@ export const ListInput: React.FC<ListInputProps> = ({
               onFocus={() => setAddingFocused(true)}
               onBlur={() => setAddingFocused(false)}
               onChange={(e) => setAddValue(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && addValue.trim()) handleAdd() }}
+              onKeyDown={(e) => { if (e.key === 'Enter' && addValue.trim()) handleAdd() }}
               value={addValue}
             />
             <button className='icon-button-accented' onClick={handleAdd}>

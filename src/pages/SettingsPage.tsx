@@ -12,6 +12,7 @@ import SubmitButton from '../components/lib/SubmitButton';
 import CopyText from '../components/lib/CopyText';
 import Icon from '../components/icons/Icon';
 import ConfirmButton from '../components/lib/ConfirmButton';
+import { LuTrash2 } from 'react-icons/lu';
 
 const SettingsPage = () => {
   const navigate = useNavigate();;
@@ -90,7 +91,8 @@ const SettingsPage = () => {
               <p>{invite.title}</p>
               <div className='flex gap-6'>
                 <Icon name='submit' className='icon-button-accented' onClick={() => handleInviteAccept(invite)} />
-                <Icon name='trash' className='icon-button-danger' onClick={() => handleInviteRefuse(invite)} />
+                {/* <Icon name='trash' className='icon-button-danger' onClick={() => handleInviteRefuse(invite)} /> */}
+                <LuTrash2 className='icon-button-danger' onClick={() => handleInviteRefuse(invite)} />
               </div>
             </div>)}  
           </div>}
