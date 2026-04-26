@@ -49,7 +49,6 @@ export const ListInput: React.FC<ListInputProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
@@ -57,7 +56,10 @@ export const ListInput: React.FC<ListInputProps> = ({
         setAddingFocused(false);
       }
 
-      if (addValue == "") setState('view'); 
+      if (addValue == "") {
+        setState('view');
+        setRemovingItem(null);
+      } 
     };
 
     if (isOpen) {
