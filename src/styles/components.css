@@ -477,3 +477,12 @@ input[type="number"] {
   border-color: var(--color-accent);
   background-color: white;
 }
+
+  /* Refs */
+.ref-text {
+  @apply underline cursor-pointer 
+}
+
+.ref-text:hover {
+  color: var(--color-accent);
+}

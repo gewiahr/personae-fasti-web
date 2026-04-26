@@ -13,7 +13,6 @@ export const Modal = ({
   children,
   className = ''
 }: ModalProps) => {
-  // Close modal when clicking outside or pressing Escape
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
