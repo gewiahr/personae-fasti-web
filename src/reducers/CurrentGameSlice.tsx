@@ -193,6 +193,18 @@ export const updateGameSettings = createAsyncThunk(
   }
 )
 
+export const revokeInvite = createAsyncThunk(
+  'revokeInvite',
+  async (params: { auth: string, username: string }, _) => {
+    try {
+      const { error } = await api.delete(`/game/invite/${params.username}`, params.auth);
+      if (error) throw error
+    } catch (e) {
+      throw e
+    }
+  }
+);
+
 // export const resetCurrentGame = createAsyncThunk(
 //   'resetCurrentGame',
 //   async (_, appThunk) => {

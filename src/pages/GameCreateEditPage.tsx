@@ -13,7 +13,7 @@ import { ListInput, type ListInputItem } from '../components/lib/Inputs/ListInpu
 import { useNotifications } from '../context/NotificationContext';
 import FoldableCategory from '../components/lib/FoldableCategory';
 import { ToggleSwitch } from '../components/lib/ToggleSwitch';
-import { editSession, removeLastSession, startNewSession, updateGameSettings } from '../reducers/CurrentGameSlice';
+import { editSession, removeLastSession, revokeInvite, startNewSession, updateGameSettings } from '../reducers/CurrentGameSlice';
 import Icon from '../components/icons/Icon';
 import dayjs from 'dayjs';
 import ConfirmButton from '../components/lib/ConfirmButton';
@@ -64,8 +64,8 @@ const GameCreateEditPage: React.FC = () => {
     setLoading(true);
     
     const method = newGame ? api.post : api.put;
-    const { error } = await method<Game>("/game", auth, game);
-    if (!error) window.location.href = `/settings`; //id ? `/settings` : `/`; //navigate(data?.id ? `/settings` : `/`);
+    const { data, error } = await method<Game>("/game", auth, game);
+    if (!error) window.location.href = newGame && data ? `/game/${data.id}` : `/settings`; //id ? `/settings` : `/`; //navigate(data?.id ? `/settings` : `/`);
     else setError(error.message);
 
     if (game) dispatch(updateGameSettings({ auth, gameID: game.id, settings: game.settings }))
@@ -92,6 +92,7 @@ const GameCreateEditPage: React.FC = () => {
       .unwrap()
       .then(() => {
         addNotification('Началась новая сессия', 'success');
+        refetchPageData();
       }).catch((e: any) => {
         addNotification(e.message, 'error');
       });
@@ -102,6 +103,7 @@ const GameCreateEditPage: React.FC = () => {
       .unwrap()
       .then(() => {
         addNotification('Последняя сессия удалена', 'info');
+        refetchPageData();
       }).catch((e: any) => {
         addNotification(e.message, 'error');
       }); 
@@ -113,13 +115,23 @@ const GameCreateEditPage: React.FC = () => {
       .unwrap()
       .then(() => {
         addNotification('Сессия изменена', 'success');
+        refetchPageData();
       }).catch((e: any) => {
         addNotification(e.message, 'error');
       });
   };
 
   const handleOnDeleteFromPlayersList = async (player: PlayerInfo, invite: boolean = false) => {
-    
+    if (invite) {
+      dispatch(revokeInvite({ auth, username: player.username }))
+        .unwrap()
+        .then(() => {
+          addNotification('Приглашение отозвано', 'success');
+          refetchPageData();
+        }).catch((e: any) => {
+          addNotification(e.message, 'error');
+        });
+    }
   };
 
   // const toLocaleStringDate = (date?: string, short: boolean) => {
@@ -149,7 +161,7 @@ const GameCreateEditPage: React.FC = () => {
               error={error || ""}
             />
 
-            <ListInput
+            {!newGame && <ListInput
               label='Игроки'
               addButtonLabel='Добавить игрока'
               setOptions={pageData?.players.map((p) => { return { key: p.id, value: p.username, onDelete: p.id === player?.id ? undefined : () => handleOnDeleteFromPlayersList(p) } as ListInputItem })
@@ -158,9 +170,9 @@ const GameCreateEditPage: React.FC = () => {
               onAdd={(username) => handleInvite(username)}
               onAddLabel='Пригласить'
               onAddStatus='отправка...'
-            />
+            />}
 
-            {game && <>
+            {game && !newGame && <>
               <FoldableCategory key="sessions_settings" title={`Сессии: ${game.sessions.length}`}>
                 <div className='flex gap-2'>
                   <ConfirmButton className='w-full mb-6' children={"Новая сессия"} onClickConfirm={() => handleNewSession()} />
