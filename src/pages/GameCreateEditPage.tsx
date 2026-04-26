@@ -6,7 +6,7 @@ import { api } from '../utils/api';
 import type { Game } from '../types/game';
 import { useAppDispatch, useAppSelector } from '../store';
 import { selectAuthorization, selectPlayerInfo } from '../reducers/PlayerSlice';
-import type { GameFullInfo, GamePage, PlayerInfo, Session, SessionEdit } from '../types/request';
+import type { GameFullInfo, GamePage, PlayerInfo, SessionEdit } from '../types/request';
 import { LoadingPage } from './LoadingPage';
 import SubmitButton from '../components/lib/SubmitButton';
 import { ListInput, type ListInputItem } from '../components/lib/Inputs/ListInput';
@@ -38,6 +38,7 @@ const GameCreateEditPage: React.FC = () => {
   const [sessionEditItem, setSessionEditItem] = useState<SessionEdit | null>(null);
 
   const sessionEditNameRef = useRef<HTMLInputElement>(null);
+  const sessionEditDateRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (pageData) {
@@ -47,7 +48,7 @@ const GameCreateEditPage: React.FC = () => {
   }, [pageData]);
 
   useEffect(() => {
-    sessionEditNameRef.current?.focus();
+    if (!sessionEditDateRef.current) sessionEditNameRef.current?.focus();
   }, [sessionEditItem]);
 
   const handleFieldChange = (value: string, field?: string) => {
@@ -177,6 +178,7 @@ const GameCreateEditPage: React.FC = () => {
                   {game.sessions.sort((a, b) => b.number - a.number).map((session, i) => <>
                     {session.number == Number(sessionEditItem?.number) ? <div className='flex flex-col gap-2'>
                         <InputField 
+                          key={`gamecreateeditpage_sessionedit_inputfield_name`}
                           inputRef={sessionEditNameRef}
                           value={sessionEditItem?.name} 
                           entityEdit={{ handleFieldChange: (value) => setSessionEditItem({...sessionEditItem!, name: value}) }} 
@@ -185,11 +187,13 @@ const GameCreateEditPage: React.FC = () => {
                         <div className='flex gap-2 justify-between items-center'>
                           {/* <DateTimePicker /> */}
                           {i !== game.sessions.length - 1 ? <InputField 
+                            key={`gamecreateeditpage_sessionedit_inputfield_startdate`}
                             htmlType='datetime-local'
+                            inputRef={sessionEditDateRef}
                             value={toDateTimeLocal(sessionEditItem?.startTime)} 
-                            min={toDateTimeLocal(game.sessions[i+2]?.endTime)}
-                            max={toDateTimeLocal(game.sessions[i]?.endTime)}
-                            entityEdit={{ handleFieldChange: (value) => setSessionEditItem({...sessionEditItem!, startTime: value}) }} 
+                            // min={toDateTimeLocal(game.sessions[i+2]?.endTime)}
+                            // max={toDateTimeLocal(game.sessions[i]?.endTime)}
+                            entityEdit={{ handleFieldChange: (value) => setSessionEditItem({...sessionEditItem!, startTime: value }) }} // dayjs(value).utc().toISOString()
                           /> : <></>}
                           <div className='flex gap-4'>
                             <AiOutlineCheck className='icon-button-accented' size={24} onClick={() => { handleEditSession(); setSessionEditItem(null) }} />
