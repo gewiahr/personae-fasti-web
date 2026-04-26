@@ -376,7 +376,7 @@ input[type="number"] {
 }
 
 .layout-footer {
-  @apply p-4 text-center text-sm;
+  @apply flex gap-8 p-4 justify-center items-center text-center text-sm;
   background-color: var(--color-header);
   color: var(--color-gray);
 }

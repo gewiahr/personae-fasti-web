@@ -2,6 +2,7 @@ import { type ReactNode, useState } from 'react';
 import { NotificationProvider } from '../context/NotificationContext';
 import NotificationPopup from '../components/lib/NotificationPopup';
 import Header from './Header';
+import Footer from './Footer';
 
 export const Layout = ({ children }: { children: ReactNode }) => {
   const [isMenuOpen, switchMenuOpen] = useState(false);
@@ -25,9 +26,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
           {children}
         </main>
 
-        <footer className="layout-footer">
-          <a href='https://github.com/gewiahr'>{`© ${new Date().getFullYear()} gewiahr (Tomasz Mozhny)`}</a>
-        </footer>
+        <Footer />
       </div>
       <NotificationPopup />
     </NotificationProvider>
