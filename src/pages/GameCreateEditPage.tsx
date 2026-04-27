@@ -30,7 +30,7 @@ const GameCreateEditPage: React.FC = () => {
 
   const { addNotification } = useNotifications();
 
-  const [game, setGame] = useState<GameFullInfo>();
+  const [game, setGame] = useState<GameFullInfo>({title: ''} as GameFullInfo);
   const [loading, setLoading] = useState<boolean>(!newGame);
   const [error, setError] = useState<string>("");
   const { data: pageData, refetch: refetchPageData, error: pageError } = useApi.get<GamePage>(`/game/${id}`, auth, [], newGame);
@@ -48,7 +48,8 @@ const GameCreateEditPage: React.FC = () => {
   }, [pageData]);
 
   useEffect(() => {
-    if (!sessionEditDateRef.current) sessionEditNameRef.current?.focus();
+    if (!newGame && !sessionEditDateRef.current) sessionEditNameRef.current?.focus();
+    if (newGame) sessionEditNameRef.current?.focus();
   }, [sessionEditItem]);
 
   const handleFieldChange = (value: string, field?: string) => {
@@ -65,12 +66,17 @@ const GameCreateEditPage: React.FC = () => {
     
     const method = newGame ? api.post : api.put;
     const { data, error } = await method<Game>("/game", auth, game);
-    if (!error) window.location.href = newGame && data ? `/game/${data.id}` : `/settings`; //id ? `/settings` : `/`; //navigate(data?.id ? `/settings` : `/`);
-    else setError(error.message);
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+      return
+    } else {
+      window.location.href = newGame && data ? `/game/${data.id}` : `/settings`; //id ? `/settings` : `/`; //navigate(data?.id ? `/settings` : `/`);}
+    }
 
     if (game) dispatch(updateGameSettings({ auth, gameID: game.id, settings: game.settings }))
-      .catch((e) => addNotification(e.message, 'error'))
-      .then(() =>  addNotification("Настройки сохранены", 'success'));
+      // .catch((e) => addNotification(e.message, 'error'))
+      // .then(() =>  addNotification("Настройки сохранены", 'success'));
     
     setLoading(false);
     // ** Join in one endpoint call ** //
@@ -173,7 +179,7 @@ const GameCreateEditPage: React.FC = () => {
             />}
 
             {game && !newGame && <>
-              <FoldableCategory key="sessions_settings" title={`Сессии: ${game.sessions.length}`}>
+              <FoldableCategory key="sessions_settings" title={`Сессии: ${game.sessions.filter((s) => s.number > 0).length}`}>
                 <div className='flex gap-2'>
                   <ConfirmButton className='w-full mb-6' children={"Новая сессия"} onClickConfirm={() => handleNewSession()} />
                   {/* <SubmitButton className='w-full mb-6' onClick={() => {}} >
@@ -194,7 +200,7 @@ const GameCreateEditPage: React.FC = () => {
                           inputRef={sessionEditNameRef}
                           value={sessionEditItem?.name} 
                           entityEdit={{ handleFieldChange: (value) => setSessionEditItem({...sessionEditItem!, name: value}) }} 
-                          label={`Сессия ${session.number}`} 
+                          label={session.number > 0 ? `Сессия ${session.number}` : `Предыстория`} 
                         />
                         <div className='flex gap-2 justify-between items-center'>
                           {/* <DateTimePicker /> */}
