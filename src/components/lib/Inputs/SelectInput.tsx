@@ -90,7 +90,7 @@ export const SelectInput: React.FC<SelectInputProps> = (
       {/* Dropdown options */}
       {isOpen && (
         <div
-          className="select-input-dropdown-container"
+          className="select-input-dropdown-container scroll-thin"
           onClick={(e) => e.stopPropagation()} >
           {options.map((option) => (
             <div

@@ -33,5 +33,9 @@ module.exports = {
         'safe-area-bottom': 'env(safe-area-inset-bottom, 0px)',
       },
     }
-  }
+  },
+
+  plugins: [
+    require('tailwind-scrollbar'),
+  ],
 }

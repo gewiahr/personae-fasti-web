@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin 'tailwind-scrollbar';
 
   /* Auth Gate */
 
@@ -479,10 +480,16 @@ input[type="number"] {
 }
 
   /* Refs */
+
 .ref-text {
   @apply underline cursor-pointer 
 }
 
 .ref-text:hover {
   color: var(--color-accent);
+}
+
+  /* Scroll */
+.scroll-thin {
+  @apply scrollbar-thin scrollbar-thumb-gray-600 scrollbar-hover:scrollbar-thumb-gray-200 scrollbar-track-transparent
 }
