@@ -17,7 +17,7 @@ import { editSession, removeLastSession, revokeInvite, startNewSession, updateGa
 import Icon from '../components/icons/Icon';
 import dayjs from 'dayjs';
 import ConfirmButton from '../components/lib/ConfirmButton';
-import { AiOutlineCheck, AiOutlineClose } from 'react-icons/ai';
+import { LuCheck, LuUndo2 } from 'react-icons/lu';
 
 const GameCreateEditPage: React.FC = () => {
   const { id } = useParams();
@@ -115,16 +115,38 @@ const GameCreateEditPage: React.FC = () => {
       }); 
   };
 
-  const handleEditSession = () => {
-    if (sessionEditItem === null) return
-    dispatch(editSession({ auth, sessionUpdate: sessionEditItem }))
-      .unwrap()
-      .then(() => {
-        addNotification('Сессия изменена', 'success');
-        refetchPageData();
-      }).catch((e: any) => {
-        addNotification(e.message, 'error');
-      });
+  const handleEditSession = async (sessionIndex: number) => {
+    if (sessionEditItem === null) return false;
+
+    const sessionStartTime = new Date(sessionEditItem.startTime).valueOf();
+    const sessionEndTime = new Date(game.sessions[sessionIndex]?.endTime).valueOf();
+
+    if (sessionStartTime < new Date(game.sessions[sessionIndex+2]?.endTime).valueOf()) {
+      addNotification(`Сессия не может начинаться раньше предыдущей (не раньше ${new Date(game.sessions[sessionIndex+2]?.endTime).toLocaleString()})`, 'warning');
+      return false;
+    } else if (sessionEndTime != 0 && sessionStartTime > sessionEndTime) {
+      addNotification(`Сессия не может начинаться позже следующей (не позже ${new Date(game.sessions[sessionIndex]?.endTime).toLocaleString()}})`, 'warning');
+      return false;
+    }
+
+    var sessionStartTimeString;
+    try {
+      sessionStartTimeString = dayjs(sessionEditItem.startTime).utc().toISOString()
+    } catch (e: any) {
+      addNotification('Неверная дата', 'error');
+      return false; 
+    }
+
+    try {
+      await dispatch(editSession({ auth, sessionUpdate: { ...sessionEditItem, startTime: sessionStartTimeString } })).unwrap()
+    } catch (e: any) {
+      addNotification(e.message, 'error');
+      return false;
+    }
+
+    addNotification('Сессия изменена', 'success');
+    refetchPageData();
+    return true;
   };
 
   const handleOnDeleteFromPlayersList = async (player: PlayerInfo, invite: boolean = false) => {
@@ -208,14 +230,14 @@ const GameCreateEditPage: React.FC = () => {
                             key={`gamecreateeditpage_sessionedit_inputfield_startdate`}
                             htmlType='datetime-local'
                             inputRef={sessionEditDateRef}
-                            value={toDateTimeLocal(sessionEditItem?.startTime)} 
-                            // min={toDateTimeLocal(game.sessions[i+2]?.endTime)}
-                            // max={toDateTimeLocal(game.sessions[i]?.endTime)}
+                            label='Начало сессии'
+                            error={sessionEditItem?.error}
+                            value={sessionEditItem?.startTime} 
                             entityEdit={{ handleFieldChange: (value) => setSessionEditItem({...sessionEditItem!, startTime: value }) }} // dayjs(value).utc().toISOString()
                           /> : <></>}
                           <div className='flex gap-4'>
-                            <AiOutlineCheck className='icon-button-accented' size={24} onClick={() => { handleEditSession(); setSessionEditItem(null) }} />
-                            <AiOutlineClose className='icon-button-accented' size={24} onClick={() => setSessionEditItem(null)} />                   
+                            <LuCheck className='icon-button-accented' size={24} onClick={async () => { if (await handleEditSession(i)) { setSessionEditItem(null) } else setSessionEditItem({...sessionEditItem!, error: 'Неверная дата' }) }} />
+                            <LuUndo2 className='icon-button-accented' size={24} onClick={() => setSessionEditItem(null)} />                   
                             {/* <Icon name='submit' size={24} />
                             <Icon name='arrowUp' size={24} onClick={() => setSessionEditItem(null)} /> */}
                           </div>                       
@@ -227,7 +249,7 @@ const GameCreateEditPage: React.FC = () => {
                       </div> 
                       <div className='flex gap-6'>
                         <p>{game.sessions[i+1]?.endTime != null ? dayjs.utc(game.sessions[i+1].endTime).local().format('DD.MM.YY') : ''}</p>
-                        <Icon name='edit' className='icon-button-accented' onClick={() => { setSessionEditItem({...session, startTime: game.sessions[i+1]?.endTime }) }} />
+                        <Icon name='edit' className='icon-button-accented' onClick={() => { setSessionEditItem({...session, startTime: toDateTimeLocal(game.sessions[i+1]?.endTime) }) }} />
                       </div>
                     </div>}
                   </>)}  

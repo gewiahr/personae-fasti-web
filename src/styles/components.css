@@ -269,6 +269,24 @@ input[type="number"] {
   color: var(--color-accent);  
 }
 
+  /* Datepicker */
+  
+.input-field[type="datetime-local"] {
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+}
+
+.input-field[type="datetime-local"]:focus {
+  outline: none;
+  border-radius: 0.5rem; /* Same as rounded-lg */
+}
+
+.input-field[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
   /* Card Label */
 
 .card-label-container {

@@ -45,6 +45,7 @@ export type SessionEdit = {
   number: number;
   name: string;
   startTime: string;
+  error?: string;
 };
 
 export type PlayerFullInfo = {
