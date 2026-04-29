@@ -48,7 +48,7 @@ export const InputField: React.FC<InputFieldProps> = ({
       <FloatingLabel 
         id={id}
         label={label}
-        placeholder={isFocused || value.length > 0} 
+        placeholder={!!(isFocused || value.length > 0 || shortError)} 
         labelBGColor={labelBGColor}    
         error={shortError}    
       />
@@ -71,7 +71,7 @@ export const InputField: React.FC<InputFieldProps> = ({
       </label> */}
 
       {error && !shortError && (
-        <p className="mt-1 text-sm text-red-600">{error}</p>
+        <p className="text-sm text-red-600">{error}</p>
       )}
     </div>
   );

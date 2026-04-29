@@ -124,13 +124,13 @@ export const RecordFeed: React.FC<RecordFeedProps> = ({ records, editable = fals
                 <div className='z-10 py-2'>
                   <Divider>
                     <span className="text-sm font-medium text-gray-400">
-                      {isCurrentSession ? (
+                      {isPrehistory ? (
+                        'Предыстория'
+                      ) : isCurrentSession ? (
                         <>
                           <span className="text-white">Текущая сессия</span>
                           {sessionNumber && ` #${sessionNumber}`}
                         </>
-                      ) : isPrehistory ? (
-                        'Предыстория'
                       ) : (
                         `Сессия #${sessionNumber}`
                       )}
