@@ -3,12 +3,12 @@ import { RichInput } from './lib/Inputs/RichInput';
 import { enrichMentionInput } from '../types/mention';
 import { ToggleSwitch } from './lib/ToggleSwitch';
 import { SelectInput } from './lib/Inputs/SelectInput';
-import Icon from './icons/Icon';
 import { useAppDispatch, useAppSelector } from '../store';
 import { postNewRecord, selectCurrentGame } from '../reducers/CurrentGameSlice';
 import { selectAuthorization, selectPlayerInfo } from '../reducers/PlayerSlice';
 import { convertSuggestionDataToRender } from '../types/suggestion';
 import SubmitButton from './lib/SubmitButton';
+import { LuChevronDown, LuChevronUp } from 'react-icons/lu';
 
 type RecordInputProps = {
 
@@ -84,11 +84,11 @@ export const RecordInput: React.FC<RecordInputProps> = () => {
           entityEdit={{ handleFieldChange: (value) => setQuestID(value) }} 
           nullable={true}
         />}
-        {player?.id === game?.gmID && <div className='w-62.5 justify-items-end'>
+        {player?.id === game?.gmID && <div className={`${quests && quests.length > 0 ? 'w-62.5 justify-items-end' : 'w-full'}`}>
           <ToggleSwitch 
             key={`recordinput_hiddenswitch_${inputKey}`} 
             label='Скрыть пост' 
-            labelPosition='left' 
+            labelPosition={quests && quests.length > 0 ? 'left' : 'right'}
             className=''
             entityEdit={{ handleFieldChange : (value) => setPostHidden(value) }} 
             setValue={postHidden} 
@@ -96,11 +96,13 @@ export const RecordInput: React.FC<RecordInputProps> = () => {
         </div>}
       </div>}
       <div className="flex justify-between items-center mt-2">    
-        {showPostSettings && <SubmitButton
+        {showPostSettings && postSettingsOpen ? <LuChevronUp 
+          className='icon-button-accented size-10' 
           onClick={() => setPostSettingsOpen(!postSettingsOpen)}
-        >
-          <Icon name={`${postSettingsOpen ? 'arrowUp' : 'arrowDown'}`} />
-        </SubmitButton>}
+        /> : <LuChevronDown 
+          className='icon-button-accented size-10' 
+          onClick={() => setPostSettingsOpen(!postSettingsOpen)}
+        />}
 
         <SubmitButton
           onClick={handleSubmit}
