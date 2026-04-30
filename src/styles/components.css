@@ -508,6 +508,14 @@ input[type="number"] {
 }
 
   /* Scroll */
+
 .scroll-thin {
   @apply scrollbar-thin scrollbar-thumb-gray-600 scrollbar-hover:scrollbar-thumb-gray-200 scrollbar-track-transparent
+}
+
+  /* Text */
+
+.text-to-remove {
+  @apply line-through;
+  color: var(--color-text-danger)
 }

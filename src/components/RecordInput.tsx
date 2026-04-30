@@ -67,7 +67,7 @@ export const RecordInput: React.FC<RecordInputProps> = () => {
     <div className="mb-6">
       <div className="flex flex-col space-y-2">
         <RichInput 
-          key={inputKey} 
+          key={`recordinput_richinput_${inputKey}`} 
           label='Что нового?'
           value={input} 
           entityEdit={{ handleFieldChange }} 

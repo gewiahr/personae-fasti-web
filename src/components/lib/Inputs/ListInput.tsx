@@ -4,6 +4,7 @@ import { LuTrash } from 'react-icons/lu';
 import Divider from '../Divider';
 
 type ListInputProps = TextInputProps & {
+  //listID?: string // for unique keys with multiple inputs
   addButtonLabel?: string;
   setOptions?: ListInputItem[];
   // suggestions?: ListInputItem[];
@@ -16,13 +17,12 @@ export type ListInputItem = {
   key: any;
   value: string;
   status?: string;
-  onDelete?: () => void;
-}
+  onDelete?: () => Promise<boolean>;
+};
 
 export const ListInput: React.FC<ListInputProps> = ({ 
   // suggestions = [], 
   setOptions = [], 
-  // value = '', 
   label, 
   addButtonLabel = 'Добавить', 
   // entityEdit, 
@@ -33,10 +33,6 @@ export const ListInput: React.FC<ListInputProps> = ({
   onAddLabel = 'Добавить',
   onAddStatus = ""
 }) => {
-
-  // const [isAdding, setAdding] = useState<boolean>(false);
-  
-
   const [state, setState] = useState<'view' | 'add' | 'remove'>('view');
 
   const [addValue, setAddValue] = useState<string>("");
@@ -44,7 +40,6 @@ export const ListInput: React.FC<ListInputProps> = ({
   const [removingItem, setRemovingItem] = useState<ListInputItem | null>(null);
 
   const [listItems, setListItems] = useState<ListInputItem[]>(setOptions);
-  //const [constainerFocused, setContainerFocused] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -56,10 +51,10 @@ export const ListInput: React.FC<ListInputProps> = ({
         setAddingFocused(false);
       }
 
-      if (addValue == "") {
-        setState('view');
-        setRemovingItem(null);
-      } 
+      // if (addValue == "") {
+      //   setState('view');
+      //   setRemovingItem(null);
+      // } 
     };
 
     if (isOpen) {
@@ -69,28 +64,20 @@ export const ListInput: React.FC<ListInputProps> = ({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isOpen, addValue]);
+  }, [isOpen]);
 
   useEffect(() => {
-    if (state === 'add' && inputRef.current) {
-      inputRef.current.focus();
+    if (state === 'add') {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+      setAddValue("");
     }
-    setAddValue("");
   }, [state]);
 
-  // if (setKey != null || setKey != undefined) {
-  //   let foundOptionByKey = options.find((option) => (option.key == setKey));
-  //   if (foundOptionByKey) value = foundOptionByKey.value;
-  // };
-
-  // const handleChange = (value: any) => {
-  //   entityEdit?.handleFieldChange(value, entityEdit?.fieldName || "", entityEdit.arrayIndex);
-  //   setIsOpen(false);
-  // };
-
-  // const handleClearSelect = () => {
-  //   handleChange(0);
-  // }
+  // useEffect(() => {
+  //   setListItems(setOptions);
+  // }, [setOptions]);
 
   const handleAdd = async () => {
     const newKey = listItems.at(-1);
@@ -108,7 +95,7 @@ export const ListInput: React.FC<ListInputProps> = ({
     );
   }
 
-  return (
+  return (  
     <div className={`relative ${className}`} ref={containerRef}>
       {/* Input-like trigger  min-h-12 */}
       <div className={`list-input-container ${error ? 'list-input-container-border-error' : 'list-input-container-border'}`}
@@ -119,9 +106,9 @@ export const ListInput: React.FC<ListInputProps> = ({
       >
         <div className='list-input-item-list'>
 
-          {listItems.map((item) => <>
+          {listItems.map((item) => <div key={`listinput_mapitems_item${item.key}`}>
             <div className='list-input-item'>
-              <p className={`${removingItem?.key == item.key ? 'text-red-600 line-through' : ''}`}>{item.value}</p> 
+              <p className={`${removingItem?.key == item.key ? 'text-to-remove' : ''}`}>{item.value}</p> 
               <div className='flex gap-4'>
                 <p className='text-(--color-text-gray) italic'>{item.status}</p>
                 {/* {item.onDelete && state === 'view' ? <Icon name='trash' className='icon-button-danger' size={24} onClick={() => { setState('remove'); setRemovingItem(item) }} /> : <div className='w-6' ></div>} */}
@@ -129,7 +116,7 @@ export const ListInput: React.FC<ListInputProps> = ({
               </div>     
             </div>
             <Divider />      
-          </>)}
+          </div>)}
 
           {state === 'add' ? <div className={`list-input-item`}>
             <input
@@ -146,13 +133,23 @@ export const ListInput: React.FC<ListInputProps> = ({
             </button>
           </div> : state === 'remove' ? <div className='flex'>
             <button 
-              onClick={() => { setState('view'); removingItem?.onDelete?.(); setRemovingItem(null) }}
+              onClick={async () => { 
+                if (removingItem && await removingItem?.onDelete?.()) {
+                  setListItems(prevItems => 
+                    prevItems.filter(item => 
+                      item.key !== removingItem.key
+                    )
+                  ) 
+                }; 
+                setRemovingItem(null); 
+                setState('view');
+              }}
               className='list-input-button-delete'
             >
               Удалить
             </button>
             <button 
-              onClick={() => { setState('view'); setRemovingItem(null) }}
+              onClick={() => { setRemovingItem(null); setState('view'); }}
               className='list-input-button-reject'
             >
               Отменить

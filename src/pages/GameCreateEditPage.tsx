@@ -151,15 +151,18 @@ const GameCreateEditPage: React.FC = () => {
 
   const handleOnDeleteFromPlayersList = async (player: PlayerInfo, invite: boolean = false) => {
     if (invite) {
-      dispatch(revokeInvite({ auth, username: player.username }))
-        .unwrap()
-        .then(() => {
-          addNotification('Приглашение отозвано', 'success');
-          refetchPageData();
-        }).catch((e: any) => {
-          addNotification(e.message, 'error');
-        });
+      try {
+        await dispatch(revokeInvite({ auth, username: player.username })).unwrap()
+        addNotification('Приглашение отозвано', 'success');
+        refetchPageData();
+        return true
+      } catch (e: any) {
+        addNotification(e.message, 'error');
+        return false
+      }
     }
+
+    return false
   };
 
   // const toLocaleStringDate = (date?: string, short: boolean) => {
@@ -192,8 +195,8 @@ const GameCreateEditPage: React.FC = () => {
             {!newGame && <ListInput
               label='Игроки'
               addButtonLabel='Добавить игрока'
-              setOptions={pageData?.players.map((p) => { return { key: p.id, value: p.username, onDelete: p.id === player?.id ? undefined : () => handleOnDeleteFromPlayersList(p) } as ListInputItem })
-                                           .concat(pageData?.invites.map((i) => { return { key: i.id, value: i.username, status: "приглашен(-а)", onDelete: () => handleOnDeleteFromPlayersList(i, true) } as ListInputItem }))
+              setOptions={pageData?.players.map((p) => { return { key: p.id, value: p.username, onDelete: p.id === player?.id ? undefined : async () => await handleOnDeleteFromPlayersList(p) } as ListInputItem })
+                                           .concat(pageData?.invites.map((i) => { return { key: i.id, value: i.username, status: "приглашен(-а)", onDelete: async () => await handleOnDeleteFromPlayersList(i, true) } as ListInputItem }))
                                            .sort((a, b) => a.key - b.key)}
               onAdd={(username) => handleInvite(username)}
               onAddLabel='Пригласить'
@@ -215,7 +218,7 @@ const GameCreateEditPage: React.FC = () => {
                 {game.sessions.length <= 0 ? <div className='flex flex-col gap-4 justify-center items-center text-center'>
                   <p className='italic'>В игре пока нет ни одной сессии</p>
                 </div> : <div className='flex flex-col gap-4'>
-                  {game.sessions.sort((a, b) => b.number - a.number).map((session, i) => <>
+                  {game.sessions.sort((a, b) => b.number - a.number).map((session, i) => <div key={`gamecreateeditpage_sessionslist_session${session.number}`}>
                     {session.number == Number(sessionEditItem?.number) ? <div className='flex flex-col gap-2'>
                         <InputField 
                           key={`gamecreateeditpage_sessionedit_inputfield_name`}
@@ -233,7 +236,7 @@ const GameCreateEditPage: React.FC = () => {
                             label='Начало сессии'
                             error={sessionEditItem?.error}
                             value={sessionEditItem?.startTime} 
-                            entityEdit={{ handleFieldChange: (value) => setSessionEditItem({...sessionEditItem!, startTime: value }) }} // dayjs(value).utc().toISOString()
+                            entityEdit={{ handleFieldChange: (value) => setSessionEditItem({...sessionEditItem!, startTime: value, error: undefined }) }} // dayjs(value).utc().toISOString()
                           /> : <></>}
                           <div className='flex gap-4'>
                             <LuCheck className='icon-button-accented' size={24} onClick={async () => { if (await handleEditSession(i)) { setSessionEditItem(null) } else setSessionEditItem({...sessionEditItem!, error: 'Неверная дата' }) }} />
@@ -252,7 +255,7 @@ const GameCreateEditPage: React.FC = () => {
                         <Icon name='edit' className='icon-button-accented' onClick={() => { setSessionEditItem({...session, startTime: toDateTimeLocal(game.sessions[i+1]?.endTime) }) }} />
                       </div>
                     </div>}
-                  </>)}  
+                  </div>)}  
                 </div>}
                 <div>
 
@@ -261,7 +264,7 @@ const GameCreateEditPage: React.FC = () => {
 
               <ToggleSwitch
                 key={"gamesettings_alloweditrecord"}
-                label='Разрешить редактировать записи всем игрокам'
+                label='Разрешить редактировать записи других игроков'
                 labelPosition='right'
                 setValue={game.settings.allowAllEditRecords}
                 entityEdit={{ handleFieldChange: (value) => setGame({ ...game, settings: { ...game.settings, allowAllEditRecords: value as boolean } }) }}
