@@ -1,14 +1,14 @@
-import { useNavigate, useParams } from 'react-router-dom';
-import type { Char } from '../types/entities';
-import { useApi } from '../hooks/useApi';
-import type { CharPageData } from '../types/request';
 import { useEffect, useState } from 'react';
-import RichText from '../components/lib/RichText/RichText';
-import { RecordFeed } from '../components/RecordFeed';
-import { useAppSelector } from '../store';
-import { selectAuthorization } from '../reducers/PlayerSlice';
-import LoadingLabel from '../components/lib/LoadingLabel';
-import SubmitButton from '../components/lib/SubmitButton';
+import { useNavigate, useParams } from 'react-router-dom';
+import { RecordFeed } from '@/pages/Records/RecordFeed';
+import { useApi } from '@/hooks/useApi';
+import { selectAuthorization } from '@/reducers/PlayerSlice';
+import { useAppSelector } from '@/store';
+import type { Char } from '@/types/entities';
+import type { CharPageData } from '@/types/request';
+import LoadingLabel from '@lib/LoadingLabel';
+import RichText from '@lib/RichText/RichText';
+import SubmitButton from '@lib/SubmitButton';
 
 export const CharPage = () => {
   const { id } = useParams();
@@ -19,7 +19,7 @@ export const CharPage = () => {
 
   const auth = useAppSelector(selectAuthorization);
 
-  const { data, loading, error } = useApi.get<CharPageData>(`/char/${id}`, auth, [], newChar);
+  const { data, loading, error } = useApi.get<CharPageData>(`/chars/${id}`, auth, [], newChar);
 
   useEffect(() => {
     if (data) {
@@ -28,7 +28,7 @@ export const CharPage = () => {
   }, [data]);
 
   const openEditing = () => {
-    navigate(`/char/${id}/edit`);
+    navigate(`/chars/${id}/edit`);
   };
 
   return (

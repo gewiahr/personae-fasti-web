@@ -1,24 +1,23 @@
-import { RichInput } from '../components/lib/Inputs/RichInput'
-import { convertSuggestionDataToRender } from '../types/suggestion';
-import { useEffect, useState } from 'react';
-import { InputField } from '../components/lib/Inputs/InputField';
-import { useNavigate, useParams } from 'react-router-dom';
-import type { QuestPageData } from '../types/request';
-import { useApi } from '../hooks/useApi';
-import { api } from '../utils/api';
-import { NewQuestTask, type Quest, type QuestTask } from '../types/quest';
-import { useNotifications } from '../context/NotificationContext';
-import { SelectInput } from '../components/lib/Inputs/SelectInput';
-import { NumericInputInline } from '../components/lib/Inputs/NumericInputInline';
-import { enrichQuestFieldsMentions, enrichQuestTaskFieldsMentions, simplerQuestFieldsMentions, simplerQuestTaskFieldsMentions } from '../types/mention';
-import Icon from '../components/icons/Icon';
-import { selectAuthorization } from '../reducers/PlayerSlice';
-import { useAppSelector } from '../store';
-import { selectCurrentGameSuggestions } from '../reducers/CurrentGameSlice';
-import LoadingLabel from '../components/lib/LoadingLabel';
-import SubmitButton from '../components/lib/SubmitButton';
-import Divider from '../components/lib/Divider';
-
+import Icon from "@/components/icons/Icon";
+import { useNotifications } from "@/context/NotificationContext";
+import { useApi } from "@/hooks/useApi";
+import { selectCurrentGameSuggestions } from "@/reducers/CurrentGameSlice";
+import { selectAuthorization } from "@/reducers/PlayerSlice";
+import { useAppSelector } from "@/store";
+import { simplerQuestFieldsMentions, simplerQuestTaskFieldsMentions, enrichQuestFieldsMentions, enrichQuestTaskFieldsMentions } from "@/types/mention";
+import { type Quest, type QuestTask, NewQuestTask } from "@/types/quest";
+import type { QuestPageData } from "@/types/request";
+import { convertSuggestionDataToRender } from "@/types/suggestion";
+import { api } from "@/utils/api";
+import Divider from "@lib/Divider";
+import { InputField } from "@lib/Inputs/InputField";
+import { NumericInputInline } from "@lib/Inputs/NumericInputInline";
+import { RichInput } from "@lib/Inputs/RichInput";
+import { SelectInput } from "@lib/Inputs/SelectInput";
+import LoadingLabel from "@lib/LoadingLabel";
+import SubmitButton from "@lib/SubmitButton";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 
 const QuestEditPage = () => {
   const { id } = useParams();
@@ -79,17 +78,18 @@ const QuestEditPage = () => {
     const method = newQuest ? api.post : api.put;
     const { data, error } = await method<Quest>(endpoint, auth, { quest: enrichedQuest, tasks: enrichedTasks });
 
+    console.log(data?.id)
     if (error) {
       addNotification(`Ошибка: ${error.message}`, 'error');
     } else if (!error) {
-      navigate(data?.id ? `/quest/${data.id}` : '/quests');
+      navigate(data?.id ? `/quests/${data.id}` : '/quests');
     };
   };
 
   const deleteQuest = async () => {
     if (!quest) return;
 
-    const { error } = await api.delete(`/quest/${quest.id}`, auth);
+    const { error } = await api.delete(`/quests/${quest.id}`, auth);
 
     if (error) {
       addNotification(error.message, 'error');

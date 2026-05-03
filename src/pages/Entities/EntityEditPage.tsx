@@ -1,37 +1,37 @@
-import type { EntityCreateUpdate, EntityMetaData } from '../types/entities';
-import { RichInput } from '../components/lib/Inputs/RichInput'
-import { convertSuggestionDataToRender } from '../types/suggestion';
 import { useEffect, useState } from 'react';
-import { InputField } from '../components/lib/Inputs/InputField';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useApi } from '../hooks/useApi';
-import { enrichEntityFieldsMentions, simplerEntityFieldsMentions } from '../types/mention';
-import { api } from '../utils/api';
-import { ToggleSwitch } from '../components/lib/ToggleSwitch';
-import ImageUpload from '../components/lib/ImageUpload';
-import FoldableCategory from '../components/lib/FoldableCategory';
-import { SelectInput } from '../components/lib/Inputs/SelectInput';
-import { useAppSelector } from '../store';
-import { selectAuthorization, selectPlayerInfo } from '../reducers/PlayerSlice';
-import { selectCurrentGameInfo, selectCurrentGameSuggestions } from '../reducers/CurrentGameSlice';
-import SubmitButton from '../components/lib/SubmitButton';
-import LoadingLabel from '../components/lib/LoadingLabel';
+import { useApi } from '@/hooks/useApi';
+import { selectCurrentGameSuggestions, selectCurrentGameInfo } from '@/reducers/CurrentGameSlice';
+import { selectAuthorization, selectPlayerInfo } from '@/reducers/PlayerSlice';
+import { useAppSelector } from '@/store';
+import { simplerEntityFieldsMentions, enrichEntityFieldsMentions } from '@/types/mention';
+import { convertSuggestionDataToRender } from '@/types/suggestion';
+import { api } from '@/utils/api';
+import FoldableCategory from '@lib/FoldableCategory';
+import ImageUpload from '@lib/ImageUpload';
+import { InputField } from '@lib/Inputs/InputField';
+import { RichInput } from '@lib/Inputs/RichInput';
+import { SelectInput } from '@lib/Inputs/SelectInput';
+import LoadingLabel from '@lib/LoadingLabel';
+import SubmitButton from '@lib/SubmitButton';
+import { ToggleSwitch } from '@lib/ToggleSwitch';
+import { useEntityContext } from './EntityLayout';
+import type { EntityMetaDataTypeMap } from '@/types/entities';
 
-interface EntityEditPageProps {
-  metaData: EntityMetaData;
-};
-
-const EntityEditPage = <T extends EntityCreateUpdate>({ metaData }: EntityEditPageProps) => {
+const EntityEditPage = () => {
   const { id } = useParams();
-  const newEntity = !id;
   const navigate = useNavigate();
+  const { entityType, metaData } = useEntityContext();
+   const newEntity = !id;
+
+  type EntityModel = EntityMetaDataTypeMap[typeof entityType]['edit'];
 
   const auth = useAppSelector(selectAuthorization);
   const suggestionData = useAppSelector(selectCurrentGameSuggestions);
   const player = useAppSelector(selectPlayerInfo);
   const game = useAppSelector(selectCurrentGameInfo);
   
-  const [entity, setEntity] = useState<T | null>(newEntity ? {} as T : null);
+  const [entity, setEntity] = useState<EntityModel | null>(newEntity ? {} as EntityModel : null);
   const { data: pageData, loading, error } = useApi.get(`/${metaData.EntityType}/${id}`, auth, [], newEntity);
   const [hidden, setHidden] = useState<boolean>(entity && entity?.hidden || false);
 
@@ -48,7 +48,7 @@ const EntityEditPage = <T extends EntityCreateUpdate>({ metaData }: EntityEditPa
     setEntity(prev => prev ? { ...prev, [field]: value } : null);
   };
 
-  const saveEdited = async (editedEntity: T | null) => {
+  const saveEdited = async (editedEntity: EntityModel | null) => {
     if (!editedEntity || !suggestionData) return;
 
     var enrichedEntity = enrichEntityFieldsMentions(editedEntity, metaData, convertSuggestionDataToRender(suggestionData));
@@ -57,9 +57,9 @@ const EntityEditPage = <T extends EntityCreateUpdate>({ metaData }: EntityEditPa
     const endpoint = `/${metaData.EntityType}`;
     const method = newEntity ? api.post : api.put;
 
-    const { data, error } = await method<T>(endpoint, auth, enrichedEntity);
+    const { data, error } = await method<EntityModel>(endpoint, auth, enrichedEntity);
     if (!error) {
-      navigate(data?.id ? `/${metaData.EntityType}/${data.id}` : `/${metaData.EntityType}`);
+      navigate(data?.id ? `/${metaData.EntityTypePl}/${data.id}` : `/${metaData.EntityTypePl}`);
     }
   };
 

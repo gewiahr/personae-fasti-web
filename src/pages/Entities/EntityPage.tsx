@@ -1,30 +1,30 @@
-import { useNavigate, useParams } from 'react-router-dom';
-import type { Entity, EntityMetaData } from '../types/entities';
-import { useApi } from '../hooks/useApi';
-import { useEffect, useState } from 'react';
-import RichText from '../components/lib/RichText/RichText';
-import { RecordFeed } from '../components/RecordFeed';
-import useImage from '../hooks/useImage';
-import { LoadingPage } from './LoadingPage';
-import { ErrorPage } from './ErrorPage';
-import Hyperlink from '../components/lib/RichText/Hyperlink';
-import type { EntityInfo } from '../types/request';
-import { useAppSelector } from '../store';
-import { selectAuthorization } from '../reducers/PlayerSlice';
-import SubmitButton from '../components/lib/SubmitButton';
+import { RecordFeed } from "@/pages/Records/RecordFeed";
+import { useApi } from "@/hooks/useApi";
+import useImage from "@/hooks/useImage";
+import { selectAuthorization } from "@/reducers/PlayerSlice";
+import { useAppSelector } from "@/store";
+import type { EntityInfo } from "@/types/request";
+import Hyperlink from "@lib/RichText/Hyperlink";
+import RichText from "@lib/RichText/RichText";
+import SubmitButton from "@lib/SubmitButton";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { ErrorPage } from "../ErrorPage";
+import { LoadingPage } from "../LoadingPage";
+import { useEntityContext } from "./EntityLayout";
+import type { EntityType, EntityMetaDataTypeMap } from "@/types/entities";
 
-interface EntityPageProp {
-  metaData: EntityMetaData;
-}
-
-export const EntityPage = <T extends Entity>({ metaData }: EntityPageProp) => {
+export const EntityPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { entityType, metaData } = useEntityContext();
   const newEntity = id ? false : true;
+
+  type EntityModel = EntityMetaDataTypeMap[typeof entityType]['page'];
 
   const { image, ratio } = useImage({ entityType: metaData.EntityType, entityID: id || "" });
 
-  const [entity, setEntity] = useState<T>({} as T);
+  const [entity, setEntity] = useState<EntityModel>({} as EntityModel);
 
   const auth = useAppSelector(selectAuthorization);
   const { data, loading, error } = useApi.get(`/${metaData.EntityType}/${id}`, auth, [], newEntity);
@@ -36,7 +36,7 @@ export const EntityPage = <T extends Entity>({ metaData }: EntityPageProp) => {
   }, [data]);
 
   const openEditing = () => {
-    navigate(`/${metaData.EntityType}/${id}/edit`);
+    navigate(`/${metaData.EntityTypePl}/${id}/edit`);
   };
 
   return (
@@ -75,12 +75,12 @@ export const EntityPage = <T extends Entity>({ metaData }: EntityPageProp) => {
           <div className='mt-6'>
             {data.parent != null && <>
               <p>
-                Находится в <Hyperlink key={metaData.EntityType + data.parent.id} id={data.parent.id} type={metaData.EntityType} mentionText={data.parent.name} />.
+                Находится в <Hyperlink key={metaData.EntityType + data.parent.id} id={data.parent.id} type={metaData.EntityType as EntityType} mentionText={data.parent.name} />.
               </p>
             </>}
             {data.includes.length > 0 && <>
               <p>
-                В {entity.name} наход{data.includes.length > 1 ? "ятся" : "ится"} {data.includes.map((el: EntityInfo, i: number) => (<Hyperlink key={metaData.EntityType + el.id} id={'' + el.id} type={metaData.EntityType} mentionText={i === 0 ? `${el.name}` : `, ${el.name}`} />))}.
+                В {entity.name} наход{data.includes.length > 1 ? "ятся" : "ится"} {data.includes.map((el: EntityInfo, i: number) => (<Hyperlink key={metaData.EntityType + el.id} id={'' + el.id} type={metaData.EntityType as EntityType} mentionText={i === 0 ? `${el.name}` : `, ${el.name}`} />))}.
               </p>
             </>}
           </div>

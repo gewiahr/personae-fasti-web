@@ -1,25 +1,21 @@
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useApi } from '../hooks/useApi';
-import { useEffect, useState } from 'react';
-import RichText from '../components/lib/RichText/RichText';
-import { RecordFeed } from '../components/RecordFeed';
-import { QuestTaskType, type Quest, type QuestTask } from '../types/quest';
-import Icon from '../components/icons/Icon';
-import { ToggleSwitch } from '../components/lib/ToggleSwitch';
-import { NumericInputInline } from '../components/lib/Inputs/NumericInputInline';
-import { useNotifications } from '../context/NotificationContext';
-import { api } from '../utils/api';
-import { useAppSelector } from '../store';
-import { selectAuthorization } from '../reducers/PlayerSlice';
-import LoadingLabel from '../components/lib/LoadingLabel';
-import SubmitButton from '../components/lib/SubmitButton';
-import Divider from '../components/lib/Divider';
+import Icon from '@/components/icons/Icon';
+import { useNotifications } from '@/context/NotificationContext';
+import { useApi } from '@/hooks/useApi';
+import { selectAuthorization } from '@/reducers/PlayerSlice';
+import { useAppSelector } from '@/store';
+import { QuestTaskType, type Quest, type QuestTask } from '@/types/quest';
+import { api } from '@/utils/api';
+import Divider from '@lib/Divider';
+import { NumericInputInline } from '@lib/Inputs/NumericInputInline';
+import LoadingLabel from '@lib/LoadingLabel';
+import RichText from '@lib/RichText/RichText';
+import SubmitButton from '@lib/SubmitButton';
+import { ToggleSwitch } from '@lib/ToggleSwitch';
+import { RecordFeed } from '@/pages/Records/RecordFeed';
 
-type QuestPageProp = {
-
-}
-
-export const QuestPage: React.FC<QuestPageProp> = () => {
+export const QuestPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const newQuest = id ? false : true;
@@ -41,7 +37,7 @@ export const QuestPage: React.FC<QuestPageProp> = () => {
   }, [data]);
 
   const openEditing = () => {
-    navigate(`/quest/${id}/edit`);
+    navigate(`/quests/${id}/edit`);
   };
 
   const editTasks = () => {

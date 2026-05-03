@@ -1,22 +1,43 @@
 import { Route, Routes } from 'react-router-dom'
-import { RecordPage } from './pages/RecordPage';
-import { CharsList } from './components/CharsList';
-// import { CharPage } from './pages/CharPage';
-// import CharEditPage from './pages/CharEditPage';
-import EntityPage from './pages/EntityPage';
-import { EntitiesList } from './components/EntitiesList';
-import { CharMetaData, LocationMetaData, NPCMetaData } from './types/entities';
-import EntityEditPage from './pages/EntityEditPage';
-import SettingsPage from './pages/SettingsPage';
-import QuestPage from './pages/QuestPage';
-import { QuestsList } from './components/QuestsList';
-import QuestEditPage from './pages/QuestEditPage';
-import GameCreateEditPage from './pages/GameCreateEditPage';
+import EntityList from '@/pages/Entities/EntityList'
+import EntityPage from '@/pages/Entities/EntityPage'
+import QuestList from '@/pages/Quests/QuestList'
+import QuestPage from '@/pages/Quests/QuestPage'
+import { RecordPage } from '@/pages/Records/RecordPage'
+import SettingsPage from '@/pages/Settings/SettingsPage'
+import EntityLayout from './pages/Entities/EntityLayout'
+import EntityEditPage from './pages/Entities/EntityEditPage'
+import QuestEditPage from './pages/Quests/QuestEditPage'
+import GameCreateEditPage from './pages/Games/GameCreateEditPage'
 
 const AppRouter = () => {
   return (
     <Routes>
-      <Route path="/" element={<RecordPage key={1} />} />
+        <Route path="/" element={<RecordPage />} />
+
+        <Route path=":entityType" element={<EntityLayout />}>
+          <Route index element={<EntityList />} />
+          <Route path=":id" element={<EntityPage />} />
+          <Route path="new" element={<EntityEditPage />} />
+          <Route path=":id/edit" element={<EntityEditPage />} />
+        </Route>
+
+        <Route path="quests"> {/* element={<QuestLayout />}> */}
+          <Route index element={<QuestList />} />
+          <Route path=":id" element={<QuestPage />} />
+          <Route path="new" element={<QuestEditPage />} />
+          <Route path=":id/edit" element={<QuestEditPage />} />
+        </Route>
+
+        <Route path="games"> {/* element={<GameLayout />}> */}
+          {/* <Route path=":id" element={<GamePage />} /> */}
+          <Route path="new" element={<GameCreateEditPage />} />
+          <Route path=":id/edit" element={<GameCreateEditPage />} />
+        </Route>
+
+        <Route path="settings" element={<SettingsPage />} />
+
+      {/* <Route path="/" element={<RecordPage key={1} />} />
 
       <Route path="/chars" element={<CharsList key={"chars"} />} />
       <Route path="/char/:id" element={<EntityPage key={11} metaData={CharMetaData} />} />
@@ -41,7 +62,7 @@ const AppRouter = () => {
       <Route path="/game/:id" element={<GameCreateEditPage key={400001} />} />
       <Route path="/game/new" element={<GameCreateEditPage key={400002} />} />
 
-      <Route path="settings" element={<SettingsPage key={999} />} />
+      <Route path="settings" element={<SettingsPage key={999} />} /> */}
     </Routes>
   )
 }

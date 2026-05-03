@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import { RichInput } from './lib/Inputs/RichInput';
-import { enrichMentionInput } from '../types/mention';
-import { ToggleSwitch } from './lib/ToggleSwitch';
-import { SelectInput } from './lib/Inputs/SelectInput';
-import { useAppDispatch, useAppSelector } from '../store';
-import { postNewRecord, selectCurrentGame } from '../reducers/CurrentGameSlice';
-import { selectAuthorization, selectPlayerInfo } from '../reducers/PlayerSlice';
-import { convertSuggestionDataToRender } from '../types/suggestion';
-import SubmitButton from './lib/SubmitButton';
 import { LuChevronDown, LuChevronUp } from 'react-icons/lu';
+import { selectCurrentGame, postNewRecord } from '@/reducers/CurrentGameSlice';
+import { selectAuthorization, selectPlayerInfo } from '@/reducers/PlayerSlice';
+import { useAppDispatch, useAppSelector } from '@/store';
+import { enrichMentionInput } from '@/types/mention';
+import { convertSuggestionDataToRender } from '@/types/suggestion';
+import { RichInput } from '@lib/Inputs/RichInput';
+import { SelectInput } from '@lib/Inputs/SelectInput';
+import SubmitButton from '@lib/SubmitButton';
+import { ToggleSwitch } from '@lib/ToggleSwitch';
 
 type RecordInputProps = {
 

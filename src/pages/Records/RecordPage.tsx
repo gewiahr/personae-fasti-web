@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
-import { RecordFeed } from '../components/RecordFeed';
-import { RecordInput } from '../components/RecordInput';
-import { useAppDispatch, useAppSelector } from '../store';
-import { loadCurrentGameQuests, loadCurrentGameRecords, loadCurrentGameSuggestions, selectCurrentGame } from '../reducers/CurrentGameSlice';
-import { selectAuthorization } from '../reducers/PlayerSlice';
+import { useEffect } from "react";
+import { RecordFeed } from "./RecordFeed";
+import { RecordInput } from "./RecordInput";
+import { selectCurrentGame, loadCurrentGameRecords, loadCurrentGameQuests, loadCurrentGameSuggestions } from "@/reducers/CurrentGameSlice";
+import { selectAuthorization } from "@/reducers/PlayerSlice";
+import { useAppDispatch, useAppSelector } from "@/store";
+
 
 export const RecordPage = () => {
   const dispatch = useAppDispatch();

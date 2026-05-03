@@ -1,21 +1,22 @@
-import { useEffect, useState } from 'react';
-import { SelectInput } from '../components/lib/Inputs/SelectInput';
-import type { GameFullInfo, GameInfo } from '../types/request';
-import { api } from '../utils/api';
-import { useNavigate } from 'react-router-dom';
-import { useNotifications } from '../context/NotificationContext';
-import FoldableCategory from '../components/lib/FoldableCategory';
-import { useAppDispatch, useAppSelector } from '../store';
-import { loadPlayerGames, selectAuthorization, selectPlayerGames, selectPlayerInfo, selectPlayerInvites } from '../reducers/PlayerSlice';
-import { changeCurrentGame, selectCurrentGame, startNewSession } from '../reducers/CurrentGameSlice';
-import SubmitButton from '../components/lib/SubmitButton';
-import CopyText from '../components/lib/CopyText';
-import Icon from '../components/icons/Icon';
-import ConfirmButton from '../components/lib/ConfirmButton';
-import { LuTrash2 } from 'react-icons/lu';
+import Icon from "@/components/icons/Icon";
+import { useNotifications } from "@/context/NotificationContext";
+import { selectCurrentGame, changeCurrentGame, startNewSession } from "@/reducers/CurrentGameSlice";
+import { selectAuthorization, selectPlayerInfo, selectPlayerGames, selectPlayerInvites, loadPlayerGames } from "@/reducers/PlayerSlice";
+import { useAppDispatch, useAppSelector } from "@/store";
+import type { GameFullInfo, GameInfo } from "@/types/request";
+import { api } from "@/utils/api";
+import ConfirmButton from "@lib/ConfirmButton";
+import CopyText from "@lib/CopyText";
+import FoldableCategory from "@lib/FoldableCategory";
+import { SelectInput } from "@lib/Inputs/SelectInput";
+import SubmitButton from "@lib/SubmitButton";
+import { useState, useEffect } from "react";
+import { LuTrash2 } from "react-icons/lu";
+import { useNavigate } from "react-router-dom";
+
 
 const SettingsPage = () => {
-  const navigate = useNavigate();;
+  const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
   const auth = useAppSelector(selectAuthorization);
@@ -114,10 +115,10 @@ const SettingsPage = () => {
               <h2 className='text-xl'>{game.title}</h2>}
             </div>}
             <div className='flex gap-2 max-xs:flex-1 xs:justify-end'>
-              {game?.gmID === player?.id && <SubmitButton key={`settingspage_submitbutton_editgame`} className='flex' onClick={() => navigate(`/game/${game ? game.id : 0}`)}>
+              {game?.gmID === player?.id && <SubmitButton key={`settingspage_submitbutton_editgame`} className='flex' onClick={() => navigate(`/games/${game ? game.id : 0}/edit`)}>
                 Редактировать
               </SubmitButton>}
-              <SubmitButton key={`settingspage_submitbutton_newgame`} onClick={() => navigate("/game/new")}>
+              <SubmitButton key={`settingspage_submitbutton_newgame`} onClick={() => navigate("/games/new")}>
                 Создать
               </SubmitButton>
             </div>

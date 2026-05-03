@@ -1,17 +1,18 @@
-// components/RecordEdit.tsx
 import { useEffect, useState } from 'react';
-import { enrichMentionInput, simplifyMentionInput } from '../types/mention';
-import { Modal } from './lib/Modal';
-import { RichInput } from "./lib/Inputs/RichInput";
-import type { SuggestionEntityRender } from '../types/suggestion';
-import type { GameInfo, PlayerInfo, Record } from "../types/request";
-import { ToggleSwitch } from './lib/ToggleSwitch';
-import { useNotifications } from '../context/NotificationContext';
-import { SelectInput } from './lib/Inputs/SelectInput';
-import { useAppDispatch, useAppSelector } from '../store';
-import { deleteRecord, editRecord, loadCurrentGameQuests, selectCurrentGameQuests } from '../reducers/CurrentGameSlice';
-import { selectAuthorization } from '../reducers/PlayerSlice';
-import SubmitButton from './lib/SubmitButton';
+import { useNotifications } from '@/context/NotificationContext';
+import { selectCurrentGameQuests, loadCurrentGameQuests, editRecord, deleteRecord } from '@/reducers/CurrentGameSlice';
+import { selectAuthorization } from '@/reducers/PlayerSlice';
+import { useAppDispatch, useAppSelector } from '@/store';
+import { enrichMentionInput, simplifyMentionInput } from '@/types/mention';
+import type { PlayerInfo, GameInfo } from '@/types/request';
+import type { SuggestionEntityRender } from '@/types/suggestion';
+import { RichInput } from '@lib/Inputs/RichInput';
+import { SelectInput } from '@lib/Inputs/SelectInput';
+import { Modal } from '@lib/Modal';
+import SubmitButton from '@lib/SubmitButton';
+import { ToggleSwitch } from '@lib/ToggleSwitch';
+import { type Record } from '@/types/request'
+
 
 interface RecordEditProps {
   record: Record;

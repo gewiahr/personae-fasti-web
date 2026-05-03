@@ -1,20 +1,19 @@
-import { EntityCard } from './EntityCard';
-import type { EntityMetaData } from '../types/entities';
-import { useEffect, useState } from 'react';
-import type { EntityInfo } from '../types/request';
-import { api } from '../utils/api';
-import { useAppSelector } from '../store';
-import { selectAuthorization } from '../reducers/PlayerSlice';
-import type { ApiError } from '../types/api';
-import { ErrorPage } from '../pages/ErrorPage';
-import LoadingLabel from './lib/LoadingLabel';
-import LinkButton from './lib/LinkButton';
+import { selectAuthorization } from "@/reducers/PlayerSlice";
+import { useAppSelector } from "@/store";
+import type { ApiError } from "@/types/api";
+import type { EntityInfo } from "@/types/request";
+import { api } from "@/utils/api";
+import LinkButton from "@lib/LinkButton";
+import LoadingLabel from "@lib/LoadingLabel";
+import { useState, useEffect } from "react";
+import { ErrorPage } from "../ErrorPage";
+import EntityCard from "./EntityCard";
+import { useEntityContext } from "./EntityLayout";
+import CharList from "../Chars/CharList";
 
-interface EntitiesListProp {
-  metaData: EntityMetaData;
-}
-
-export const EntitiesList = ({ metaData }: EntitiesListProp) => {
+const EntityList = () => {
+  const { entityType, metaData } = useEntityContext();
+  
   const [entities, setEntities] = useState<EntityInfo[]>([]);
   const [error, setError] = useState<ApiError | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -39,11 +38,14 @@ export const EntitiesList = ({ metaData }: EntitiesListProp) => {
 
   if (error) return <ErrorPage error={error} entityMeta={metaData} />
 
+  /// ## Adapt Char list page to entities list ## ///
+  if (entityType === 'chars') return <CharList />
+
   return (
     <div className="max-w-4xl mx-auto p-4">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">{metaData.EntityNamePl}</h1>
-        <LinkButton to={`/${metaData.EntityType}/new`} >
+        <LinkButton to={`/${metaData.EntityTypePl}/new`} >
           Добавить
         </LinkButton>
       </div>
@@ -67,3 +69,5 @@ export const EntitiesList = ({ metaData }: EntitiesListProp) => {
     </div>
   );
 };
+
+export default EntityList;

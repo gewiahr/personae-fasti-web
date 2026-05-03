@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import GameCreateEditPage from '../pages/GameCreateEditPage';
-import SubmitButton from '../components/lib/SubmitButton';
 import { /* useAppDispatch ,*/ useAppSelector } from '../store';
 import { /* selectAuthorization ,*/ selectPlayer } from '../reducers/PlayerSlice';
-import CopyText from '../components/lib/CopyText';
+import GameCreateEditPage from '@/pages/Games/GameCreateEditPage';
+import CopyText from '@lib/CopyText';
+import SubmitButton from '@lib/SubmitButton';
 
 type AuthGateNoGameProps = {
 
@@ -38,7 +38,7 @@ const AuthGateNoGame: React.FC<AuthGateNoGameProps> = ({ }) => {
             <p className='text-2xl not-italic'>Вы ещё не участвуете ни в одной игре</p>
             <div>
               <p>Создайте игру и пригласите друзей</p>
-              <SubmitButton className='mt-3' onClick={() => switchNewGame(true)} >Создать игру</SubmitButton>
+              <SubmitButton className='mt-3' onClick={() => switchNewGame(true)}>Создать игру</SubmitButton>
             </div>
             <div className='flex items-center justify-center gap-2'>
               <div className={`h-px bg-gray-300 w-[40%]`} />

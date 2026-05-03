@@ -1,5 +1,6 @@
 import React from 'react';
 import Hyperlink from './Hyperlink';
+import type { EntityType } from '@/types/entities';
 //import { SuggestionData } from "../types/suggestion";
 
 type RichTextProps = {
@@ -24,10 +25,10 @@ const RichText = ({ text, uid, fullWidth = false, className='' }: RichTextProps)
       }
 
       const [fullMatch, type, id, mentionText] = match;
-  
+      
       // Push the link component
       elements.push(
-        <Hyperlink key={`richtext-${uid}_hyperlink-${type}-${id}_match-${match.index}`} id={id} type={type} mentionText={mentionText}/>
+        <Hyperlink key={`richtext-${uid}_hyperlink-${type}-${id}_match-${match.index}`} id={id} type={type as EntityType} mentionText={mentionText}/>
       );
 
       lastIndex = match.index + fullMatch.length;

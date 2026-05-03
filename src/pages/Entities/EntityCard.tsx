@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import type { EntityMetaData } from '../types/entities';
-import type { EntityInfo } from '../types/request';
-import Icon from './icons/Icon';
+import Icon from '@/components/icons/Icon';
+import type { EntityMetaData } from '@/types/entities';
+import type { EntityInfo } from '@/types/request';
 
 type EntityCardProps = {
   entity: EntityInfo;
@@ -9,7 +9,7 @@ type EntityCardProps = {
   labelText?: string;
 };
 
-export const EntityCard = ({ entity, metaData, labelText }: EntityCardProps) => {
+const EntityCard = ({ entity, metaData, labelText }: EntityCardProps) => {
 
   const truncateDescription = (text: string, maxLength: number = 100) => {
     if (text.length <= maxLength) return text;
@@ -18,7 +18,7 @@ export const EntityCard = ({ entity, metaData, labelText }: EntityCardProps) => 
 
   return (
     <Link
-      to={`/${metaData.EntityType}/${entity.id}`}
+      to={`/${metaData.EntityTypePl}/${entity.id}`}
       className="entity-card-link-container"
     >
       <div className="flex flex-col h-full p-4">
@@ -74,3 +74,5 @@ export const EntityCard = ({ entity, metaData, labelText }: EntityCardProps) => 
     </Link>
   );
 };
+
+export default EntityCard;

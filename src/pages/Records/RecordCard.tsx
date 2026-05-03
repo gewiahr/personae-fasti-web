@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
-import type { Record } from '../types/request';
-import Icon from './icons/Icon';
-import RichText from './lib/RichText/RichText';
+import Icon from '@/components/icons/Icon';
+import RichText from '@lib/RichText/RichText';
+import { type Record } from '@/types/request'
+
 
 interface RecordCardProps {
   record: Record;
@@ -50,7 +51,7 @@ const RecordCard = ({ record, label="", accented=false, editable=false, showQues
       </div>
 
       {showQuest && record.quest && 
-        <Link to={`/quest/${record.quest.id}`} >
+        <Link to={`/quests/${record.quest.id}`} >
           <div className={`record-card-quest-container ${accented ? 'record-card-quest-container-accented' : 'record-card-quest-container-dimmed'}`} >
             Квест: {record.quest.name}  
           </div>

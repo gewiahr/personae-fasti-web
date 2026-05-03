@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { InputField } from '../components/lib/Inputs/InputField';
-import { api } from './api';
-import { useLocalStorage } from '../hooks/useLocalStorage';
-import type { PlayerFullInfo } from '../types/request';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '../store';
-import { selectAuthorization, selectPlayerInfo } from '../reducers/PlayerSlice';
+import { api } from './api';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { selectAuthorization, selectPlayerInfo } from '@/reducers/PlayerSlice';
+import { useAppSelector } from '@/store';
+import type { PlayerFullInfo } from '@/types/request';
+import { InputField } from '@lib/Inputs/InputField';
 
 type AuthGateRegUsernameInputState = 'check' | 'accept' | 'loading';
 type AuthGateRegUsernameInputCheck = 'none' | 'valid' | 'invalid';

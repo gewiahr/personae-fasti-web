@@ -1,17 +1,17 @@
-import { EntityCard } from './EntityCard';
-import type { CharInfo } from '../types/request';
-import { CharMetaData } from '../types/entities';
-import { useEffect, useState } from 'react';
-import { selectAuthorization } from '../reducers/PlayerSlice';
-import { useAppSelector } from '../store';
-import { selectCurrentGamePlayers } from '../reducers/CurrentGameSlice';
-import type { ApiError } from '../types/api';
-import { ErrorPage } from '../pages/ErrorPage';
-import { api } from '../utils/api';
-import LoadingLabel from './lib/LoadingLabel';
-import LinkButton from './lib/LinkButton';
+import { selectCurrentGamePlayers } from "@/reducers/CurrentGameSlice";
+import { selectAuthorization } from "@/reducers/PlayerSlice";
+import { useAppSelector } from "@/store";
+import type { ApiError } from "@/types/api";
+import { CharMetaData } from "@/types/entities";
+import type { CharInfo } from "@/types/request";
+import { api } from "@/utils/api";
+import LinkButton from "@lib/LinkButton";
+import LoadingLabel from "@lib/LoadingLabel";
+import { useState, useEffect } from "react";
+import EntityCard from "../Entities/EntityCard";
+import { ErrorPage } from "../ErrorPage";
 
-export const CharsList = () => {
+const CharList = () => {
   const auth = useAppSelector(selectAuthorization);
   const players = useAppSelector(selectCurrentGamePlayers);
 
@@ -41,7 +41,7 @@ export const CharsList = () => {
     <div className="max-w-4xl mx-auto p-4">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Герои</h1>
-        <LinkButton to="/char/new">
+        <LinkButton to="/chars/new">
           Добавить
         </LinkButton>
       </div>
@@ -63,3 +63,5 @@ export const CharsList = () => {
     </div>
   );
 };
+
+export default CharList;

@@ -1,10 +1,12 @@
-interface HyperlinkProps {
+import { entityToMetaData, type EntityType } from "@/types/entities";
+
+type HyperlinkProps = {
   id: string,
-  type: string,
+  type: EntityType,
   mentionText: string
 }
 
-const Hyperlink = ({ id, type, mentionText }: HyperlinkProps) => {
+const Hyperlink: React.FC<HyperlinkProps> = ({ id, type, mentionText }) => {
   let typeColor = "";
   switch (type) {
     case "char":
@@ -20,16 +22,13 @@ const Hyperlink = ({ id, type, mentionText }: HyperlinkProps) => {
 
   return (
     <a
-      key={`${type}-${id}`}
-      href={`/${type}/${id}`}
-      //className="text-blue-500 text-sans mention-link hover:underline"
-      //className={`bg-${typeColor}-800 rounded px-1 py-0.5`}
+      key={`hyperlink-${type}-${id}`}
+      href={`/${entityToMetaData[type].metaData}/${id}`}
       className={`${typeColor} text-sans mention-link hover:underline`}
-      onClick={(e) => {
-        e.preventDefault();
-        // Optional: Add navigation logic here
-        window.location.href = `/${type}/${id}`;
-      }}
+      // onClick={(e) => {
+      //   e.preventDefault();
+      //   window.location.href = `/${entityConfig[type].EntityTypePl}/${id}`;
+      // }}
     >
       {mentionText}
     </a>

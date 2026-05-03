@@ -1,14 +1,15 @@
-import type { Record, Session } from '../types/request';
-import RecordCard from './RecordCard';
-import { useEffect, useState } from 'react';
-import RecordEdit from './RecordEdit';
-import { useAppDispatch, useAppSelector } from '../store';
-import { loadCurrentGameRecords, selectCurrentGame } from '../reducers/CurrentGameSlice';
-import { selectAuthorization, selectPlayerInfo } from '../reducers/PlayerSlice';
-import { convertSuggestionDataToRender } from '../types/suggestion';
-import { selectIsLoadingNew } from '../reducers/LoadingSlice';
-import LoadingLabel from './lib/LoadingLabel';
-import Divider from './lib/Divider';
+import { selectCurrentGame, loadCurrentGameRecords } from "@/reducers/CurrentGameSlice";
+import { selectIsLoadingNew } from "@/reducers/LoadingSlice";
+import { selectAuthorization, selectPlayerInfo } from "@/reducers/PlayerSlice";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { convertSuggestionDataToRender } from "@/types/suggestion";
+import Divider from "@lib/Divider";
+import LoadingLabel from "@lib/LoadingLabel";
+import { useState, useEffect } from "react";
+import type { Record, Session } from '@/types/request'
+import RecordCard from "./RecordCard";
+import RecordEdit from "./RecordEdit";
+
 
 type RecordFeedProps = {
   records: Record[];

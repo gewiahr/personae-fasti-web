@@ -1,13 +1,13 @@
-import { QuestCard } from './QuestCard';
-import { useAppDispatch, useAppSelector } from '../store';
-import { selectAuthorization } from '../reducers/PlayerSlice';
-import { loadCurrentGameQuests, selectCurrentGameQuests } from '../reducers/CurrentGameSlice';
 import { useEffect } from 'react';
-import { selectIsLoadingNew } from '../reducers/LoadingSlice';
-import LoadingLabel from './lib/LoadingLabel';
-import LinkButton from './lib/LinkButton';
+import { QuestCard } from './QuestCard';
+import { selectCurrentGameQuests, loadCurrentGameQuests } from '@/reducers/CurrentGameSlice';
+import { selectIsLoadingNew } from '@/reducers/LoadingSlice';
+import { selectAuthorization } from '@/reducers/PlayerSlice';
+import { useAppDispatch, useAppSelector } from '@/store';
+import LinkButton from '@lib/LinkButton';
+import LoadingLabel from '@lib/LoadingLabel';
 
-export const QuestsList = () => {
+const QuestList = () => {
   const dispatch = useAppDispatch();
   const auth = useAppSelector(selectAuthorization);
   const quests = useAppSelector(selectCurrentGameQuests);
@@ -21,7 +21,7 @@ export const QuestsList = () => {
     <div className="max-w-4xl mx-auto p-4">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Квесты</h1>
-        <LinkButton to="/quest/new" >
+        <LinkButton to="/quests/new" >
           Добавить
         </LinkButton>
       </div>
@@ -42,3 +42,5 @@ export const QuestsList = () => {
     </div>
   );
 };
+
+export default QuestList

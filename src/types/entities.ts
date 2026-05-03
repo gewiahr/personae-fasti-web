@@ -171,7 +171,7 @@ export const LocationMetaData: EntityMetaData = {
     },
     {
       FieldName: 'title',
-      FieldLabel: 'Заглавие ',
+      FieldLabel: 'Заглавие',
       Type: 'label',
       EditType: 'input',
     },
@@ -183,3 +183,25 @@ export const LocationMetaData: EntityMetaData = {
     }
   ]
 };
+
+export type EntityType = 'char' | 'npc' | 'location';
+
+export type EntityMetaDataType = keyof typeof entityConfig;
+
+export interface EntityMetaDataTypeMap {
+  chars: { page: Char, edit: CharCreateUpdate, suggestion: 'char' };
+  npcs: { page: NPC, edit: NPCCreateUpdate, suggestion: 'npc' };
+  locations: { page: Location, edit: LocationCreateUpdate, suggestion: 'location' };
+};
+
+export const entityConfig = {
+  chars: CharMetaData,
+  npcs: NPCMetaData,
+  locations: LocationMetaData,
+};
+
+export const entityToMetaData = {
+  char: { metaData: 'chars' as EntityMetaDataType },
+  npc: { metaData: 'npcs' as EntityMetaDataType },
+  location: { metaData: 'locations' as EntityMetaDataType },
+}
