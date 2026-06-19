@@ -5,10 +5,10 @@ import QuestList from '@/pages/Quests/QuestList'
 import QuestPage from '@/pages/Quests/QuestPage'
 import { RecordPage } from '@/pages/Records/RecordPage'
 import SettingsPage from '@/pages/Settings/SettingsPage'
-import EntityLayout from './pages/Entities/EntityLayout'
-import EntityEditPage from './pages/Entities/EntityEditPage'
-import QuestEditPage from './pages/Quests/QuestEditPage'
-import GameCreateEditPage from './pages/Games/GameCreateEditPage'
+import EntityLayout from '@/pages/Entities/EntityLayout'
+import EntityEditPage from '@/pages/Entities/EntityEditPage'
+import QuestEditPage from '@/pages/Quests/QuestEditPage'
+import GameCreateEditPage from '@/pages/Games/GameCreateEditPage'
 
 const AppRouter = () => {
   return (

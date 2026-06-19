@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { LuChevronDown, LuChevronUp } from 'react-icons/lu';
+import { LuChevronDown } from 'react-icons/lu';
 import { selectCurrentGame, postNewRecord } from '@/reducers/CurrentGameSlice';
-import { selectAuthorization, selectPlayerInfo } from '@/reducers/PlayerSlice';
+import { selectAuthorization, selectPlayerExt } from '@/reducers/PlayerSlice';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { enrichMentionInput } from '@/types/mention';
 import { convertSuggestionDataToRender } from '@/types/suggestion';
@@ -26,10 +26,9 @@ export const RecordInput: React.FC<RecordInputProps> = () => {
   const dispatch = useAppDispatch();
   const auth = useAppSelector(selectAuthorization);
   const { game, quests, suggestions } = useAppSelector(selectCurrentGame);
-  const player = useAppSelector(selectPlayerInfo);
+  const playerExt = useAppSelector(selectPlayerExt);
 
-  const showPostSettings = (quests && quests.length > 0) || (player?.id === game?.gmID);
-
+  const showPostSettings = (quests && quests.length > 0) || (playerExt === game?.ext);
 
   useEffect(() => {
   
@@ -37,7 +36,7 @@ export const RecordInput: React.FC<RecordInputProps> = () => {
 
   const handleSubmit = () => {
     if (input.trim() === '' || !suggestions) return;
-    if (!game || !player) return;
+    if (!game || !playerExt) return;
 
     setIsSubmitting(true);
 
@@ -45,8 +44,6 @@ export const RecordInput: React.FC<RecordInputProps> = () => {
     dispatch(postNewRecord({
       auth,
       content: enrichedText,
-      gameID: game?.id,
-      playerID: player.id,
       hidden: postHidden,
       questID
     }));
@@ -71,38 +68,47 @@ export const RecordInput: React.FC<RecordInputProps> = () => {
           label='Что нового?'
           value={input} 
           entityEdit={{ handleFieldChange }} 
-          suggestionData={convertSuggestionDataToRender(suggestions)}
+          suggestionData={suggestions && convertSuggestionDataToRender(suggestions)}
         />
       </div>
-      {showPostSettings && postSettingsOpen && <div className='flex justify-between gap-6 items-center my-2'>
-        {quests && quests.length > 0 && <SelectInput 
-          key={`recordinput_questselect_${inputKey}`}
-          className='w-full'
-          options={quests.map((quest) => { return { key: quest.id, value: quest.name } })} 
-          label='Связанный квест'
-          setKey={questID} 
-          entityEdit={{ handleFieldChange: (value) => setQuestID(value) }} 
-          nullable={true}
-        />}
-        {player?.id === game?.gmID && <div className={`${quests && quests.length > 0 ? 'w-62.5 justify-items-end' : 'w-full'}`}>
-          <ToggleSwitch 
-            key={`recordinput_hiddenswitch_${inputKey}`} 
-            label='Скрыть пост' 
-            labelPosition={quests && quests.length > 0 ? 'left' : 'right'}
-            className=''
-            entityEdit={{ handleFieldChange : (value) => setPostHidden(value) }} 
-            setValue={postHidden} 
-          />
-        </div>}
-      </div>}
+      {showPostSettings && (<div
+        className={`overflow-hidden transition-all duration-200 ease-in-out ${
+          postSettingsOpen ? 'max-h-96 opacity-100 overflow-visible' : 'max-h-0 opacity-0'
+        }`}
+      >
+        <div className="flex justify-between gap-6 items-center my-2">
+          {quests && quests.length > 0 && (
+            <SelectInput
+              key={`recordinput_questselect_${inputKey}`}
+              className="w-full"
+              options={quests.map((quest) => ({ key: quest.id, value: quest.name }))}
+              label="Связанный квест"
+              setKey={questID}
+              entityEdit={{ handleFieldChange: (value) => setQuestID(value) }}
+              nullable={true}
+            />
+          )}
+          {playerExt == game?.gmExt && (
+            <div className={`${quests && quests.length > 0 ? 'w-62.5 justify-items-end' : 'w-full'}`}>
+              <ToggleSwitch
+                key={`recordinput_hiddenswitch_${inputKey}`}
+                label="Скрыть пост"
+                labelPosition={quests && quests.length > 0 ? 'left' : 'right'}
+                className=""
+                entityEdit={{ handleFieldChange: (value) => setPostHidden(value) }}
+                setValue={postHidden}
+              />
+            </div>
+          )}
+        </div>
+      </div>)}
       <div className="flex justify-between items-center mt-2">    
-        {showPostSettings && postSettingsOpen ? <LuChevronUp 
-          className='icon-button-accented size-10' 
+        {showPostSettings && (<LuChevronDown
+          className={`icon-button-accented size-10 transition-transform duration-200 ${
+            postSettingsOpen ? 'rotate-180' : ''
+          }`}
           onClick={() => setPostSettingsOpen(!postSettingsOpen)}
-        /> : <LuChevronDown 
-          className='icon-button-accented size-10' 
-          onClick={() => setPostSettingsOpen(!postSettingsOpen)}
-        />}
+        />)}
 
         <SubmitButton
           onClick={handleSubmit}
@@ -112,7 +118,6 @@ export const RecordInput: React.FC<RecordInputProps> = () => {
           {isSubmitting ? 'Публикуется...' : 'Опубликовать'}
         </SubmitButton>
       </div>
-      
     </div>
   );
 };

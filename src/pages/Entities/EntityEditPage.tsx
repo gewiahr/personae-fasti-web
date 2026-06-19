@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useApi } from '@/hooks/useApi';
 import { selectCurrentGameSuggestions, selectCurrentGameInfo } from '@/reducers/CurrentGameSlice';
-import { selectAuthorization, selectPlayerInfo } from '@/reducers/PlayerSlice';
+import { selectAuthorization, selectPlayerExt } from '@/reducers/PlayerSlice';
 import { useAppSelector } from '@/store';
 import { simplerEntityFieldsMentions, enrichEntityFieldsMentions } from '@/types/mention';
 import { convertSuggestionDataToRender } from '@/types/suggestion';
@@ -28,7 +28,7 @@ const EntityEditPage = () => {
 
   const auth = useAppSelector(selectAuthorization);
   const suggestionData = useAppSelector(selectCurrentGameSuggestions);
-  const player = useAppSelector(selectPlayerInfo);
+  const playerExt = useAppSelector(selectPlayerExt);
   const game = useAppSelector(selectCurrentGameInfo);
   
   const [entity, setEntity] = useState<EntityModel | null>(newEntity ? {} as EntityModel : null);
@@ -39,7 +39,7 @@ const EntityEditPage = () => {
   useEffect(() => {
     if (pageData && pageData[metaData.EntityType] && suggestionData) {
       setEntity(simplerEntityFieldsMentions(pageData[metaData.EntityType], metaData, suggestionData));
-      setHidden(pageData[metaData.EntityType].hiddenBy > 0)
+      setHidden(pageData[metaData.EntityType].hidden)
     }
   }, [pageData, suggestionData]);
 
@@ -109,9 +109,9 @@ const EntityEditPage = () => {
         {id && <FoldableCategory title='Изображение' children={<ImageUpload entityType={metaData.EntityType} entityID={id} />} />}
         
         {/* // ** Change game proof by request instead of local storage ** // */}
-        {player?.id === game?.gmID && <div className='py-2'>
+        {playerExt === game?.gmExt && <div className='py-2'>
           <ToggleSwitch 
-            key={`toggle_sectert_post_${player?.id}`}
+            key={`toggle_sectert_post_${playerExt}`}
             label='Скрыть'
             labelPosition='right'
             setValue={hidden}

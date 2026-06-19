@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { InputField } from "../components/lib/Inputs/InputField";
 import SubmitButton from "../components/lib/SubmitButton";
 import { useAppDispatch, useAppSelector } from "../store";
@@ -17,6 +17,9 @@ const LoginComponent = () => {
 
   const dispatch = useAppDispatch();
   const auth = useAppSelector(selectAuthorization);
+
+  const loginRef = useRef<HTMLInputElement>(null);
+  const signupRef = useRef<HTMLInputElement>(null); 
 
   const handleLoginInput = (value: string) => {
     setLogin(value.trim().replace(" ", ""));
@@ -59,7 +62,15 @@ const LoginComponent = () => {
     };
   }, [login]);
 
-    useEffect(() => {
+  useEffect(() => {
+    if (mayRegister) signupRef.current?.focus();
+  }, [mayRegister]);
+
+  useEffect(() => {
+    if (mayLogin) loginRef.current?.focus();
+  }, [mayLogin]);
+
+  useEffect(() => {
     const handleGlobalEnter = (e: KeyboardEvent) => {
       if (e.key === 'Enter') {
         e.preventDefault();
@@ -110,10 +121,10 @@ const LoginComponent = () => {
         </div>
 
         {mayRegister && <>
-          <InputField label='Почта' value={email} entityEdit={{ handleFieldChange: (value) => setEmail(value.trim().replace(" ", "")) }} />
+          <InputField inputRef={signupRef} label='Почта' value={email} entityEdit={{ handleFieldChange: (value) => setEmail(value.trim().replace(" ", "")) }} />
           <InputField label='Пароль' htmlType="password" value={password} entityEdit={{ handleFieldChange: handlePasswordInput }} error={passwordError} />
         </>}
-        {mayLogin && <InputField label='Пароль' htmlType="password" value={password} entityEdit={{ handleFieldChange: handlePasswordInput }} error={passwordError} />}
+        {mayLogin && <InputField inputRef={loginRef} label='Пароль' htmlType="password" value={password} entityEdit={{ handleFieldChange: handlePasswordInput }} error={passwordError} />}
 
         {mayRegister ? <SubmitButton className='w-full' onClick={handleSignUpButton}>
           Зарегистрироваться

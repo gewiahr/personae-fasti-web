@@ -2,50 +2,33 @@ import { useEffect, type ReactNode } from 'react';
 import useTelegram from '../hooks/useTelegram';
 import AuthGateNoGame from './AuthGateNoGame';
 import { useAppDispatch, useAppSelector } from '../store';
-import { loginTG, loginToken, selectAuthorization, selectPlayerInfo, selectPlayerInfoLoading, setPlayerLoading } from '../reducers/PlayerSlice';
-import { selectCurrentGameInfo } from '../reducers/CurrentGameSlice';
+import { loginTG, loginToken, selectAuthorization, selectPlayerExt, selectPlayerLoading, setPlayerLoading } from '../reducers/PlayerSlice';
+import { selectCurrentGameInfo, selectCurrentGameLoading } from '../reducers/CurrentGameSlice';
 import LoadingLabel from '../components/lib/LoadingLabel';
 import LoginComponent from './LoginComponent';
-//import { api } from './api';
-//import { useLocalStorage } from '../hooks/useLocalStorage';
 
 export const AuthGate = ({ children }: { children: ReactNode }) => {
   const { TMA, initDataRaw } = useTelegram();
 
   const dispatch = useAppDispatch();
 
-  const playerInfo = useAppSelector(selectPlayerInfo);
+  const playerExt = useAppSelector(selectPlayerExt);
   const auth = useAppSelector(selectAuthorization);
   const currentGame = useAppSelector(selectCurrentGameInfo);
-  const isAuthenticated = !!playerInfo;
-
-  //const [isLoading, setIsLoading] = useState<boolean>(true);
-  const isLoading = useAppSelector(selectPlayerInfoLoading);
-
-  // const [localAuth, setLocalAuth] = useLocalStorage('auth', '');
-  // const localAuth = window.localStorage.getItem('auth');
-  // const noToken = localAuth == null || l`ocalAuth == '';
-
-  //const [error, setError] = useState<string>('');
+  const isAuthenticated = !!playerExt;
+  const playerIsLoading = useAppSelector(selectPlayerLoading);
+  const gameIsLoading = useAppSelector(selectCurrentGameLoading);
 
   useEffect(() => {
     if (!isAuthenticated) {
-      if (TMA) dispatch(loginTG({ rawData: initDataRaw })).unwrap();
-      else dispatch(loginToken({ token: auth }))
-    } else {
-      dispatch(setPlayerLoading(false));
+      if (TMA) {
+        dispatch(loginTG({ rawData: initDataRaw })).unwrap();
+      } else if (auth) { 
+        dispatch(loginToken({ token: auth }));
+      } else { 
+        dispatch(setPlayerLoading(false));
+      }
     }
-
-    // dispatch(playerLogin({ token: localAuth })).unwrap();
-
-    // const handleEnterPress = (event: KeyboardEvent) => {
-    //   if (event.key === 'Enter') {
-    //     buttonLoginTG();
-    //   }
-    // };
-
-    // window.addEventListener('keydown', handleEnterPress);
-    // return () => window.removeEventListener('keydown', handleEnterPress);
   }, []);
 
   // const buttonLoginTG = async () => {
@@ -53,7 +36,7 @@ export const AuthGate = ({ children }: { children: ReactNode }) => {
   //     //await dispatch(playerLoginTG({ rawData: initDataRaw })).unwrap();
   //     //const response = await api.get(`/login/${login}`, auth);
   //   } catch (e) {
-  //     console.log(e);
+  //     console.error(e);
   //   }
   // }
 
@@ -70,7 +53,7 @@ export const AuthGate = ({ children }: { children: ReactNode }) => {
   //   </div>
   // );
 
-  if (isLoading) return (
+  if (playerIsLoading) return (  
     <div className="auth-gate-page">
       <LoadingLabel />
     </div>
@@ -78,12 +61,18 @@ export const AuthGate = ({ children }: { children: ReactNode }) => {
 
   // AuthGate 
   if (!isAuthenticated) return (
-   <LoginComponent />
+    <LoginComponent />
   );
 
   // if (playerInfo?.settings == null) return (
   //   <AuthGateReg />
   // );
+
+  if (gameIsLoading) return (
+    <div className="auth-gate-page">
+      <LoadingLabel />
+    </div>
+  );
 
   if (currentGame == null) return (
     <AuthGateNoGame />

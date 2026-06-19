@@ -1,19 +1,19 @@
 import { Link } from 'react-router-dom';
 import Icon from '@/components/icons/Icon';
 import RichText from '@lib/RichText/RichText';
-import { type Record } from '@/types/request'
-
+import { type Record } from '@/types/record'
+import type { QuestBrief } from '@/types/quest';
 
 interface RecordCardProps {
   record: Record;
   label?: string;
   accented?: boolean;
   editable?: boolean;
-  showQuest?: boolean;
+  quest?: QuestBrief;
   onEdit?: (record : Record) => void;
 };
 
-const RecordCard = ({ record, label="", accented=false, editable=false, showQuest=true, onEdit } : RecordCardProps) => {
+const RecordCard = ({ record, label="", accented=false, editable=false, quest, onEdit } : RecordCardProps) => {
   return (
     <div>
       <div
@@ -28,7 +28,7 @@ const RecordCard = ({ record, label="", accented=false, editable=false, showQues
         <div className="flex justify-between items-end pt-2">
           <span className='datestamp-label'>Обновлено: {new Date(record.updated).toLocaleDateString()}</span>
           <div className="flex items-center">
-            {record.hiddenBy > 0 && <div className='pr-4'>
+            {record.hidden && <div className='pr-4'>
               <Icon 
                 key={`icon_hidden_${record.id}`} 
                 name='hidden'
@@ -50,10 +50,10 @@ const RecordCard = ({ record, label="", accented=false, editable=false, showQues
         </div>
       </div>
 
-      {showQuest && record.quest && 
-        <Link to={`/quests/${record.quest.id}`} >
+      {quest && 
+        <Link to={`/quests/${record.questID}`} >
           <div className={`record-card-quest-container ${accented ? 'record-card-quest-container-accented' : 'record-card-quest-container-dimmed'}`} >
-            Квест: {record.quest.name}  
+            Квест: {quest.name}  
           </div>
         </Link>
       }

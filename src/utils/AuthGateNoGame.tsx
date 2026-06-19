@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { /* useAppDispatch ,*/ useAppSelector } from '../store';
-import { /* selectAuthorization ,*/ selectPlayer } from '../reducers/PlayerSlice';
+import { /* selectAuthorization ,*/ selectPlayerUsername } from '../reducers/PlayerSlice';
 import GameCreateEditPage from '@/pages/Games/GameCreateEditPage';
 import CopyText from '@lib/CopyText';
 import SubmitButton from '@lib/SubmitButton';
@@ -12,7 +12,7 @@ type AuthGateNoGameProps = {
 const AuthGateNoGame: React.FC<AuthGateNoGameProps> = ({ }) => {
   // const dispatch = useAppDispatch();
   // const auth = useAppSelector(selectAuthorization);
-  const player = useAppSelector(selectPlayer);
+  const playerUsername = useAppSelector(selectPlayerUsername);
 
   const [newGameSwitch, switchNewGame] = useState<boolean>(false);
 
@@ -47,7 +47,7 @@ const AuthGateNoGame: React.FC<AuthGateNoGameProps> = ({ }) => {
             </div>
             <div>
               <p className='mb-3'>Поделитесь своим ником чтобы вас могли пригласить</p>
-              <CopyText text={player!.info!.username} />
+              <CopyText text={playerUsername} />
             </div>
           </div>
         </div>

@@ -14,7 +14,7 @@ export type SuggestionEntity = {
   sid: string;
   type: string;
   name: string;
-  hidden: boolean;
+  secret: boolean;
 }
 
 export type SuggestionEntityRender = {
@@ -24,9 +24,9 @@ export type SuggestionEntityRender = {
   typeName: string;
   ref: string;
   name: string;
-  hidden: boolean;
+  secret: boolean;
 }
 
 export const convertSuggestionDataToRender = (sg: SuggestionData) => {
-  return sg.entities.filter((suggestion) => !suggestion.hidden).map((suggestion) => formSuggestionRef(suggestion));
+  return sg.entities.filter((suggestion) => !suggestion.secret).map((suggestion) => formSuggestionRef(suggestion));
 }

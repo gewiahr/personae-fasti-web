@@ -1,15 +1,15 @@
 import { selectCurrentGame, loadCurrentGameRecords } from "@/reducers/CurrentGameSlice";
 import { selectIsLoadingNew } from "@/reducers/LoadingSlice";
-import { selectAuthorization, selectPlayerInfo } from "@/reducers/PlayerSlice";
+import { selectAuthorization, selectPlayerExt } from "@/reducers/PlayerSlice";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { convertSuggestionDataToRender } from "@/types/suggestion";
 import Divider from "@lib/Divider";
 import LoadingLabel from "@lib/LoadingLabel";
 import { useState, useEffect } from "react";
-import type { Record, Session } from '@/types/request'
+import type { Record } from '@/types/record'
+import type { Session } from '@/types/game'
 import RecordCard from "./RecordCard";
 import RecordEdit from "./RecordEdit";
-
 
 type RecordFeedProps = {
   records: Record[];
@@ -25,9 +25,10 @@ type RecordSession = {
 
 export const RecordFeed: React.FC<RecordFeedProps> = ({ records, editable = false, showQuests = false, showSessions = false }) => {
   const dispatch = useAppDispatch();
-  const { game, players, sessions, suggestions } = useAppSelector(selectCurrentGame);
+  const { game, settings, players, sessions, quests, suggestions } = useAppSelector(selectCurrentGame);
+  // const sessions = useAppSelector(selectCurrentGameSessions);
   const auth = useAppSelector(selectAuthorization);
-  const player = useAppSelector(selectPlayerInfo);
+  const playerExt = useAppSelector(selectPlayerExt);
   const recordsLoading = useAppSelector(selectIsLoadingNew(loadCurrentGameRecords.typePrefix));
 
   const [ editing, setEditing ] = useState<Record | null>(null);
@@ -154,10 +155,10 @@ export const RecordFeed: React.FC<RecordFeedProps> = ({ records, editable = fals
                 <RecordCard 
                   key={record.id}
                   record={record}
-                  label={players.find(p => p.id === record.playerID)?.username}
-                  accented={record.playerID === player?.id}
-                  editable={editable && ((record.playerID === player?.id || game?.gmID === player?.id) || (game?.settings?.allowAllEditRecords))}
-                  showQuest={showQuests}
+                  label={players.find(p => p.ext === record.playerExt)?.username}
+                  accented={record.playerExt === playerExt}
+                  editable={editable && ((record.playerExt === playerExt || game?.gmExt === playerExt) || (settings?.allowAllEditRecords))}
+                  quest={showQuests ? quests.find((q) => q.id === record.questID) : undefined}
                   onEdit={onRecordEdit}
                 />
               ))}
@@ -166,11 +167,10 @@ export const RecordFeed: React.FC<RecordFeedProps> = ({ records, editable = fals
         })}
       </div>}
 
-      {editing && player && game && 
+      {editing && playerExt && game && 
         <RecordEdit 
           key={`recordfeed_editmodal`} 
           record={editing}
-          currentPlayer={player}
           currentGame={game} 
           onClose={onModalClose} 
           suggestionData={convertSuggestionDataToRender(suggestions)}

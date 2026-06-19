@@ -48,6 +48,8 @@ export const selectIsLoadingWithId = (name: string) => (id?: string) => (state: 
 
 export const selectIsLoadingNew = (name?: string) => (state: RootState) => name ? state.loading.list.includes(name) : false
 
+export const selectLoadingList = (state: RootState) => state.loading.list
+
 export const {
   changeRequestStatus,
   addLoading,

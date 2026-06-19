@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from './api';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { selectAuthorization, selectPlayerInfo } from '@/reducers/PlayerSlice';
+import { selectAuthorization, selectPlayerUsername } from '@/reducers/PlayerSlice';
 import { useAppSelector } from '@/store';
-import type { PlayerFullInfo } from '@/types/request';
+import type { PlayerFull } from '@/types/player';
 import { InputField } from '@lib/Inputs/InputField';
 
 type AuthGateRegUsernameInputState = 'check' | 'accept' | 'loading';
@@ -12,14 +12,14 @@ type AuthGateRegUsernameInputCheck = 'none' | 'valid' | 'invalid';
 
 const AuthGateReg: React.FC = () => {
   const auth = useAppSelector(selectAuthorization);
-  const player = useAppSelector(selectPlayerInfo);
+  const playerUsername = useAppSelector(selectPlayerUsername);
 
   const initInputTip = 'Выберите имя пользователя, (пока что) его нельзя будет сменить';
   const [inputState, setInputState] = useState<AuthGateRegUsernameInputState>('check');
   const [inputTip, setInputTip] = useState<string>(initInputTip);
   const [inputCheck, setInputCheck] = useState<AuthGateRegUsernameInputCheck>('none');
-  const [_, setPlayerInfoLS] = useLocalStorage<PlayerFullInfo | null>('playerInfo', null);
-  const [newUsername, setNewUsername] = useState<string>(player?.username || "");
+  const [_, setPlayerInfoLS] = useLocalStorage<PlayerFull | null>('playerInfo', null);
+  const [newUsername, setNewUsername] = useState<string>(playerUsername || "");
   const navigate = useNavigate();
   //const { addNotification } = useNotifications();
 
@@ -49,7 +49,7 @@ const AuthGateReg: React.FC = () => {
 
   const acceptUsername = async () => {
     setInputState('loading');
-    var { data, error } = await api.patch<PlayerFullInfo>(`/player/username`, auth, { "newUsername": newUsername }); 
+    var { data, error } = await api.patch<PlayerFull>(`/player/username`, auth, { "newUsername": newUsername }); 
     if (error) {
       setInputTip('Имя недоступно! Попробуйте другое!');
       setInputState('check');

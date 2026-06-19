@@ -2,8 +2,7 @@ import { selectCurrentGamePlayers } from "@/reducers/CurrentGameSlice";
 import { selectAuthorization } from "@/reducers/PlayerSlice";
 import { useAppSelector } from "@/store";
 import type { ApiError } from "@/types/api";
-import { CharMetaData } from "@/types/entities";
-import type { CharInfo } from "@/types/request";
+import { type CharBrief, CharMetaData } from "@/types/entities";
 import { api } from "@/utils/api";
 import LinkButton from "@lib/LinkButton";
 import LoadingLabel from "@lib/LoadingLabel";
@@ -11,17 +10,18 @@ import { useState, useEffect } from "react";
 import EntityCard from "../Entities/EntityCard";
 import { ErrorPage } from "../ErrorPage";
 
+/* DEPRICATED */
 const CharList = () => {
   const auth = useAppSelector(selectAuthorization);
   const players = useAppSelector(selectCurrentGamePlayers);
 
-  const [chars, setChars] = useState<CharInfo[]>([]);
+  const [chars, setChars] = useState<CharBrief[]>([]);
   const [error, setError] = useState<ApiError | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchCharInfo = async () => {
-      const { data } = await api.get<{ chars: CharInfo[] }>("/chars", auth);
+    const fetchCharBriefArray = async () => {
+      const { data } = await api.get<{ chars: CharBrief[] }>("/chars", auth);
       if (error) {
         setError(error);
       } else if (data) {
@@ -30,7 +30,7 @@ const CharList = () => {
       setLoading(false);
     };
 
-    fetchCharInfo();
+    fetchCharBriefArray();
   }, []);
 
   //if (loading) return <LoadingPage />
@@ -52,7 +52,7 @@ const CharList = () => {
             key={char.id}
             entity={char}
             metaData={CharMetaData}
-            labelText={players.find((player) => (player.id === char.playerID))?.username || ""}
+            labelText={players.find((player) => (player.ext === char.playerExt))?.username || ""}
           />
         ))}
       </div> : 

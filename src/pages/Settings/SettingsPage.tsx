@@ -1,9 +1,9 @@
 import Icon from "@/components/icons/Icon";
 import { useNotifications } from "@/context/NotificationContext";
 import { selectCurrentGame, changeCurrentGame, startNewSession } from "@/reducers/CurrentGameSlice";
-import { selectAuthorization, selectPlayerInfo, selectPlayerGames, selectPlayerInvites, loadPlayerGames } from "@/reducers/PlayerSlice";
+import { selectAuthorization, selectPlayerGames, selectPlayerInvites, loadPlayerGames, selectPlayerUsername, selectPlayerExt } from "@/reducers/PlayerSlice";
 import { useAppDispatch, useAppSelector } from "@/store";
-import type { GameFullInfo, GameInfo } from "@/types/request";
+import type { GameBrief, GameFull } from "@/types/game";
 import { api } from "@/utils/api";
 import ConfirmButton from "@lib/ConfirmButton";
 import CopyText from "@lib/CopyText";
@@ -20,12 +20,13 @@ const SettingsPage = () => {
 
   const dispatch = useAppDispatch();
   const auth = useAppSelector(selectAuthorization);
-  const player = useAppSelector(selectPlayerInfo);
+  const playerExt = useAppSelector(selectPlayerExt);
+  const playerUsername = useAppSelector(selectPlayerUsername);
   const playerGames = useAppSelector(selectPlayerGames);
   const playerInvites = useAppSelector(selectPlayerInvites);
   const { game } = useAppSelector(selectCurrentGame);
 
-  const [_, setEditedCurrentGame] = useState<GameFullInfo | null>(game);
+  const [_, setEditedCurrentGame] = useState<GameFull | null>(game);
 
 
   const { addNotification } = useNotifications();
@@ -56,7 +57,7 @@ const SettingsPage = () => {
       });
   };
 
-  const handleInviteAccept = async (invite: GameInfo) => {
+  const handleInviteAccept = async (invite: GameBrief) => {
     const { error, status } = await api.post(`/player/invite/accept/${invite.id}`, auth, null);
     if (error) {
       addNotification(`Ошибка: ${error.message}`, 'error');
@@ -67,7 +68,7 @@ const SettingsPage = () => {
     };   
   };
 
-  const handleInviteRefuse = async (invite: GameInfo) => {
+  const handleInviteRefuse = async (invite: GameBrief) => {
     const { error, status } = await api.post(`/player/invite/refuse/${invite.id}`, auth, null);
     if (error) {
       addNotification(`Ошибка: ${error.message}`, 'error');
@@ -86,7 +87,7 @@ const SettingsPage = () => {
         <FoldableCategory key="game_invites" title={`Приглашений: ${playerInvites.length}`}>
           {playerInvites.length <= 0 ? <div className='flex flex-col gap-4 justify-center items-center text-center'>
             <p className='italic'>Вы не приглашены ни в одну игру. Поделитесь своим именем пользователя чтобы мастер игры мог вас пригласить</p>
-            <CopyText text={player!.username} />
+            <CopyText text={playerUsername} />
           </div> : <div className='flex flex-col gap-6'>
             {playerInvites.map((invite) => <div className='flex flex-1 gap-6 justify-between items-center'>
               <p>{invite.title}</p>
@@ -115,7 +116,7 @@ const SettingsPage = () => {
               <h2 className='text-xl'>{game.title}</h2>}
             </div>}
             <div className='flex gap-2 max-xs:flex-1 xs:justify-end'>
-              {game?.gmID === player?.id && <SubmitButton key={`settingspage_submitbutton_editgame`} className='flex' onClick={() => navigate(`/games/${game ? game.id : 0}/edit`)}>
+              {game?.gmID == playerExt && <SubmitButton key={`settingspage_submitbutton_editgame`} className='flex' onClick={() => navigate(`/games/${game ? game.id : 0}/edit`)}>
                 Редактировать
               </SubmitButton>}
               <SubmitButton key={`settingspage_submitbutton_newgame`} onClick={() => navigate("/games/new")}>
@@ -125,7 +126,7 @@ const SettingsPage = () => {
           </div>
         </div>
 
-        {game?.gmID === player?.id && <ConfirmButton className='w-full mt-2' children={"Начать новую сессию"} onClickConfirm={() => handleNewSession()} />}
+        {game?.gmID == playerExt && <ConfirmButton className='w-full mt-2' children={"Начать новую сессию"} onClickConfirm={() => handleNewSession()} />}
 
         {/* <SelectItems
           items={[

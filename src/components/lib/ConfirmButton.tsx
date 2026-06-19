@@ -4,10 +4,11 @@ import SubmitButton from './SubmitButton';
 type ConfirmButtonProps = {
   children: React.ReactNode;
   onClickConfirm: () => void;
+  confirmation?: React.ReactNode;
   className?: string;  
 }
 
-const ConfirmButton: React.FC<ConfirmButtonProps> = ({ children, onClickConfirm, className }) => {
+const ConfirmButton: React.FC<ConfirmButtonProps> = ({ children, onClickConfirm, confirmation = 'Подтвердить', className }) => {
   const [confirmDelay, setConfirmDelay] = useState<boolean>(false);
   const [confirmRequested, setConfirmRequested] = useState<boolean>(false);
 
@@ -48,7 +49,7 @@ const ConfirmButton: React.FC<ConfirmButtonProps> = ({ children, onClickConfirm,
     confirmDelay ? <SubmitButton className={`${className}`} onClick={() => {}} ref={buttonRef} disabled>
         {"Загрузка..."}
     </SubmitButton> : confirmRequested ? <SubmitButton className={`${className}`} onClick={handleOnClickConfirm} ref={buttonRef} danger>
-        {"Подтвердить"}
+        {confirmation}
     </SubmitButton> : <SubmitButton className={`${className}`} onClick={handleConfirmRequest} ref={buttonRef} >
         {children}
     </SubmitButton>

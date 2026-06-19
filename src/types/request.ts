@@ -1,128 +1,42 @@
-import type { Char, NPC, Location } from "./entities";
-import type { Quest, QuestTask } from "./quest";
+import type { Char, NPC, Location, CharBrief, NPCBrief } from "./entities";
+import type { GameBrief, GameFull, Session } from "./game";
+import type { PlayerBrief } from "./player";
+import type { Record } from "./record";
 
-export type LoginInfo = {
-  authorization: string;
-  player: PlayerFullInfo;
-  currentGame: GameFullInfo;
-};
+
+
+/* =================== */
 
 export type GameRecords = {
   records: Record[];
   sessions: Session[];
-  players: PlayerInfo[];
-  currentGame: GameInfo;
-};
-
-export type Record = {
-  id: number;
-  text: string;
-  playerID: number;
-  gameID: number;
-  questID: number;
-  quest: Quest;
-  created: string;
-  updated: string;
-  hiddenBy: number;
-};
-
-export type NewRecord = {
-  text: string;
-  playerID: number;
-  gameID: number;
-  questID: number;
-  hidden: boolean;
-};
-
-export type Session = {
-  id: number;
-  number: number;
-  name: string;
-  endTime: string;
-};
-
-export type SessionEdit = {
-  number: number;
-  name: string;
-  startTime: string;
-  error?: string;
-};
-
-export type PlayerFullInfo = {
-  id: number;
-  username: string;
-  settings: PlayerSettings;
-};
-
-export type PlayerSettings = {
-  couldChangeUsername: boolean;
-  //colorTheme: 'blue' | 'green'
+  players: PlayerBrief[];
+  currentGame: GameBrief;
 };
 
 export type PlayerGamesInfo = {
-  currentGame: GameFullInfo;
-  playerGames: GameInfo[];
-  playerInvites: GameInfo[];
-};
-
-export type PlayerInfo = {
-  id: number;
-  username: string;
-};
-
-export type GameInfo = {
-  id: number;
-  title: string;
-  gmID: number;
-};
-
-export type GameFullInfo = {
-  id: number;
-  title: string;
-  gmID: number;
-
-  settings: GameSettings;
-  sessions: Session[];
+  currentGame: GameFull;
+  playerGames: GameBrief[];
+  playerInvites: GameBrief[];
 };
 
 export type GamePage = {
-  game: GameFullInfo;
-  players: PlayerInfo[];
-  invites: PlayerInfo[];
+  game: GameFull;
+  players: PlayerBrief[];
+  invites: PlayerBrief[];
 }
 
-export type GameSettings = {
-  allowAllEditRecords: boolean;
-};
-
-export interface EntityInfo {
-  id: number;
-  name: string;
-  title: string;
-
-  gameID: number;
-  hiddenBy: number;  
-};
-
-export interface CharInfo extends EntityInfo {
-  playerID: number;
-};
-
-export interface NPCInfo extends EntityInfo {
-  playerID: number;
-};
-
 export interface GameEntities {
-  currentGame: GameInfo;
+  currentGame: GameBrief;
 }
 
 export interface GameChars extends GameEntities {
-  chars: CharInfo[];
-  players: PlayerInfo[];
+  chars: CharBrief[];
+  players: PlayerBrief[];
 };
 
 export interface GameNPCs extends GameEntities {
-  npcs: NPCInfo[];
+  npcs: NPCBrief[];
 };
 
 export interface EntityPageData {
@@ -140,28 +54,6 @@ export interface NPCPageData extends EntityPageData {
 export interface LocationPageData extends EntityPageData {
   Location: Location;
 };
-
-export interface QuestInfo {
-  id: number;
-  name: string;
-  title: string;
-  description: string;
-
-  gameID: number;
-  successful: boolean;	
-  hiddenBy: number; 
-  finished: boolean;
-}
-
-export interface GameQuests {
-  quests: QuestInfo[];
-}
-
-export interface QuestPageData {
-  quest: Quest;
-  tasks: QuestTask[];
-  records: Record[];
-}
 
 export type NewEntity = {
   name: string;

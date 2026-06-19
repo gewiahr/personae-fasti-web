@@ -261,7 +261,7 @@ input[type="number"] {
 }
 
 .number-input-inline-arrow {
-  @apply px-2 focus:outline-none;
+  @apply px-2 focus:outline-none cursor-pointer;
   color: var(--color-text-gray);
 }
 
@@ -344,7 +344,7 @@ input[type="number"] {
   /* Entity Card */
 
 .entity-card-link-container {
-  @apply block border rounded-lg overflow-hidden transition-colors duration-200;
+  @apply block border relative z-20 rounded-lg transition-colors duration-200;
   background-color: var(--color-bg-secondary);
   border-color: var(--color-dimmed);
 }
@@ -352,6 +352,26 @@ input[type="number"] {
 .entity-card-link-container:hover {
   /* @apply hover:border-blue-500 hover:bg-gray-750; */
   border-color: var(--color-accent);
+}
+
+.entity-card-footer-container {
+  @apply relative -top-4 -mb-4 z-10 px-4 pt-6 pb-2 rounded-lg border text-xs cursor-pointer;
+}
+
+.entity-card-footer-container:hover {
+  color: var(--color-text-accent);
+}
+
+.entity-card-footer-container-accented {
+  /* @apply border-blue-500 bg-gray-800; */
+  background-color: var(--color-bg-secondary);
+  border-color: var(--color-accent);
+}
+
+.entity-card-footer-container-dimmed {
+  /* @apply border-gray-700 bg-gray-800; */
+  background-color: var(--color-bg-secondary);
+  border-color: var(--color-dimmed);
 }
 
   /* Modal */
@@ -390,7 +410,6 @@ input[type="number"] {
 .layout-header {
   @apply sticky top-0 z-50 p-4;
   background-color: var(--color-header);
-  position: sticky;
   z-index: 50;
 }
 

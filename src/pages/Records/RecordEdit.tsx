@@ -1,39 +1,38 @@
 import { useEffect, useState } from 'react';
 import { useNotifications } from '@/context/NotificationContext';
 import { selectCurrentGameQuests, loadCurrentGameQuests, editRecord, deleteRecord } from '@/reducers/CurrentGameSlice';
-import { selectAuthorization } from '@/reducers/PlayerSlice';
+import { selectAuthorization, selectPlayerExt } from '@/reducers/PlayerSlice';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { enrichMentionInput, simplifyMentionInput } from '@/types/mention';
-import type { PlayerInfo, GameInfo } from '@/types/request';
+import type { GameBrief } from '@/types/game';
 import type { SuggestionEntityRender } from '@/types/suggestion';
 import { RichInput } from '@lib/Inputs/RichInput';
 import { SelectInput } from '@lib/Inputs/SelectInput';
 import { Modal } from '@lib/Modal';
 import SubmitButton from '@lib/SubmitButton';
 import { ToggleSwitch } from '@lib/ToggleSwitch';
-import { type Record } from '@/types/request'
+import { type Record } from '@/types/record'
 
 
 interface RecordEditProps {
   record: Record;
-  currentPlayer: PlayerInfo;
-  currentGame: GameInfo;
+  currentGame: GameBrief;
   onClose: () => void;
   suggestionData: SuggestionEntityRender[];
 }
 
 export const RecordEdit = ({
   record,
-  currentPlayer,
   currentGame,
   onClose,
   suggestionData
 }: RecordEditProps) => {
   const dispatch = useAppDispatch();
   const auth = useAppSelector(selectAuthorization);
+  const playerExt = useAppSelector(selectPlayerExt);
   const quests = useAppSelector(selectCurrentGameQuests);
 
-  const [postHidden, setPostHidden] = useState<boolean>(record.hiddenBy !== 0);
+  const [postHidden, setPostHidden] = useState<boolean>(record.hidden);
   const [editedRecord, setEditedRecord] = useState<Record>(record);
 
   const { addNotification } = useNotifications();
@@ -53,7 +52,7 @@ export const RecordEdit = ({
 
     dispatch(editRecord({
       auth,
-      record: { ...editedRecord, text: enrichedText }
+      record: { ...editedRecord, text: enrichedText, hidden: postHidden }
     }))
       .unwrap()
       .then(() => {
@@ -119,7 +118,7 @@ export const RecordEdit = ({
         />
       </div>}
 
-      {currentPlayer.id == currentGame.gmID &&
+      {playerExt == currentGame.gmExt &&
         <div className='py-2'>
           <ToggleSwitch
             key={"recordedit_hiddenswitch"}
@@ -131,18 +130,18 @@ export const RecordEdit = ({
         </div>
       }
 
-      <div className='flex justify-between items-center'>
+      <div className='flex justify-between items-center mt-4'>
         <SubmitButton 
           onClick={handleDelete}
           danger={true}
-          className="w-[30%] mt-2"
+          className="w-[30%]"
         >
           {"Удалить"}
         </SubmitButton>
 
         <SubmitButton 
           onClick={handleSave} 
-          className="w-[65%] mt-2"
+          className="w-[65%]"
         >
           {"Сохранить"}  
         </SubmitButton>

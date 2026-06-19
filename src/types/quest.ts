@@ -1,3 +1,27 @@
+import type { Record } from "./record";
+
+  /* Request */
+  
+export interface QuestBrief {
+  id: number;
+  name: string;
+  title: string;
+  description: string;
+
+  gameExt: string;
+  successful: boolean;	
+  hidden: boolean; 
+  finished: boolean;
+}
+
+export interface QuestPageData {
+  quest: Quest;
+  tasks: QuestTask[];
+  records: Record[];
+}
+
+  /* Edit */ 
+
 export interface Quest {
   id: number;
   name: string;
@@ -8,7 +32,7 @@ export interface Quest {
 	headID: number;
   gameID: number;
   successful: boolean;
-  hiddenBy: number;
+  hidden: boolean;
   finished: boolean;
 };
 
@@ -24,7 +48,7 @@ export interface QuestTask {
   type: number;
   capacity: number;
   current: number;
-  hiddenBy: number;
+  hidden: boolean;
   finished: boolean;
 }
 
@@ -40,7 +64,7 @@ export const NewQuestTask = (questID: number) : QuestTask => ({
     type: 0,
     capacity: 0,
     current: 0,
-    hiddenBy: 0,
+    hidden: false,
     finished: false
 });
 

@@ -1,22 +1,30 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { GameFullInfo, GameInfo, GameQuests, GameRecords, GameSettings, NewRecord, PlayerInfo, QuestInfo, Record, Session, SessionEdit } from '../types/request';
-import { type RootState } from '../store';
-import { api } from '../utils/api';
-import type { SuggestionData } from '../types/suggestion';
+import type { GameRecords } from '@/types/request';
+import type { QuestBrief } from '@/types/quest';
+import type { GameBrief, GameFull, GameSettings, Session, SessionEdit } from '@/types/game';
+import type { EditRecord, NewRecord, Record } from '@/types/record';
+import type { PlayerBrief } from '@/types/player';
+import { type RootState } from '@/store';
+import { api } from '@/utils/api';
+import type { SuggestionData } from '@/types/suggestion';
 import { addLoading, removeLoading } from './LoadingSlice';
 import dayjs from 'dayjs';
 
 export type CurrentGameData = {
-  game: GameFullInfo | null;
+  game: GameBrief | null;
+  settings: GameSettings | null;
+  loading: boolean;
   records: Record[];
   sessions: Session[];
-  players: PlayerInfo[];
-  quests: QuestInfo[];
+  players: PlayerBrief[];
+  quests: QuestBrief[];
   suggestions: SuggestionData;
 };
 
 const initialState: CurrentGameData = {
   game: null,
+  settings: null,
+  loading: true,
   records: [],
   sessions: [],
   players: [],
@@ -24,11 +32,32 @@ const initialState: CurrentGameData = {
   suggestions: { entities: [] }
 };
 
+export const loadCurrentGame = createAsyncThunk(
+  'loadCurrentGame',
+  async (params: { auth: string }, appThunk) => {
+    try {
+      const { data, error } = await api.get<GameFull>("/player/currentGame", params.auth);
+      if (error) throw error
+      appThunk.dispatch(setCurrentGame(data || null));
+      appThunk.dispatch(setCurrentGameSettings(data?.settings || null));
+      appThunk.dispatch(setCurrentGameSessions(data?.sessions || []));
+      appThunk.dispatch(setCurrentGamePlayers(data?.players || []));
+
+      appThunk.dispatch(loadCurrentGameQuests({ auth: params.auth }));
+      appThunk.dispatch(loadCurrentGameSuggestions({ auth: params.auth }));
+    } catch (e) {
+      throw e
+    } finally {
+      appThunk.dispatch(setCurrentGameLoading(false));
+    }
+  }
+);
+
 export const changeCurrentGame = createAsyncThunk(
   'changeCurrentGame',
-  async (params: { auth: string, gameID: number }, appThunk) => {
+  async (params: { auth: string, gameID: string }, appThunk) => {
     try {
-      const { data, error } = await api.put<GameFullInfo>("/player/game", params.auth, { gameID: Number(params.gameID) });
+      const { data, error } = await api.put<GameFull>("/player/game", params.auth, { gameID: params.gameID });
       if (error) throw error
       appThunk.dispatch(setCurrentGame(data || null));
     } catch (e) {
@@ -41,7 +70,7 @@ export const startNewSession = createAsyncThunk(
   'startNewSession',
   async (params: { auth: string }, _) => {
     try {
-      const { error } = await api.post<GameInfo>("/game/session/new", params.auth, null);
+      const { error } = await api.post<{sessions: Session[]}>("/game/session/new", params.auth, null);
       if (error) throw error
     } catch (e) {
       throw e
@@ -53,7 +82,7 @@ export const removeLastSession = createAsyncThunk(
   'removeLastSession',
   async (params: { auth: string }, _) => {
     try {
-      const { error } = await api.delete<GameInfo>("/game/session/remove", params.auth);
+      const { error } = await api.delete<{sessions: Session[]}>("/game/session/remove", params.auth);
       if (error) throw error
     } catch (e) {
       throw e
@@ -65,7 +94,7 @@ export const editSession = createAsyncThunk(
   'editSession',
   async (params: { auth: string, sessionUpdate: SessionEdit }, _) => {
     try {
-      const { error } = await api.patch<GameInfo>("/game/session", params.auth, { name: params.sessionUpdate.name, number: params.sessionUpdate.number, startTime: dayjs(params.sessionUpdate.startTime).utc().toISOString() } as SessionEdit);
+      const { error } = await api.patch<{sessions: Session[]}>("/game/session", params.auth, { name: params.sessionUpdate.name, number: params.sessionUpdate.number, startTime: dayjs(params.sessionUpdate.startTime).utc().toISOString() } as SessionEdit);
       if (error) throw error
     } catch (e) {
       throw e
@@ -78,11 +107,11 @@ export const loadCurrentGameRecords = createAsyncThunk(
   async (params: { auth: string }, appThunk) => {
     appThunk.dispatch(addLoading(loadCurrentGameRecords.typePrefix));
     try {
-      const response = await api.get<GameRecords>('/records', params.auth);
+      const response = await api.get<{records: Record[]}>('/records', params.auth);
       //appThunk.dispatch(setCurrentGame(response.data?.currentGame || null));
-      appThunk.dispatch(setCurrentGameRecords(response.data?.records === null ? [] : response.data?.records || []));
-      appThunk.dispatch(setCurrentGameSessions(response.data?.sessions === null ? [] : response.data?.sessions || []));
-      appThunk.dispatch(setCurrentGamePlayers(response.data?.players || []));
+      appThunk.dispatch(setCurrentGameRecords(response.data?.records || []));
+      // appThunk.dispatch(setCurrentGameSessions(response.data?.sessions === null ? [] : response.data?.sessions || []));
+      // appThunk.dispatch(setCurrentGamePlayers(response.data?.players || []));
     } catch (e) {
 
     } finally {
@@ -93,14 +122,12 @@ export const loadCurrentGameRecords = createAsyncThunk(
 
 export const postNewRecord = createAsyncThunk(
   'postNewRecord',
-  async (params: { auth: string, playerID: number, gameID: number, content: string, hidden: boolean, questID: number }, { dispatch, getState }) => {
+  async (params: { auth: string, content: string, hidden: boolean, questID: number }, { dispatch, getState }) => {
     const game = selectCurrentGameInfo(getState() as RootState);
     if (!game) return;
 
     const newRecord: NewRecord = {
       text: params.content,
-      playerID: params.playerID,
-      gameID: game.id,
       questID: params.questID,
       hidden: params.hidden
     };
@@ -110,10 +137,13 @@ export const postNewRecord = createAsyncThunk(
 
       if (error) throw error;
       if (data) {
+        dispatch(loadCurrentGameRecords({ auth: params.auth }));
+        dispatch(loadCurrentGameQuests({ auth: params.auth }));
+        dispatch(loadCurrentGameSuggestions({ auth: params.auth }));
         //dispatch(setCurrentGame(data?.currentGame || null));
-        dispatch(setCurrentGameRecords(data?.records || []));
-        dispatch(setCurrentGameSessions(data?.sessions || []));
-        dispatch(setCurrentGamePlayers(data?.players || []));
+        // dispatch(setCurrentGameRecords(data?.records || []));
+        // dispatch(setCurrentGameSessions(data?.sessions || []));
+        // dispatch(setCurrentGamePlayers(data?.players || []));
       }
     } catch (err) {
       throw err;
@@ -128,14 +158,23 @@ export const editRecord = createAsyncThunk(
     if (!game) return;
 
     try {
-      const { data, error } = await api.put<GameRecords>('/record', params.auth, params.record);
+      const { data, error } = await api.put<GameRecords>('/record', params.auth, {
+        id: params.record.id,
+        text: params.record.text,
+        questID: params.record.questID, 
+        hidden: params.record.hidden
+      } as EditRecord);
 
       if (error) throw error;
       if (data) {
+        dispatch(loadCurrentGameRecords({ auth: params.auth }));
+        dispatch(loadCurrentGameQuests({ auth: params.auth }));
+        dispatch(loadCurrentGameSuggestions({ auth: params.auth }));
+
         //dispatch(setCurrentGame(data?.currentGame || null));
-        dispatch(setCurrentGameRecords(data?.records || []));
-        dispatch(setCurrentGameSessions(data?.sessions || []));
-        dispatch(setCurrentGamePlayers(data?.players || []));
+        // dispatch(setCurrentGameRecords(data?.records || []));
+        // dispatch(setCurrentGameSessions(data?.sessions || []));
+        // dispatch(setCurrentGamePlayers(data?.players || []));
       }
     } catch (err) {
       throw err;
@@ -163,7 +202,7 @@ export const loadCurrentGameQuests = createAsyncThunk(
   async (params: { auth: string }, appThunk) => {
     appThunk.dispatch(addLoading(loadCurrentGameQuests.typePrefix));
     try {
-      const response = await api.get<GameQuests>('/quests', params.auth);
+      const response = await api.get<{quests: QuestBrief[]}>('/quests', params.auth);
       appThunk.dispatch(setCurrentGameQuests(response.data?.quests || []));
     } catch (e) {
 
@@ -185,7 +224,7 @@ export const updateGameSettings = createAsyncThunk(
   'updateGameSettings',
   async (params: { auth: string, gameID: number, settings: GameSettings }) => {
     try {
-      const { error } = await api.put<GameFullInfo>("/game/settings", params.auth, { gameID: params.gameID, allowAllEditRecords: params.settings.allowAllEditRecords });
+      const { error } = await api.put<GameFull>("/game/settings", params.auth, { gameID: params.gameID, allowAllEditRecords: params.settings.allowAllEditRecords });
       if (error) throw error;
     } catch (e) {
       throw e;
@@ -217,7 +256,7 @@ const currentGameSlice = createSlice({
   name: 'currentGame',
   initialState,
   reducers: {
-    setCurrentGame: (state, action: PayloadAction<GameFullInfo | null>) => {
+    setCurrentGame: (state, action: PayloadAction<GameBrief | null>) => {
       state.game = action.payload;
     },
     setCurrentGameRecords: (state, action: PayloadAction<Record[]>) => {
@@ -226,34 +265,43 @@ const currentGameSlice = createSlice({
     setCurrentGameSessions: (state, action: PayloadAction<Session[]>) => {
       state.sessions = action.payload;
     },
-    setCurrentGamePlayers: (state, action: PayloadAction<PlayerInfo[]>) => {
+    setCurrentGameSettings: (state, action: PayloadAction<GameSettings | null>) => {
+      state.settings = action.payload;
+    },
+    setCurrentGamePlayers: (state, action: PayloadAction<PlayerBrief[]>) => {
       state.players = action.payload;
     },
-    setCurrentGameQuests: (state, action: PayloadAction<QuestInfo[]>) => {
+    setCurrentGameQuests: (state, action: PayloadAction<QuestBrief[]>) => {
       state.quests = action.payload;
     },
     setCurrentGameSuggestions: (state, action: PayloadAction<SuggestionData>) => {
       state.suggestions = action.payload;
     },
+    setCurrentGameLoading: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload;
+    },
     resetCurrentGame: () => initialState
   },
 });
 
-export const selectGame = (state: RootState): GameInfo | null => state.currentGame.game;
+export const selectGame = (state: RootState): GameBrief | null => state.currentGame.game;
 
 export const {
   setCurrentGame,
   setCurrentGameRecords,
   setCurrentGameSessions,
+  setCurrentGameSettings,
   setCurrentGamePlayers,
   setCurrentGameQuests,
   setCurrentGameSuggestions,
+  setCurrentGameLoading,
   resetCurrentGame
 } = currentGameSlice.actions;
 
 export const selectCurrentGame = (state: RootState) => state.currentGame;
+export const selectCurrentGameLoading = (state: RootState) => state.currentGame.loading;
 export const selectCurrentGameInfo = (state: RootState) => state.currentGame.game;
-export const selectCurrentGameGM = (state: RootState) => state.currentGame.players.find((el) => el.id === state.currentGame.game?.gmID);
+export const selectCurrentGameGM = (state: RootState) => state.currentGame.players.find((el) => el.ext === state.currentGame.game?.gmExt || "");
 export const selectCurrentGamePlayers = (state: RootState) => state.currentGame.players || [];
 export const selectCurrentGameRecords = (state: RootState) => state.currentGame.records || [];
 export const selectCurrentGameSessions = (state: RootState) => state.currentGame.sessions || [];

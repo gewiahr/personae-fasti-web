@@ -1,5 +1,31 @@
 import type { SuggestionEntity, SuggestionEntityRender } from "./suggestion";
 
+  /* Request */
+
+export interface EntityBrief {
+  id: number;
+  name: string;
+  title: string;
+
+  gameExt: string;
+  hidden: boolean;  
+};
+
+export interface CharBrief extends EntityBrief {
+  playerExt: string;
+};
+
+export interface NPCBrief extends EntityBrief {
+
+};
+
+export interface LocationBrief extends EntityBrief {
+  pid: number;
+};
+
+  /* Edit */
+
+
 export interface EntityEdit {
   fieldName?: string;
   arrayIndex?: number;
@@ -19,7 +45,7 @@ export interface Entity {
   title: string;
   description: string;
   gameID: number;
-  hiddenBy: number;
+  hidden: boolean;
 };
 
 export interface EntityCreateUpdate {
@@ -189,9 +215,9 @@ export type EntityType = 'char' | 'npc' | 'location';
 export type EntityMetaDataType = keyof typeof entityConfig;
 
 export interface EntityMetaDataTypeMap {
-  chars: { page: Char, edit: CharCreateUpdate, suggestion: 'char' };
-  npcs: { page: NPC, edit: NPCCreateUpdate, suggestion: 'npc' };
-  locations: { page: Location, edit: LocationCreateUpdate, suggestion: 'location' };
+  chars: { page: Char, brief: CharBrief, edit: CharCreateUpdate, suggestion: 'char' };
+  npcs: { page: NPC, brief: NPCBrief, edit: NPCCreateUpdate, suggestion: 'npc' };
+  locations: { page: Location, brief: LocationBrief, edit: LocationCreateUpdate, suggestion: 'location' };
 };
 
 export const entityConfig = {

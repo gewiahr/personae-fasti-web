@@ -6,10 +6,11 @@ import Icon from '@/components/icons/Icon';
 import { useNotifications } from '@/context/NotificationContext';
 import { useApi } from '@/hooks/useApi';
 import { updateGameSettings, startNewSession, removeLastSession, editSession, revokeInvite } from '@/reducers/CurrentGameSlice';
-import { selectAuthorization, selectPlayerInfo } from '@/reducers/PlayerSlice';
+import { selectAuthorization, selectPlayerExt } from '@/reducers/PlayerSlice';
 import { useAppDispatch, useAppSelector } from '@/store';
-import type { Game } from '@/types/game';
-import type { GameFullInfo, GamePage, SessionEdit, PlayerInfo } from '@/types/request';
+import type { Game, GameFull, SessionEdit } from '@/types/game';
+import type { GamePage } from '@/types/request';
+import type { PlayerBrief } from '@/types/player';
 import { api } from '@/utils/api';
 import ConfirmButton from '@lib/ConfirmButton';
 import FoldableCategory from '@lib/FoldableCategory';
@@ -26,11 +27,11 @@ const GameCreateEditPage: React.FC = () => {
 
   const dispatch = useAppDispatch();
   const auth = useAppSelector(selectAuthorization);
-  const player = useAppSelector(selectPlayerInfo);
+  const playerExt = useAppSelector(selectPlayerExt);
 
   const { addNotification } = useNotifications();
 
-  const [game, setGame] = useState<GameFullInfo>({title: ''} as GameFullInfo);
+  const [game, setGame] = useState<GameFull>({title: ''} as GameFull);
   const [loading, setLoading] = useState<boolean>(!newGame);
   const [error, setError] = useState<string>("");
   const { data: pageData, refetch: refetchPageData, error: pageError } = useApi.get<GamePage>(`/game/${id}`, auth, [], newGame);
@@ -54,11 +55,11 @@ const GameCreateEditPage: React.FC = () => {
 
   const handleFieldChange = (value: string, field?: string) => {
     if (!field) return
-    setGame(prev => prev ? { ...prev, [field]: value } : { title: "" } as GameFullInfo);
+    setGame(prev => prev ? { ...prev, [field]: value } : { title: "" } as GameFull);
     setError("");
   };
 
-  const saveEdited = async (editedGame: GameFullInfo) => {
+  const saveEdited = async (editedGame: GameFull) => {
     if (!editedGame || editedGame.title == "") return;
 
     // ** Join in one endpoint call ** //
@@ -149,7 +150,7 @@ const GameCreateEditPage: React.FC = () => {
     return true;
   };
 
-  const handleOnDeleteFromPlayersList = async (player: PlayerInfo, invite: boolean = false) => {
+  const handleOnDeleteFromPlayersList = async (player: PlayerBrief, invite: boolean = false) => {
     if (invite) {
       try {
         await dispatch(revokeInvite({ auth, username: player.username })).unwrap()
@@ -195,7 +196,7 @@ const GameCreateEditPage: React.FC = () => {
             {!newGame && <ListInput
               label='Игроки'
               addButtonLabel='Добавить игрока'
-              setOptions={pageData?.players.map((p) => { return { key: p.id, value: p.username, onDelete: p.id === player?.id ? undefined : async () => await handleOnDeleteFromPlayersList(p) } as ListInputItem })
+              setOptions={pageData?.players.map((p) => { return { key: p.id, value: p.username, onDelete: p.id === playerExt ? undefined : async () => await handleOnDeleteFromPlayersList(p) } as ListInputItem })
                                            .concat(pageData?.invites.map((i) => { return { key: i.id, value: i.username, status: "приглашен(-а)", onDelete: async () => await handleOnDeleteFromPlayersList(i, true) } as ListInputItem }))
                                            .sort((a, b) => a.key - b.key)}
               onAdd={(username) => handleInvite(username)}

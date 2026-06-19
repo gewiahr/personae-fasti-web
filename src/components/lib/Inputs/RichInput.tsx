@@ -22,12 +22,9 @@ export const RichInput: React.FC<RichInputProps> = ({ label, labelBGColor = 'bg-
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
-  //console.log('fullSuggestionData from Redux:', fullSuggestionData);
-
   useEffect(() => {
     // if (fullSuggestionData.entities.length <= 0) return;
     // var suggestionRender = fullSuggestionData.entities.filter((suggestion) => !suggestion.hidden).map((suggestion) => formSuggestionRef(suggestion));
-    // console.log(suggestionRender)
     // setSuggestionData(suggestionRender);
     // //setSuggestionDataShown(suggestionRender);
   }, []);
@@ -36,11 +33,10 @@ export const RichInput: React.FC<RichInputProps> = ({ label, labelBGColor = 'bg-
     entityEdit?.handleFieldChange(inputValue, entityEdit?.fieldName || "", entityEdit.arrayIndex);
   }, [inputValue]);
 
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
     const cursorPos = e.target.selectionStart;
 
-    //console.log(newValue)
     setInputValue(newValue);
 
     const context = getMentionContext(newValue, cursorPos);
@@ -61,13 +57,13 @@ export const RichInput: React.FC<RichInputProps> = ({ label, labelBGColor = 'bg-
       setSelectedSuggestionIndex(0);
     };
 
-  }, []);
+  };
 
   const getFilteredSuggestions = useCallback((context: MentionContext) => {
     const textarea = textareaRef.current;
     if (!textarea) return [];
     return suggestionData.filter(entity =>
-      !entity.hidden && entity.name.toLowerCase().includes(context.query.toLowerCase())
+      !entity.secret && entity.name.toLowerCase().includes(context.query.toLowerCase())
     );
   }, [suggestionData]);
 
@@ -167,7 +163,7 @@ export const RichInput: React.FC<RichInputProps> = ({ label, labelBGColor = 'bg-
         onKeyDown={handleKeyDown}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        className={`rich-input-textarea peer rich-input-textarea-border`}
+        className={`rich-input-textarea peer rich-input-textarea-border scroll-thin`}
       />
       
       {/* Floating label */}

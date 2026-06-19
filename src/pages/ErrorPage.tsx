@@ -27,10 +27,12 @@ export const ErrorPage = ({ error, entityMeta }: ErrorPageProps) => {
   };
 
   return (
-    <div className="flex flex-1 flex-col justify-center items-center">
-      <h2 className="text-xl text-(--color-text-danger) text-center">{title}</h2>
-      <br />
-      <p className="text-center">{message}</p>
+     <div className="absolute inset-0 flex flex-col justify-center items-center">
+      <div className="flex flex-col justify-center items-center self-center">
+        <h2 className="text-xl text-(--color-text-danger) text-center">{title}</h2>
+        <br />
+        <p className="text-center">{message}</p>
+      </div>
     </div>
   );
 };

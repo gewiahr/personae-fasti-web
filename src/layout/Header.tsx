@@ -1,7 +1,7 @@
 import { miniApp } from "@tma.js/sdk-react";
 import { BurgerMenu } from "../components/lib/BurgerMenu/BurgerMenu";
 import { resetCurrentGame, selectCurrentGameInfo } from "../reducers/CurrentGameSlice";
-import { resetPlayer, selectAuthorization, selectPlayerInfo } from "../reducers/PlayerSlice";
+import { resetPlayer, selectPlayerUsername } from "../reducers/PlayerSlice";
 import { useAppDispatch, useAppSelector } from "../store";
 import HeaderTMA from "./HeaderTMA";
 import HeaderWeb from "./HeaderWeb";
@@ -17,14 +17,13 @@ type HeaderProps = {
 
 const Header: React.FC<HeaderProps> = ({ isMenuOpen, switchMenuOpen, closeMenu }) => {
   const dispatch = useAppDispatch();
-  const auth = useAppSelector(selectAuthorization);
-  const player = useAppSelector(selectPlayerInfo);
+  //const auth = useAppSelector(selectAuthorization);
+  const username = useAppSelector(selectPlayerUsername);
   const currentGame = useAppSelector(selectCurrentGameInfo);
 
   const TMA = miniApp.ready.isAvailable();
 
   const logout = async () => {
-    console.log(auth);
     dispatch(resetPlayer());
     dispatch(resetCurrentGame());
 
@@ -37,12 +36,12 @@ const Header: React.FC<HeaderProps> = ({ isMenuOpen, switchMenuOpen, closeMenu }
       <HeaderTMA
         menuButton={<MenuButton isMenuOpen={isMenuOpen} buttonClick={switchMenuOpen} />}
         title={currentGame?.title}
-        username={player?.username}
+        username={username}
       /> :
       <HeaderWeb
         menuButton={<MenuButton isMenuOpen={isMenuOpen} buttonClick={switchMenuOpen} />}
         title={currentGame?.title}
-        username={player?.username}
+        username={username}
       />
     }
 
