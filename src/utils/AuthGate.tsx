@@ -64,10 +64,6 @@ export const AuthGate = ({ children }: { children: ReactNode }) => {
     <LoginComponent />
   );
 
-  // if (playerInfo?.settings == null) return (
-  //   <AuthGateReg />
-  // );
-
   if (gameIsLoading) return (
     <div className="auth-gate-page">
       <LoadingLabel />
