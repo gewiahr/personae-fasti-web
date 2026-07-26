@@ -1,17 +1,16 @@
-import Icon from "@/components/icons/Icon";
 import { useNotifications } from "@/context/NotificationContext";
 import { selectCurrentGame, changeCurrentGame, startNewSession } from "@/reducers/CurrentGameSlice";
 import { selectAuthorization, selectPlayerGames, selectPlayerInvites, loadPlayerGames, selectPlayerUsername, selectPlayerExt } from "@/reducers/PlayerSlice";
 import { useAppDispatch, useAppSelector } from "@/store";
-import type { GameBrief, GameFull } from "@/types/game";
+import type { GameBrief } from "@/types/game";
 import { api } from "@/utils/api";
 import ConfirmButton from "@lib/ConfirmButton";
 import CopyText from "@lib/CopyText";
 import FoldableCategory from "@lib/FoldableCategory";
 import { SelectInput } from "@lib/Inputs/SelectInput";
 import SubmitButton from "@lib/SubmitButton";
-import { useState, useEffect } from "react";
-import { LuTrash2 } from "react-icons/lu";
+import { useEffect } from "react";
+import { LuCheck, LuTrash2 } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 
 
@@ -26,21 +25,14 @@ const SettingsPage = () => {
   const playerInvites = useAppSelector(selectPlayerInvites);
   const { game } = useAppSelector(selectCurrentGame);
 
-  const [_, setEditedCurrentGame] = useState<GameFull | null>(game);
-
-
   const { addNotification } = useNotifications();
 
   useEffect(() => {
     dispatch(loadPlayerGames({ auth }));
   }, []);
 
-  useEffect(() => {
-    setEditedCurrentGame(game);
-  });
-
   const handleChangeCurrentGame = (value: string) => {
-    dispatch(changeCurrentGame({ auth, gameID: Number(value) }))
+    dispatch(changeCurrentGame({ auth, gameExt: value }))
       .unwrap()
       .catch((e: any) => {
         addNotification(e.message, 'error');
@@ -58,7 +50,7 @@ const SettingsPage = () => {
   };
 
   const handleInviteAccept = async (invite: GameBrief) => {
-    const { error, status } = await api.post(`/player/invite/accept/${invite.id}`, auth, null);
+    const { error, status } = await api.post(`/player/invite/accept/${invite.ext}`, auth, null);
     if (error) {
       addNotification(`Ошибка: ${error.message}`, 'error');
       return;
@@ -69,7 +61,7 @@ const SettingsPage = () => {
   };
 
   const handleInviteRefuse = async (invite: GameBrief) => {
-    const { error, status } = await api.post(`/player/invite/refuse/${invite.id}`, auth, null);
+    const { error, status } = await api.post(`/player/invite/refuse/${invite.ext}`, auth, null);
     if (error) {
       addNotification(`Ошибка: ${error.message}`, 'error');
       return;
@@ -91,10 +83,11 @@ const SettingsPage = () => {
           </div> : <div className='flex flex-col gap-6'>
             {playerInvites.map((invite) => <div className='flex flex-1 gap-6 justify-between items-center'>
               <p>{invite.title}</p>
-              <div className='flex gap-6'>
-                <Icon name='submit' className='icon-button-accented' onClick={() => handleInviteAccept(invite)} />
+              <div className='flex gap-6 items-center'>
+                <LuCheck size={24} className='icon-button-accented' onClick={() => handleInviteAccept(invite)} />
+                {/* <Icon name='submit' className='icon-button-accented' onClick={() => handleInviteAccept(invite)} /> */}
                 {/* <Icon name='trash' className='icon-button-danger' onClick={() => handleInviteRefuse(invite)} /> */}
-                <LuTrash2 className='icon-button-danger' onClick={() => handleInviteRefuse(invite)} />
+                <LuTrash2 size={20} className='icon-button-danger' onClick={() => handleInviteRefuse(invite)} />
               </div>
             </div>)}  
           </div>}
@@ -107,8 +100,8 @@ const SettingsPage = () => {
               {playerGames && playerGames.length > 0 ? <SelectInput
                 key={playerGames.length}
                 options={playerGames?.
-                  filter((pg) => pg.id != game.id).
-                  map((pg) => { return { key: pg.id, value: pg.title } }) || []}
+                  filter((pg) => pg.ext != game.ext).
+                  map((pg) => { return { key: pg.ext, value: pg.title } }) || []}
                 value={game.title}
                 entityEdit={{ handleFieldChange: handleChangeCurrentGame }}
 
@@ -116,7 +109,7 @@ const SettingsPage = () => {
               <h2 className='text-xl'>{game.title}</h2>}
             </div>}
             <div className='flex gap-2 max-xs:flex-1 xs:justify-end'>
-              {game?.gmID == playerExt && <SubmitButton key={`settingspage_submitbutton_editgame`} className='flex' onClick={() => navigate(`/games/${game ? game.id : 0}/edit`)}>
+              {game?.gmExt == playerExt && <SubmitButton key={`settingspage_submitbutton_editgame`} className='flex' onClick={() => navigate(`/games/${game ? game.ext : 0}/edit`)}>
                 Редактировать
               </SubmitButton>}
               <SubmitButton key={`settingspage_submitbutton_newgame`} onClick={() => navigate("/games/new")}>
@@ -126,7 +119,7 @@ const SettingsPage = () => {
           </div>
         </div>
 
-        {game?.gmID == playerExt && <ConfirmButton className='w-full mt-2' children={"Начать новую сессию"} onClickConfirm={() => handleNewSession()} />}
+        {game?.gmExt == playerExt && <ConfirmButton className='w-full mt-2' children={"Начать новую сессию"} onClickConfirm={() => handleNewSession()} />}
 
         {/* <SelectItems
           items={[

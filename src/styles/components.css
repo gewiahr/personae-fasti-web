@@ -181,7 +181,7 @@
 }
 
 .select-input-dropdown-container {
-  @apply absolute z-50 w-full border rounded-lg shadow-lg overflow-y-auto max-h-60;
+  @apply absolute z-50 w-full border rounded-lg shadow-lg overflow-y-auto max-h-62;
   background-color: var(--color-bg-secondary);
   border-color: var(--color-dimmed);
 }
