@@ -21,9 +21,8 @@ import { ToggleSwitch } from '@lib/ToggleSwitch';
 import { LoadingPage } from '../LoadingPage';
 
 const GameCreateEditPage: React.FC = () => {
-  const { id } = useParams();
-
-  const newGame = !id;
+  const { ext } = useParams();
+  const newGame = !ext;
 
   const dispatch = useAppDispatch();
   const auth = useAppSelector(selectAuthorization);
@@ -34,7 +33,7 @@ const GameCreateEditPage: React.FC = () => {
   const [game, setGame] = useState<GameFull>({title: ''} as GameFull);
   const [loading, setLoading] = useState<boolean>(!newGame);
   const [error, setError] = useState<string>("");
-  const { data: pageData, refetch: refetchPageData, error: pageError } = useApi.get<GamePage>(`/game/${id}`, auth, [], newGame);
+  const { data: pageData, refetch: refetchPageData, error: pageError } = useApi.get<GameFull>(`/game/${ext}`, auth, [], newGame);
 
   const [sessionEditItem, setSessionEditItem] = useState<SessionEdit | null>(null);
 
@@ -43,7 +42,7 @@ const GameCreateEditPage: React.FC = () => {
 
   useEffect(() => {
     if (pageData) {
-      setGame(pageData.game);
+      setGame(pageData);
       setLoading(false);
     };
   }, [pageData]);
@@ -72,10 +71,10 @@ const GameCreateEditPage: React.FC = () => {
       setLoading(false);
       return
     } else {
-      window.location.href = newGame && data ? `/game/${data.id}` : `/settings`; //id ? `/settings` : `/`; //navigate(data?.id ? `/settings` : `/`);}
+      window.location.href = newGame && data ? `/game/${data.ext}` : `/settings`; //id ? `/settings` : `/`; //navigate(data?.id ? `/settings` : `/`);}
     }
 
-    if (game) dispatch(updateGameSettings({ auth, gameID: game.id, settings: game.settings }))
+    if (game) dispatch(updateGameSettings({ auth, gameExt: game.ext, settings: game.settings }))
       // .catch((e) => addNotification(e.message, 'error'))
       // .then(() =>  addNotification("Настройки сохранены", 'success'));
     
@@ -176,6 +175,8 @@ const GameCreateEditPage: React.FC = () => {
     return dayjs.utc(isoString).local().format('YYYY-MM-DDTHH:mm');
   };
 
+  console.log(game)
+
   return (
     <div className='max-w-4xl mx-auto p-4'>
       {loading ? (
@@ -196,8 +197,8 @@ const GameCreateEditPage: React.FC = () => {
             {!newGame && <ListInput
               label='Игроки'
               addButtonLabel='Добавить игрока'
-              setOptions={pageData?.players.map((p) => { return { key: p.id, value: p.username, onDelete: p.id === playerExt ? undefined : async () => await handleOnDeleteFromPlayersList(p) } as ListInputItem })
-                                           .concat(pageData?.invites.map((i) => { return { key: i.id, value: i.username, status: "приглашен(-а)", onDelete: async () => await handleOnDeleteFromPlayersList(i, true) } as ListInputItem }))
+              setOptions={game.players.map((p) => { return { key: p.ext, value: p.username, onDelete: p.ext === playerExt ? undefined : async () => await handleOnDeleteFromPlayersList(p) } as ListInputItem })
+                                           .concat(game.invites.map((i) => { return { key: i.ext, value: i.username, status: "приглашен(-а)", onDelete: async () => await handleOnDeleteFromPlayersList(i, true) } as ListInputItem }))
                                            .sort((a, b) => a.key - b.key)}
               onAdd={(username) => handleInvite(username)}
               onAddLabel='Пригласить'
@@ -277,7 +278,7 @@ const GameCreateEditPage: React.FC = () => {
               disabled={game?.title == ""}
               onClick={() => { if (!game || game?.title == "") return; saveEdited(game) }}              
             >
-              {game?.title == "" ? "Введите название игры" : game?.id ? "Применить" : "Создать"}
+              {game.title == "" ? "Введите название игры" : game.ext ? "Применить" : "Создать"}
             </SubmitButton>
           </div>
         </>

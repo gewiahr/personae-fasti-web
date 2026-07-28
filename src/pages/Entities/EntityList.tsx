@@ -61,7 +61,7 @@ const EntityList = () => {
             entity={entity}
             metaData={metaData}
             labelText={entityType === 'chars' ? players.find(p => p.ext === (entity as CharBrief).playerExt)?.username || "" : undefined} // TODO: make accented
-            footerData={entityType === 'locations' ? entities.find(e => e.id === (entity as LocationBrief).pid || "")?.name : undefined}
+            //footerData={entityType === 'locations' ? entities.find(e => e.id === (entity as LocationBrief).pid || "")?.name : undefined}
             // Player Labels
           // playerName={data?.players.find((player) => (player.id === char.playerID))?.username || ""}
           //labelText={players.find((player) => (player.id === entity.playerID))?.username || ""}

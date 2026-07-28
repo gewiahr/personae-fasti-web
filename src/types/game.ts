@@ -10,6 +10,7 @@ export type GameFull = {
   settings: GameSettings;
   sessions: Session[];
   players: PlayerBrief[];
+  invites: PlayerBrief[]
 };
 
 export type GameSettings = {
@@ -39,13 +40,13 @@ export type SessionEdit = {
   /* Edit */
 
 export type Game = {
-  id: number;
+  ext: number;
   name: string;
-  gmID: number;
+  gmExt: number;
 };
 
 export type GameCreateUpdate = {
-  id: number;
+  ext: number;
   name: string;
-  gmID: number;
+  gmExt: number;
 };

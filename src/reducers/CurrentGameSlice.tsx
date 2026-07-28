@@ -222,9 +222,9 @@ export const loadCurrentGameSuggestions = createAsyncThunk(
 
 export const updateGameSettings = createAsyncThunk(
   'updateGameSettings',
-  async (params: { auth: string, gameID: number, settings: GameSettings }) => {
+  async (params: { auth: string, gameExt: string, settings: GameSettings }) => {
     try {
-      const { error } = await api.put<GameFull>("/game/settings", params.auth, { gameID: params.gameID, allowAllEditRecords: params.settings.allowAllEditRecords });
+      const { error } = await api.put<GameFull>("/game/settings", params.auth, { gameExt: params.gameExt, allowAllEditRecords: params.settings.allowAllEditRecords });
       if (error) throw error;
     } catch (e) {
       throw e;

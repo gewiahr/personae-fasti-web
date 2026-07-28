@@ -22,8 +22,8 @@ export type PlayerGamesInfo = {
 
 export type GamePage = {
   game: GameFull;
-  players: PlayerBrief[];
-  invites: PlayerBrief[];
+  // players: PlayerBrief[];
+  // invites: PlayerBrief[];
 }
 
 export interface GameEntities {
