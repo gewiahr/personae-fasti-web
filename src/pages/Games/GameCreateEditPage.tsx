@@ -9,7 +9,6 @@ import { updateGameSettings, startNewSession, removeLastSession, editSession, re
 import { selectAuthorization, selectPlayerExt } from '@/reducers/PlayerSlice';
 import { useAppDispatch, useAppSelector } from '@/store';
 import type { Game, GameFull, SessionEdit } from '@/types/game';
-import type { GamePage } from '@/types/request';
 import type { PlayerBrief } from '@/types/player';
 import { api } from '@/utils/api';
 import ConfirmButton from '@lib/ConfirmButton';
@@ -129,13 +128,16 @@ const GameCreateEditPage: React.FC = () => {
       return false;
     }
 
-    var sessionStartTimeString;
-    try {
-      sessionStartTimeString = dayjs(sessionEditItem.startTime).utc().toISOString()
-    } catch (e: any) {
-      addNotification('Неверная дата', 'error');
-      return false; 
-    }
+    var sessionStartTimeString = "";
+    // TODO: make prehistory sessions with meaningful time
+    if (sessionEditItem.number > 0) {
+      try {
+        sessionStartTimeString = dayjs(sessionEditItem.startTime).utc().toISOString()
+      } catch (e: any) {
+        addNotification('Неверная дата', 'error');
+        return false; 
+      }
+    } 
 
     try {
       await dispatch(editSession({ auth, sessionUpdate: { ...sessionEditItem, startTime: sessionStartTimeString } })).unwrap()
