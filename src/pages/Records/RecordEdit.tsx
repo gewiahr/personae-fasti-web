@@ -36,6 +36,8 @@ export const RecordEdit = ({
   const [editedRecord, setEditedRecord] = useState<Record>(record);
 
   const { addNotification } = useNotifications();
+  
+  const notUpdated = record.created === record.updated
 
   useEffect(() => {
     dispatch(loadCurrentGameQuests({ auth }))
@@ -118,17 +120,20 @@ export const RecordEdit = ({
         />
       </div>}
 
-      {playerExt == currentGame.gmExt &&
-        <div className='py-2'>
-          <ToggleSwitch
-            key={"recordedit_hiddenswitch"}
-            label="Скрыть пост"
-            labelPosition='right'
-            setValue={postHidden}
-            entityEdit={{ handleFieldChange: (value) => setPostHidden(value) }}
-          />
-        </div>
-      }
+      {playerExt == currentGame.gmExt && <div className='py-2'>
+        <ToggleSwitch
+          key={"recordedit_hiddenswitch"}
+          label="Скрыть пост"
+          labelPosition='right'
+          setValue={postHidden}
+          entityEdit={{ handleFieldChange: (value) => setPostHidden(value) }}
+        />
+      </div>}
+      
+      <div className='flex flex-col pt-4'>
+        <span className='datestamp-label self-end select-none'>Создано: {new Date(record.created).toLocaleDateString()}</span>
+        {!notUpdated && <span className='datestamp-label self-end select-none'>Обновлено: {new Date(record.updated).toLocaleDateString()}</span>}
+      </div>
 
       <div className='flex justify-between items-center mt-4'>
         <SubmitButton 

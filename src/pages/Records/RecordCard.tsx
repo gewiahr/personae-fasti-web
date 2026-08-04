@@ -26,7 +26,10 @@ const RecordCard = ({ record, label="", accented=false, editable=false, quest, o
           </div>
         </div>
         <div className="flex justify-between items-end pt-2">
-          <span className='datestamp-label'>Обновлено: {new Date(record.updated).toLocaleDateString()}</span>
+          
+          {/* <span className='datestamp-label'>Обновлено: {new Date(record.updated).toLocaleDateString()}</span> */}
+          <span className='datestamp-label'>{new Date(record.created).toLocaleDateString()}</span>
+
           <div className="flex items-center">
             {record.hidden && <div className='pr-4'>
               <Icon 
