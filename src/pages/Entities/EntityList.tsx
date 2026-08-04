@@ -46,7 +46,7 @@ const EntityList = () => {
   if (error) return <ErrorPage error={error} entityMeta={metaData} />
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
+    <div className="layout-page">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">{metaData.EntityNamePl}</h1>
         <LinkButton to={`/${metaData.EntityTypePl}/new`} >
