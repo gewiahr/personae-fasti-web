@@ -14,8 +14,6 @@ import SubmitButton from "@lib/SubmitButton";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-
-
 const CharEditPage = () => {
   const { id } = useParams();
   const newChar = !id;

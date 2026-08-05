@@ -57,7 +57,7 @@ export const changeCurrentGame = createAsyncThunk(
   'changeCurrentGame',
   async (params: { auth: string, gameExt: string }, appThunk) => {
     try {
-      const { data, error } = await api.put<GameFull>("/player/game", params.auth, { gameExt: params.gameExt });
+      const { data, error } = await api.put<GameFull>(`/player/currentGame/${params.gameExt}`, params.auth, null);
       if (error) throw error
       appThunk.dispatch(setCurrentGame(data || null));
     } catch (e) {

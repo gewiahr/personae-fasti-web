@@ -2,7 +2,7 @@ import { useNotifications } from "@/context/NotificationContext";
 import { selectCurrentGame, changeCurrentGame, startNewSession } from "@/reducers/CurrentGameSlice";
 import { selectAuthorization, selectPlayerGames, selectPlayerInvites, loadPlayerGames, selectPlayerUsername, selectPlayerExt } from "@/reducers/PlayerSlice";
 import { useAppDispatch, useAppSelector } from "@/store";
-import type { GameBrief } from "@/types/game";
+import type { GameInvites } from "@/types/game";
 import { api } from "@/utils/api";
 import ConfirmButton from "@lib/ConfirmButton";
 import CopyText from "@lib/CopyText";
@@ -49,24 +49,24 @@ const SettingsPage = () => {
       });
   };
 
-  const handleInviteAccept = async (invite: GameBrief) => {
-    const { error, status } = await api.post(`/player/invite/accept/${invite.ext}`, auth, null);
+  const handleInviteAccept = async (invite: GameInvites) => {
+    const { error, status } = await api.post(`/player/invite/accept/${invite.inviteCode}`, auth, null);
     if (error) {
       addNotification(`Ошибка: ${error.message}`, 'error');
       return;
     } else if (status === 200) {
-      addNotification(`Вы приняли приглашение на игру "${invite.title}"`, 'success');
+      addNotification(`Вы приняли приглашение на игру "${invite.gameTitle}"`, 'success');
       dispatch(loadPlayerGames({ auth }));
     };   
   };
 
-  const handleInviteRefuse = async (invite: GameBrief) => {
-    const { error, status } = await api.post(`/player/invite/refuse/${invite.ext}`, auth, null);
+  const handleInviteRefuse = async (invite: GameInvites) => {
+    const { error, status } = await api.post(`/player/invite/refuse/${invite.inviteCode}`, auth, null);
     if (error) {
       addNotification(`Ошибка: ${error.message}`, 'error');
       return;
     } else if (status === 200) {
-      addNotification(`Вы отклонили приглашение на игру "${invite.title}"`, 'warning');
+      addNotification(`Вы отклонили приглашение на игру "${invite.gameTitle}"`, 'warning');
       dispatch(loadPlayerGames({ auth }));
     };   
   };
@@ -82,7 +82,7 @@ const SettingsPage = () => {
             <CopyText text={playerUsername} />
           </div> : <div className='flex flex-col gap-6'>
             {playerInvites.map((invite) => <div className='flex flex-1 gap-6 justify-between items-center'>
-              <p>{invite.title}</p>
+              <p>{invite.gameTitle}</p>
               <div className='flex gap-6 items-center'>
                 <LuCheck size={24} className='icon-button-accented' onClick={() => handleInviteAccept(invite)} />
                 {/* <Icon name='submit' className='icon-button-accented' onClick={() => handleInviteAccept(invite)} /> */}

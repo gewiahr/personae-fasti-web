@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { PlayerGamesInfo } from '@/types/request';
-import type { GameBrief } from '@/types/game'; 
+import type { GameBrief, GameInvites } from '@/types/game'; 
 import type { LoginInfo, PlayerFull, PlayerSettings } from '@/types/player';
 import { type RootState } from '@/store';
 import { api } from '@/utils/api';
@@ -18,7 +18,7 @@ export type PlayerData = {
   loading: boolean;
   token: string;
   games: GameBrief[];
-  invites: GameBrief[];
+  invites: GameInvites[];
   theme: UITheme;
 };
 
@@ -169,7 +169,7 @@ const PlayerSlice = createSlice({
     setPlayerGames: (state, action: PayloadAction<GameBrief[]>) => {
       state.games = action.payload;
     },
-    setPlayerInvites: (state, action: PayloadAction<GameBrief[]>) => {
+    setPlayerInvites: (state, action: PayloadAction<GameInvites[]>) => {
       state.invites = action.payload;
     },
     resetPlayer: () => initialState
@@ -191,7 +191,7 @@ export const selectPlayerExt = (state: RootState): string => state.player.ext;
 export const selectPlayerUsername = (state: RootState): string => state.player.username;
 export const selectPlayerSettings = (state: RootState): PlayerSettings | null => state.player.settings;
 export const selectPlayerGames = (state: RootState): GameBrief[] => state.player.games;
-export const selectPlayerInvites = (state: RootState): GameBrief[] => state.player.invites;
+export const selectPlayerInvites = (state: RootState): GameInvites[] => state.player.invites;
 export const selectAuthorization = (state: RootState): string => state.player.token;
 export const selectPlayerTheme = (state: RootState): UITheme => state.player.theme;
 

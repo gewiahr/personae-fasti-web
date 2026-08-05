@@ -37,6 +37,13 @@ export type SessionEdit = {
   error?: string;
 };
 
+export type GameInvites = {
+  playerExt: string;
+  gameExt: string;
+  gameTitle: string;
+  inviteCode: string;
+};
+
   /* Edit */
 
 export type Game = {

@@ -1,5 +1,5 @@
 import type { Char, NPC, Location, CharBrief, NPCBrief } from "./entities";
-import type { GameBrief, GameFull, Session } from "./game";
+import type { GameBrief, GameFull, GameInvites, Session } from "./game";
 import type { PlayerBrief } from "./player";
 import type { Record } from "./record";
 
@@ -17,7 +17,7 @@ export type GameRecords = {
 export type PlayerGamesInfo = {
   currentGame: GameFull;
   playerGames: GameBrief[];
-  playerInvites: GameBrief[];
+  playerInvites: GameInvites[];
 };
 
 export type GamePage = {
