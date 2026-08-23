@@ -5,10 +5,10 @@ import { selectAuthorization, selectPlayerExt } from '@/reducers/PlayerSlice';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { enrichMentionInput } from '@/types/mention';
 import { convertSuggestionDataToRender } from '@/types/suggestion';
-import { RichInput } from '@lib/Inputs/RichInput';
 import { SelectInput } from '@lib/Inputs/SelectInput';
 import SubmitButton from '@lib/SubmitButton';
 import { ToggleSwitch } from '@lib/ToggleSwitch';
+import { MarkdownInput } from '@lib/Inputs/MarkdownInput';
 
 type RecordInputProps = {
 
@@ -63,7 +63,14 @@ export const RecordInput: React.FC<RecordInputProps> = () => {
   return (
     <div className="mb-6">
       <div className="flex flex-col space-y-2">
-        <RichInput 
+        {/* <RichInput 
+          key={`recordinput_richinput_${inputKey}`} 
+          label='Что нового?'
+          value={input} 
+          entityEdit={{ handleFieldChange }} 
+          suggestionData={suggestions && convertSuggestionDataToRender(suggestions)}
+        /> */}
+        <MarkdownInput
           key={`recordinput_richinput_${inputKey}`} 
           label='Что нового?'
           value={input} 

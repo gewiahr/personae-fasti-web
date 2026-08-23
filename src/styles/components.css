@@ -148,10 +148,13 @@
 .rich-input-textarea {
   @apply w-full min-h-25 max-h-[40vh] field-sizing-content px-4 py-3 border rounded-lg bg-transparent;
   background-color: var(--color-bg-primary);
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .rich-input-textarea-border {
-  border-color: var(--color-white)
+  border-color: var(--color-white);
+  transition: border-color 0.2s ease;
 }
 
 .rich-input-textarea-border:focus {
@@ -159,6 +162,99 @@
   outline: var(--color-accent);
   border-color: var(--color-accent)
 } 
+
+/* .rich-input-textarea {
+  min-height: 2.5rem;
+  padding: 0.5rem 0.75rem;
+  outline: none;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.rich-input-textarea-border {
+  border: 1px solid var(--color-border, #d1d5db);
+  border-radius: 6px;
+  transition: border-color 0.15s ease;
+}
+.rich-input-textarea-border:focus-within {
+  border-color: var(--color-primary, #3b82f6);
+} */
+
+.rich-input-bold { font-weight: 600; }
+.rich-input-italic { font-style: italic; }
+
+/* Mentions */
+.mention-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 4px;
+  padding: 0 4px;
+  cursor: default;
+  user-select: none;
+  vertical-align: baseline;
+  line-height: inherit;
+}
+.mention-chip::before { content: attr(data-icon) "\00A0"; }
+
+.mention-chip.mention-chip-editing {
+  outline: 1.5px solid currentColor;
+  outline-offset: 1px;
+  cursor: text;
+  user-select: text;
+}
+.mention-chip.mention-chip-selected {
+  outline: 2px solid currentColor;
+  outline-offset: 1px;
+}
+.mention-chip.mention-chip-pending-remove {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  text-decoration: line-through;
+}
+.mention-chip-rename-input {
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0;
+  min-width: 1ch;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.mention-chip-char { color: #3b82f6; background: rgb(59 130 246 / 0.15); }
+.mention-chip-npc { color: #eab308; background: rgb(234 179 8 / 0.15); }
+.mention-chip-location { color: #22c55e; background: rgb(34 197 94 / 0.15); }
+
+/* Suggestions dropdown */
+.mention-suggestions-menu {
+  position: absolute;
+  z-index: 50;
+  min-width: 160px;
+  max-height: 220px;
+  overflow-y: auto;
+  margin: 4px 0 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--color-bg-primary, #fff);
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+.mention-suggestions-menu li {
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.mention-suggestions-menu li.selected,
+.mention-suggestions-menu li:hover {
+  background: var(--color-bg-hover, #f1f5f9);
+}
 
 
   /* Select Input */
