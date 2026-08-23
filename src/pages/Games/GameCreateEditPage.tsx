@@ -70,7 +70,7 @@ const GameCreateEditPage: React.FC = () => {
       setLoading(false);
       return
     } else {
-      window.location.href = newGame && data ? `/game/${data.ext}` : `/settings`; //id ? `/settings` : `/`; //navigate(data?.id ? `/settings` : `/`);}
+      window.location.href = newGame && data ? `/games/${data.ext}/edit` : `/settings`;
     }
 
     if (game) dispatch(updateGameSettings({ auth, gameExt: game.ext, settings: game.settings }))

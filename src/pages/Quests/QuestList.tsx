@@ -27,11 +27,11 @@ const QuestList = () => {
       </div>
 
       {quests.length > 0 ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {quests.map((char) => (
+        {quests.map((quest) => (
           <QuestCard
-            key={char.id}
-            quest={char}
-            labelText={char.finished ? "Завершено" : "В процессе"}
+            key={quest.ext}
+            quest={quest}
+            labelText={quest.finished ? "Завершено" : "В процессе"}
           />
         ))}
       </div> :

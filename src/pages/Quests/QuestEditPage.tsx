@@ -20,8 +20,8 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 const QuestEditPage = () => {
-  const { id } = useParams();
-  const newQuest = !id;
+  const { ext } = useParams();
+  const newQuest = !ext;
   const navigate = useNavigate();
 
   const auth = useAppSelector(selectAuthorization);
@@ -30,7 +30,7 @@ const QuestEditPage = () => {
   const [quest, setQuest] = useState<Quest | null>(newQuest ? {} as Quest : null);
   const [tasks, setTasks] = useState<QuestTask[]>([]);
 
-  const { data: questData, loading, error } = useApi.get<QuestPageData>(`/quest/${id}`, auth, [], newQuest);
+  const { data: questData, loading, error } = useApi.get<QuestPageData>(`/quest/${ext}`, auth, [], newQuest);
 
   const { addNotification } = useNotifications();
 
@@ -49,7 +49,7 @@ const QuestEditPage = () => {
 
   const addTask = () => {
     if (!quest) return;
-    setTasks([...tasks, NewQuestTask(quest.id)]);
+    setTasks([...tasks, NewQuestTask()]);
   };
 
   const deleteTask = (removeIndex: number) => {
@@ -76,19 +76,19 @@ const QuestEditPage = () => {
 
     const endpoint = '/quest';
     const method = newQuest ? api.post : api.put;
-    const { data, error } = await method<Quest>(endpoint, auth, { quest: enrichedQuest, tasks: enrichedTasks });
+    const { data, error } = await method<QuestPageData>(endpoint, auth, { quest: enrichedQuest, tasks: enrichedTasks });
 
     if (error) {
       addNotification(`Ошибка: ${error.message}`, 'error');
     } else if (!error) {
-      navigate(data?.id ? `/quests/${data.id}` : '/quests');
+      navigate(data?.quest.ext ? `/quests/${data.quest.ext}` : '/quests');
     };
   };
 
   const handleResetQuest = async () => {
     if (quest == null) return
 
-    const { error, status } = await api.patch(`/quest/${id}/reset`, auth, null);
+    const { error, status } = await api.patch(`/quest/${ext}/reset`, auth, null);
     if (status === 200) {
       addNotification("Выполнение квеста отменено", 'success');
       //setTasks(data);
@@ -102,7 +102,7 @@ const QuestEditPage = () => {
   const deleteQuest = async () => {
     if (!quest) return;
 
-    const { error } = await api.delete(`/quests/${quest.id}`, auth);
+    const { error } = await api.delete(`/quests/${quest.ext}`, auth);
 
     if (error) {
       addNotification(error.message, 'error');
@@ -185,7 +185,7 @@ const QuestEditPage = () => {
 
         <Divider className='my-2' />
 
-        {quest?.id ? <div className='flex justify-between items-center'>
+        {quest?.ext ? <div className='flex justify-between items-center'>
           <SubmitButton
             onClick={deleteQuest}
             className='w-[30%]'

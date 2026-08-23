@@ -17,16 +17,16 @@ const AppRouter = () => {
 
         <Route path=":entityType" element={<EntityLayout />}>
           <Route index element={<EntityList />} />
-          <Route path=":id" element={<EntityPage />} />
+          <Route path=":ext" element={<EntityPage />} />
           <Route path="new" element={<EntityEditPage />} />
-          <Route path=":id/edit" element={<EntityEditPage />} />
+          <Route path=":ext/edit" element={<EntityEditPage />} />
         </Route>
 
         <Route path="quests"> {/* element={<QuestLayout />}> */}
           <Route index element={<QuestList />} />
-          <Route path=":id" element={<QuestPage />} />
+          <Route path=":ext" element={<QuestPage />} />
           <Route path="new" element={<QuestEditPage />} />
-          <Route path=":id/edit" element={<QuestEditPage />} />
+          <Route path=":ext/edit" element={<QuestEditPage />} />
         </Route>
 
         <Route path="games"> {/* element={<GameLayout />}> */}
@@ -40,26 +40,26 @@ const AppRouter = () => {
       {/* <Route path="/" element={<RecordPage key={1} />} />
 
       <Route path="/chars" element={<CharsList key={"chars"} />} />
-      <Route path="/char/:id" element={<EntityPage key={11} metaData={CharMetaData} />} />
+      <Route path="/char/:ext" element={<EntityPage key={11} metaData={CharMetaData} />} />
       <Route path="/char/new" element={<EntityEditPage key={12} metaData={CharMetaData} />} />
-      <Route path="/char/:id/edit" element={<EntityEditPage key={13} metaData={CharMetaData} />} />
+      <Route path="/char/:ext/edit" element={<EntityEditPage key={13} metaData={CharMetaData} />} />
 
       <Route path="/npcs" element={<EntitiesList key={"npcs"} metaData={NPCMetaData} />} />
-      <Route path="/npc/:id" element={<EntityPage key={21} metaData={NPCMetaData} />} />
+      <Route path="/npc/:ext" element={<EntityPage key={21} metaData={NPCMetaData} />} />
       <Route path="/npc/new" element={<EntityEditPage key={22} metaData={NPCMetaData} />} />
-      <Route path="/npc/:id/edit" element={<EntityEditPage key={23} metaData={NPCMetaData} />} />
+      <Route path="/npc/:ext/edit" element={<EntityEditPage key={23} metaData={NPCMetaData} />} />
 
       <Route path="/locations" element={<EntitiesList key={"locations"} metaData={LocationMetaData} />} />
-      <Route path="/location/:id" element={<EntityPage key={31} metaData={LocationMetaData} />} />
+      <Route path="/location/:ext" element={<EntityPage key={31} metaData={LocationMetaData} />} />
       <Route path="/location/new" element={<EntityEditPage key={32} metaData={LocationMetaData} />} />
-      <Route path="/location/:id/edit" element={<EntityEditPage key={33} metaData={LocationMetaData} />} />
+      <Route path="/location/:ext/edit" element={<EntityEditPage key={33} metaData={LocationMetaData} />} />
 
       <Route path="/quests" element={<QuestsList key={"quests"} />} />
-      <Route path="/quest/:id" element={<QuestPage key={31} />} />
+      <Route path="/quest/:ext" element={<QuestPage key={31} />} />
       <Route path="/quest/new" element={<QuestEditPage key={32} />} />
-      <Route path="/quest/:id/edit" element={<QuestEditPage key={33} />} />
+      <Route path="/quest/:ext/edit" element={<QuestEditPage key={33} />} />
 
-      <Route path="/game/:id" element={<GameCreateEditPage key={400001} />} />
+      <Route path="/game/:ext" element={<GameCreateEditPage key={400001} />} />
       <Route path="/game/new" element={<GameCreateEditPage key={400002} />} />
 
       <Route path="settings" element={<SettingsPage key={999} />} /> */}

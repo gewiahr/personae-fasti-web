@@ -47,7 +47,7 @@ const CharEditPage = () => {
 
     const { data, error } = await method<Char>(endpoint, auth, enrichedChar);
     if (!error) {
-      navigate(data?.id ? `/chars/${data.id}` : '/chars');
+      navigate(data?.ext ? `/chars/${data.ext}` : '/chars');
     }
   };
 
@@ -91,7 +91,7 @@ const CharEditPage = () => {
           onClick={() => saveEdited(char)}
           className='mt-6'
         >
-          {char?.id ? "Применить" : "Создать"}  
+          {char?.ext ? "Применить" : "Создать"}
         </SubmitButton>
       </div>)}
     </div>  

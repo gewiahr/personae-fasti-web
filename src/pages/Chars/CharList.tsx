@@ -49,7 +49,7 @@ const CharList = () => {
       {chars.length > 0 ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {chars.map((char) => (
           <EntityCard
-            key={char.id}
+            key={char.ext}
             entity={char}
             metaData={CharMetaData}
             labelText={players.find((player) => (player.ext === char.playerExt))?.username || ""}

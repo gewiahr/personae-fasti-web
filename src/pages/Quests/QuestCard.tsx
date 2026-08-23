@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import type { QuestInfo } from '@/types/request';
+import type { QuestBrief } from '@/types/quest';
 
 type QuestCardProps = {
-  quest: QuestInfo;
+  quest: QuestBrief;
   labelText?: string | null;
 };
 
@@ -17,7 +17,7 @@ export const QuestCard = ({ quest, labelText = null }: QuestCardProps) => {
 
   return (
     <Link
-      to={`/quests/${quest.id}`}
+      to={`/quests/${quest.ext}`}
       className={`entity-card-link-container`}
     >
       <div className="p-4 h-full flex flex-col">

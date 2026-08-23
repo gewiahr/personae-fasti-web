@@ -1,12 +1,12 @@
 import { entityToMetaData, type EntityType } from "@/types/entities";
 
 type HyperlinkProps = {
-  id: string,
+  ext: string,
   type: EntityType,
   mentionText: string
 }
 
-const Hyperlink: React.FC<HyperlinkProps> = ({ id, type, mentionText }) => {
+const Hyperlink: React.FC<HyperlinkProps> = ({ ext, type, mentionText }) => {
   let typeColor = "";
   switch (type) {
     case "char":
@@ -22,8 +22,8 @@ const Hyperlink: React.FC<HyperlinkProps> = ({ id, type, mentionText }) => {
 
   return (
     <a
-      key={`hyperlink-${type}-${id}`}
-      href={`/${entityToMetaData[type].metaData}/${id}`}
+      key={`hyperlink-${type}-${ext}`}
+      href={`/${entityToMetaData[type].metaData}/${ext}`}
       className={`${typeColor} text-sans mention-link hover:underline`}
       // onClick={(e) => {
       //   e.preventDefault();

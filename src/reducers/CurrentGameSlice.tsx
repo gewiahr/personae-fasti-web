@@ -122,13 +122,13 @@ export const loadCurrentGameRecords = createAsyncThunk(
 
 export const postNewRecord = createAsyncThunk(
   'postNewRecord',
-  async (params: { auth: string, content: string, hidden: boolean, questID: number }, { dispatch, getState }) => {
+  async (params: { auth: string, content: string, hidden: boolean, questExt: string }, { dispatch, getState }) => {
     const game = selectCurrentGameInfo(getState() as RootState);
     if (!game) return;
 
     const newRecord: NewRecord = {
       text: params.content,
-      questID: params.questID,
+      questExt: params.questExt,
       hidden: params.hidden
     };
 
@@ -161,7 +161,7 @@ export const editRecord = createAsyncThunk(
       const { data, error } = await api.put<GameRecords>('/record', params.auth, {
         id: params.record.id,
         text: params.record.text,
-        questID: params.record.questID, 
+        questExt: params.record.questExt,
         hidden: params.record.hidden
       } as EditRecord);
 

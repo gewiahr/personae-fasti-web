@@ -3,7 +3,7 @@ import type { Record } from "./record";
   /* Request */
   
 export interface QuestBrief {
-  id: number;
+  ext: string;
   name: string;
   title: string;
   description: string;
@@ -23,14 +23,11 @@ export interface QuestPageData {
   /* Edit */ 
 
 export interface Quest {
-  id: number;
+  ext: string;
   name: string;
   title: string;
   description: string;
-  parentID: number;
-	childID: number;
-	headID: number;
-  gameID: number;
+  gameExt: string;
   successful: boolean;
   hidden: boolean;
   finished: boolean;
@@ -42,7 +39,6 @@ export const QuestMetaData = {
 
 export interface QuestTask {
   id: number;
-  questID: number;
   name: string;
   description: string;
   type: number;
@@ -56,9 +52,8 @@ export const QuestTaskMetaData = {
   RichInputFields: ["description"]
 }
 
-export const NewQuestTask = (questID: number) : QuestTask => ({
+export const NewQuestTask = () : QuestTask => ({
     id: 0,
-    questID,
     name: '',
     description: '',
     type: 0,

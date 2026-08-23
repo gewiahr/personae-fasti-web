@@ -10,7 +10,7 @@ export type SuggestionData = {
 }
 
 export type SuggestionEntity = {
-  id: number;
+  ext: string;
   sid: string;
   type: string;
   name: string;
@@ -18,7 +18,7 @@ export type SuggestionEntity = {
 }
 
 export type SuggestionEntityRender = {
-  id: number;
+  ext: string;
   sid: string;
   type: string;
   typeName: string;

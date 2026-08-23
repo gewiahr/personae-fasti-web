@@ -16,9 +16,9 @@ import { ToggleSwitch } from '@lib/ToggleSwitch';
 import { RecordFeed } from '@/pages/Records/RecordFeed';
 
 export const QuestPage = () => {
-  const { id } = useParams();
+  const { ext } = useParams();
   const navigate = useNavigate();
-  const newQuest = id ? false : true;
+  const newQuest = ext ? false : true;
 
   const [quest, setQuest] = useState<Quest | null>(newQuest ? {} as Quest : null);
   const [tasks, setTasks] = useState<QuestTask[]>([]);
@@ -26,7 +26,7 @@ export const QuestPage = () => {
   const [finishQuest, setFinishQuest] = useState<boolean>(false);
 
   const auth = useAppSelector(selectAuthorization);
-  const { data, loading, error } = useApi.get(`/quest/${id}`, auth, [], newQuest);
+  const { data, loading, error } = useApi.get(`/quest/${ext}`, auth, [], newQuest);
 
   const { addNotification } = useNotifications();
 
@@ -38,7 +38,7 @@ export const QuestPage = () => {
   }, [data]);
 
   const openEditing = () => {
-    navigate(`/quests/${id}/edit`);
+    navigate(`/quests/${ext}/edit`);
   };
 
   const editTasks = () => {
@@ -49,7 +49,7 @@ export const QuestPage = () => {
   const saveTasks = async () => {
     if (quest == null) return
 
-    const { data, error, status } = await api.patch(`/quest/tasks`, auth, {"questID":quest.id, "tasks": tasks});
+    const { data, error, status } = await api.patch(`/quest/tasks`, auth, {"questExt": quest.ext, "tasks": tasks});
     if (status === 200) {
       addNotification("Задачи обновлены", 'success');
       setTasks(data);
@@ -62,7 +62,7 @@ export const QuestPage = () => {
   const handleCompleteQuest = async (successful: boolean) => {
     if (quest == null) return
 
-    const { error, status } = await api.patch(`/quest/${id}/${successful ? 'complete' : 'fail'}`, auth, null);
+    const { error, status } = await api.patch(`/quest/${ext}/${successful ? 'complete' : 'fail'}`, auth, null);
     if (status === 200) {
       addNotification("Квест завершён", 'success');
       //setTasks(data);
@@ -117,7 +117,7 @@ export const QuestPage = () => {
               </SubmitButton>
             </div>
           </div>
-          <RichText key={`questpage_richtext-${id ?? "newquest"}`} text={quest.description || ""} uid={`questpage-${id ?? "newquest"}`}/>
+          <RichText key={`questpage_richtext-${ext ?? "newquest"}`} text={quest.description || ""} uid={`questpage-${ext ?? "newquest"}`}/>
 
           {quest.finished ? <div className='w-full text-center text-xl'>
             {quest.successful ? <h4 className='text-(--color-text-accent)'>Завершён успешно</h4> : <h4 className='text-(--color-text-danger)'>Квест провален</h4>}

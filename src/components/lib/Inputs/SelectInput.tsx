@@ -45,7 +45,7 @@ export const SelectInput: React.FC<SelectInputProps> = (
   };
 
   const handleClearSelect = () => {
-    handleChange(0);
+    handleChange('');
   }
 
   return (

@@ -3,7 +3,7 @@ export type Record = {
   text: string;
   playerExt: string;
   gameExt: string;
-  questID: number;
+  questExt: string;
   created: string;
   updated: string;
   hidden: boolean;
@@ -11,13 +11,13 @@ export type Record = {
 
 export type NewRecord = {
   text: string;
-  questID: number;
+  questExt: string;
   hidden: boolean;
 };
 
 export type EditRecord = {
   id: number;
   text: string;
-  questID: number;
+  questExt: string;
   hidden: boolean;
 };

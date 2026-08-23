@@ -16,7 +16,7 @@ type RecordInputProps = {
 
 export const RecordInput: React.FC<RecordInputProps> = () => {
   const [input, setInput] = useState<string>('');
-  const [questID, setQuestID] = useState<number>(0);
+  const [questExt, setQuestExt] = useState<string>('');
   
   const [postHidden, setPostHidden] = useState<boolean>(false);
   const [inputKey, setInputKey] = useState<number>(0);
@@ -45,11 +45,11 @@ export const RecordInput: React.FC<RecordInputProps> = () => {
       auth,
       content: enrichedText,
       hidden: postHidden,
-      questID
+      questExt
     }));
 
     setInput('');
-    setQuestID(0);
+    setQuestExt('');
     setPostHidden(false);
     setInputKey(prev => prev + 1);
 
@@ -88,10 +88,10 @@ export const RecordInput: React.FC<RecordInputProps> = () => {
             <SelectInput
               key={`recordinput_questselect_${inputKey}`}
               className="w-full"
-              options={quests.map((quest) => ({ key: quest.id, value: quest.name }))}
+              options={quests.map((quest) => ({ key: quest.ext, value: quest.name }))}
               label="Связанный квест"
-              setKey={questID}
-              entityEdit={{ handleFieldChange: (value) => setQuestID(value) }}
+              setKey={questExt}
+              entityEdit={{ handleFieldChange: (value) => setQuestExt(value) }}
               nullable={true}
             />
           )}

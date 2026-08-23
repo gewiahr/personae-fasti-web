@@ -19,10 +19,10 @@ import { useEntityContext } from './EntityLayout';
 import type { EntityMetaDataTypeMap } from '@/types/entities';
 
 const EntityEditPage = () => {
-  const { id } = useParams();
+  const { ext } = useParams();
   const navigate = useNavigate();
   const { entityType, metaData } = useEntityContext();
-   const newEntity = !id;
+   const newEntity = !ext;
 
   type EntityModel = EntityMetaDataTypeMap[typeof entityType]['edit'];
 
@@ -32,8 +32,14 @@ const EntityEditPage = () => {
   const game = useAppSelector(selectCurrentGameInfo);
   
   const [entity, setEntity] = useState<EntityModel | null>(newEntity ? {} as EntityModel : null);
-  const { data: pageData, loading, error } = useApi.get(`/${metaData.EntityType}/${id}`, auth, [], newEntity);
+  const { data: pageData, loading, error } = useApi.get(`/${metaData.EntityType}/${ext}`, auth, [], newEntity);
   const [hidden, setHidden] = useState<boolean>(entity && entity?.hidden || false);
+
+  const parentLocationOptions = suggestionData.entities
+    .filter((suggestion) => suggestion.type === 'location' && !suggestion.secret)
+    .filter((suggestion) => suggestion.ext !== entity?.ext)
+    .map((suggestion) => ({ key: suggestion.ext, value: suggestion.name }))
+    .sort((a, b) => a.value.localeCompare(b.value));
 
   // Sync data to state
   useEffect(() => {
@@ -57,9 +63,10 @@ const EntityEditPage = () => {
     const endpoint = `/${metaData.EntityType}`;
     const method = newEntity ? api.post : api.put;
 
-    const { data, error } = await method<EntityModel>(endpoint, auth, enrichedEntity);
+    const { data, error } = await method<Record<string, EntityModel>>(endpoint, auth, enrichedEntity);
     if (!error) {
-      navigate(data?.id ? `/${metaData.EntityTypePl}/${data.id}` : `/${metaData.EntityTypePl}`);
+      const savedEntity = data?.[metaData.EntityType];
+      navigate(savedEntity?.ext ? `/${metaData.EntityTypePl}/${savedEntity.ext}` : `/${metaData.EntityTypePl}`);
     }
   };
 
@@ -89,24 +96,20 @@ const EntityEditPage = () => {
         })}
 
         {/* Entity specific fields */}
-        {metaData.EntityType == 'location' && <>
+        {metaData.EntityType == 'location' && parentLocationOptions.length > 0 && <>
           <div className='my-4'>
             <SelectInput  
               key={"locationedit_parentselect"}
-              options={suggestionData.entities
-                .filter((suggestion) => suggestion.type === 'location')
-                .filter((suggestion) => suggestion.id !== entity?.id)
-                .map((suggestion) => { return { key: suggestion.id, value: suggestion.name } })
-                .sort((a, b) => a.value.localeCompare(b.value))} 
+              options={parentLocationOptions}
               label='Находится в' 
-              setKey={entity && 'pid' in entity ? entity?.pid : 0} 
-              entityEdit={{ fieldName: 'pid', handleFieldChange }} 
+              setKey={entity && 'parentExt' in entity ? entity.parentExt : ''}
+              entityEdit={{ fieldName: 'parentExt', handleFieldChange }}
               nullable={true}/>
           </div>
         </>}
 
         {/* Image */}
-        {id && <FoldableCategory title='Изображение' children={<ImageUpload entityType={metaData.EntityType} entityID={id} />} />}
+        {ext && <FoldableCategory title='Изображение' children={<ImageUpload entityType={metaData.EntityType} entityID={ext} />} />}
         
         {/* // ** Change game proof by request instead of local storage ** // */}
         {playerExt === game?.gmExt && <div className='py-2'>
@@ -123,7 +126,7 @@ const EntityEditPage = () => {
           onClick={() => saveEdited(entity)}
           className='mt-6'  
         >
-          {entity?.id ? "Применить" : "Создать"}
+          {entity?.ext ? "Применить" : "Создать"}
         </SubmitButton>
       </div>)}
     </div>

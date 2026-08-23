@@ -1,32 +1,24 @@
 import { Link } from 'react-router-dom';
 import Icon from '@/components/icons/Icon';
-import type { EntityMetaData, EntityBrief, LocationBrief } from '@/types/entities';
+import type { EntityMetaData, EntityBrief } from '@/types/entities';
 
 type EntityCardProps = {
   entity: EntityBrief;
   metaData: EntityMetaData;
   labelText?: string;
-  footerData?: any; // TODO: Make cards for different entities 
 };
 
-const EntityCard = ({ entity, metaData, labelText, footerData }: EntityCardProps) => {
+const EntityCard = ({ entity, metaData, labelText }: EntityCardProps) => {
 
   const truncateDescription = (text: string, maxLength: number = 100) => {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + '...';
   };
 
-  const isLocationBrief = (
-    _entity: EntityBrief,
-    entityType: string
-  ): _entity is LocationBrief => {
-    return entityType === 'location';
-  }
-
   return (
     <div>
       <Link
-        to={`/${metaData.EntityTypePl}/${entity.id}`}
+        to={`/${metaData.EntityTypePl}/${entity.ext}`}
         className="entity-card-link-container"
       >
         <div className="flex flex-col h-full p-4">
@@ -36,7 +28,7 @@ const EntityCard = ({ entity, metaData, labelText, footerData }: EntityCardProps
               <h3 className="text-lg font-semibold text-white mb-1">{entity.name}</h3>
               {!labelText && entity.hidden && <div className=''>
                 <Icon 
-                  key={`icon_hidden_${entity.id}`} 
+                  key={`icon_hidden_${entity.ext}`}
                   className='icon-status'
                   name='hidden'
                 />
@@ -79,7 +71,7 @@ const EntityCard = ({ entity, metaData, labelText, footerData }: EntityCardProps
               <div className="flex items-center">
                 {entity.hidden && <div className='pr-4'>
                   <Icon 
-                    key={`icon_hidden_${entity.id}`} 
+                    key={`icon_hidden_${entity.ext}`}
                     className='icon-status'
                     name='hidden'
                   />
@@ -92,14 +84,6 @@ const EntityCard = ({ entity, metaData, labelText, footerData }: EntityCardProps
           </>}
         </div>
       </Link>
-
-      {footerData && metaData.EntityType == 'location' && isLocationBrief(entity, metaData.EntityType) && 
-        <Link to={`${entity.pid}`} >
-          <p className={`entity-card-footer-container entity-card-footer-container-dimmed`}>
-            Находится в {footerData}  
-          </p>
-        </Link>
-      }
     </div>
   );
 };

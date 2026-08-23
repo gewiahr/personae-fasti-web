@@ -1,7 +1,7 @@
 import { selectAuthorization } from "@/reducers/PlayerSlice";
 import { useAppSelector } from "@/store";
 import type { ApiError } from "@/types/api";
-import type { CharBrief, EntityMetaDataTypeMap, LocationBrief } from "@/types/entities";
+import type { CharBrief, EntityMetaDataTypeMap } from "@/types/entities";
 import { api } from "@/utils/api";
 import LinkButton from "@lib/LinkButton";
 import LoadingLabel from "@lib/LoadingLabel";
@@ -57,14 +57,10 @@ const EntityList = () => {
       {entities && entities.length > 0 ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {entities.map((entity) => (
           <EntityCard
-            key={entity.id}
+            key={entity.ext}
             entity={entity}
             metaData={metaData}
             labelText={entityType === 'chars' ? players.find(p => p.ext === (entity as CharBrief).playerExt)?.username || "" : undefined} // TODO: make accented
-            //footerData={entityType === 'locations' ? entities.find(e => e.id === (entity as LocationBrief).pid || "")?.name : undefined}
-            // Player Labels
-          // playerName={data?.players.find((player) => (player.id === char.playerID))?.username || ""}
-          //labelText={players.find((player) => (player.id === entity.playerID))?.username || ""}
           />
         ))}
       </div> :

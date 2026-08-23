@@ -54,7 +54,7 @@ const RecordCard = ({ record, label="", accented=false, editable=false, quest, o
       </div>
 
       {quest && 
-        <Link to={`/quests/${record.questID}`} >
+        <Link to={`/quests/${record.questExt}`} >
           <div className={`record-card-quest-container ${accented ? 'record-card-quest-container-accented' : 'record-card-quest-container-dimmed'}`} >
             Квест: {quest.name}  
           </div>

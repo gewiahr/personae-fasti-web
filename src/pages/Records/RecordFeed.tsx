@@ -158,7 +158,7 @@ export const RecordFeed: React.FC<RecordFeedProps> = ({ records, editable = fals
                   label={players.find(p => p.ext === record.playerExt)?.username}
                   accented={record.playerExt === playerExt}
                   editable={editable && ((record.playerExt === playerExt || game?.gmExt === playerExt) || (settings?.allowAllEditRecords))}
-                  quest={showQuests ? quests.find((q) => q.id === record.questID) : undefined}
+                  quest={showQuests ? quests.find((q) => q.ext === record.questExt) : undefined}
                   onEdit={onRecordEdit}
                 />
               ))}

@@ -83,8 +83,8 @@ export const RecordEdit = ({
       });
   };
 
-  const handleQuestIDChange = async (value: number) => {
-    setEditedRecord({ ...editedRecord, questID: value });
+  const handleQuestExtChange = async (value: string) => {
+    setEditedRecord({ ...editedRecord, questExt: value });
   };
 
   useEffect(() => {
@@ -112,10 +112,10 @@ export const RecordEdit = ({
       {quests && quests.length > 0 && <div className='py-2'>
         <SelectInput
           key={"recordedit_questselect"}
-          options={quests.map((quest) => { return { key: quest.id, value: quest.name } })}
+          options={quests.map((quest) => { return { key: quest.ext, value: quest.name } })}
           label='Связанный квест'
-          setKey={editedRecord.questID}
-          entityEdit={{ handleFieldChange: handleQuestIDChange }}
+          setKey={editedRecord.questExt}
+          entityEdit={{ handleFieldChange: handleQuestExtChange }}
           nullable={true}
         />
       </div>}

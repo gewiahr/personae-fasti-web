@@ -14,20 +14,20 @@ import { useEntityContext } from "./EntityLayout";
 import type { EntityType, EntityBrief, EntityMetaDataTypeMap, Location, LocationBrief } from "@/types/entities";
 
 export const EntityPage = () => {
-  const { id } = useParams();
+  const { ext } = useParams();
   const navigate = useNavigate();
   const { entityType, metaData } = useEntityContext();
-  const newEntity = id ? false : true;
+  const newEntity = ext ? false : true;
 
   type EntityModel = EntityMetaDataTypeMap[typeof entityType]['page'];
 
-  const { image, ratio } = useImage({ entityType: metaData.EntityType, entityID: id || "" });
+  const { image, ratio } = useImage({ entityType: metaData.EntityType, entityID: ext || "" });
 
   const [entity, setEntity] = useState<EntityModel>({} as EntityModel);
-  const isLocation = (e: EntityModel): e is Location => 'pid' in e;
+  const isLocation = (e: EntityModel): e is Location => 'parentExt' in e;
 
   const auth = useAppSelector(selectAuthorization);
-  const { data, loading, error } = useApi.get<Record<string, any>>(`/${metaData.EntityType}/${id}`, auth, [], newEntity);
+  const { data, loading, error } = useApi.get<Record<string, any>>(`/${metaData.EntityType}/${ext}`, auth, [], newEntity);
 
   useEffect(() => {
     if (data) {
@@ -36,7 +36,7 @@ export const EntityPage = () => {
   }, [data]);
 
   const openEditing = () => {
-    navigate(`/${metaData.EntityTypePl}/${id}/edit`);
+    navigate(`/${metaData.EntityTypePl}/${ext}/edit`);
   };
 
   const formIncludesLocation = (includes: LocationBrief[]) => {
@@ -45,7 +45,7 @@ export const EntityPage = () => {
         В <span className="font-bold italic">{entity.name}</span> наход{includes.length > 1 ? "ятся" : "ится"}: 
         {includes.map((el: EntityBrief, i: number) => (<>
           {i !== 0 ? `, ` : ` `}
-          <Hyperlink key={metaData.EntityType + el.id} id={'' + el.id} type={metaData.EntityType as EntityType} mentionText={`${el.name}`} />
+          <Hyperlink key={metaData.EntityType + el.ext} ext={el.ext} type={metaData.EntityType as EntityType} mentionText={`${el.name}`} />
         </>
         ))}.
       </p>
@@ -81,14 +81,14 @@ export const EntityPage = () => {
             </SubmitButton>
           </div>
         </div>
-        <RichText key={`${metaData.EntityType}page_richtext-${id ?? "newentity"}`} text={entity.description || ""} uid={`${metaData.EntityType}page-${id ?? "newentity"}`} fullWidth={true} />
+        <RichText key={`${metaData.EntityType}page_richtext-${ext ?? "newentity"}`} text={entity.description || ""} uid={`${metaData.EntityType}page-${ext ?? "newentity"}`} fullWidth={true} />
 
         {/* Entity specific fields */}
-        {metaData.EntityType == "location" && isLocation(entity) && (entity.pid != null || data.includes.length > 0) && <>
+        {metaData.EntityType == "location" && isLocation(entity) && (entity.parentExt || data.includes.length > 0) && <>
           <div className='mt-6'>
             {data.parent != null && <>
               <p>
-                Находится в <Hyperlink key={metaData.EntityType + data.parent.id} id={data.parent.id} type={metaData.EntityType as EntityType} mentionText={data.parent.name} />.
+                Находится в <Hyperlink key={metaData.EntityType + data.parent.ext} ext={data.parent.ext} type={metaData.EntityType as EntityType} mentionText={data.parent.name} />.
               </p>
             </>}
             {data.includes.length > 0 && formIncludesLocation(data.includes)}

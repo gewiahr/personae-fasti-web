@@ -3,7 +3,7 @@ import type { SuggestionEntity, SuggestionEntityRender } from "./suggestion";
   /* Request */
 
 export interface EntityBrief {
-  id: number;
+  ext: string;
   name: string;
   title: string;
 
@@ -20,7 +20,6 @@ export interface NPCBrief extends EntityBrief {
 };
 
 export interface LocationBrief extends EntityBrief {
-  pid: number;
 };
 
   /* Edit */
@@ -40,20 +39,20 @@ export type GameEvent = {
 };
 
 export interface Entity {
-  id: number;
+  ext: string;
   name: string;
   title: string;
   description: string;
-  gameID: number;
+  gameExt: string;
   hidden: boolean;
 };
 
 export interface EntityCreateUpdate {
-  id: number;
+  ext: string;
   name: string;
   title: string;
   description: string;
-  gameID: number;
+  gameExt: string;
   hidden: boolean;  
 }
 
@@ -172,11 +171,11 @@ export const NPCMetaData: EntityMetaData = {
 };
 
 export interface Location extends Entity {
-  pid: number;
+  parentExt: string;
 };
 
 export interface LocationCreateUpdate extends EntityCreateUpdate {
-  pid: number;
+  parentExt: string;
 }
 
 export const LocationMetaData: EntityMetaData = {
