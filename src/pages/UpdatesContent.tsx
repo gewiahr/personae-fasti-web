@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 type ServiceUpdateInfo = {
   currentVersion: string;
   updates: ServiceUpdateInfoItem[];
@@ -11,7 +9,7 @@ type ServiceUpdateInfoItem = {
 }
 
 const UpdatesContent = () => {
-  const [updates, setUpdates] = useState<ServiceUpdateInfo | null>(null);
+  const updates: ServiceUpdateInfo | null = null;
   
   return (
     updates === null ? <p>

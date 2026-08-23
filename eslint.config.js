@@ -9,17 +9,6 @@ export default defineConfig([
   globalIgnores(['dist']),
   {
     files: ['**/*.{ts,tsx}'],
-    plugins: {
-      import: importPlugin,
-    },
-    settings: {
-      'import/resolver': {
-        typescript: {
-          alwaysTryTypes: true,
-          project: './tsconfig.app.json',
-        },
-      },
-    },
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
