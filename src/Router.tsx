@@ -9,6 +9,7 @@ import EntityLayout from '@/pages/Entities/EntityLayout'
 import EntityEditPage from '@/pages/Entities/EntityEditPage'
 import QuestEditPage from '@/pages/Quests/QuestEditPage'
 import GameCreateEditPage from '@/pages/Games/GameCreateEditPage'
+import NotesPage from '@/pages/Notes/NotesPage'
 
 const AppRouter = () => {
   return (
@@ -36,6 +37,7 @@ const AppRouter = () => {
         </Route>
 
         <Route path="settings" element={<SettingsPage />} />
+        <Route path="notes" element={<NotesPage />} />
 
       {/* <Route path="/" element={<RecordPage key={1} />} />
 
