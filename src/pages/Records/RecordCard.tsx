@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
 import Icon from '@/components/icons/Icon';
-import RichText from '@lib/RichText/RichText';
 import { type Record } from '@/types/record'
 import type { QuestBrief } from '@/types/quest';
+import type { SuggestionEntity } from '@/types/suggestion';
+import MarkdownText from '@lib/RichText/MarkdownText';
 
 interface RecordCardProps {
   record: Record;
@@ -10,10 +11,11 @@ interface RecordCardProps {
   accented?: boolean;
   editable?: boolean;
   quest?: QuestBrief;
+  suggestions: SuggestionEntity[];
   onEdit?: (record : Record) => void;
 };
 
-const RecordCard = ({ record, label="", accented=false, editable=false, quest, onEdit } : RecordCardProps) => {
+const RecordCard = ({ record, label="", accented=false, editable=false, quest, suggestions, onEdit } : RecordCardProps) => {
   return (
     <div>
       <div
@@ -22,7 +24,7 @@ const RecordCard = ({ record, label="", accented=false, editable=false, quest, o
       >
         <div className="flex justify-between items-start">
           <div>
-            <RichText key={`recordcard_richtext-${record.id}`} text={record.text} uid={`recordcard-${record.id}`} />
+            <MarkdownText key={`recordcard_richtext-${record.id}`} text={record.text} uid={`recordcard-${record.id}`} suggestions={suggestions} />
           </div>
         </div>
         <div className="flex justify-between items-end pt-2">

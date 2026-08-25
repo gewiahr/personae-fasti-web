@@ -1,4 +1,5 @@
 import { $createMentionNode, $isMentionNode } from "@lib/Inputs/Mentions/MentionNode";
+import { EDITOR_TOKEN_REGEX, escapeMarkdownText, unescapeMarkdownText } from "@lib/markdownGrammar";
 import { $getRoot, $createTextNode, $createParagraphNode, $isTextNode } from "lexical";
 
 export function serializeEditorState(): string {
@@ -7,7 +8,7 @@ export function serializeEditorState(): string {
     let line = "";
     paragraph.getChildren?.().forEach((child: any) => {
       if ($isTextNode(child)) {
-        let text = child.getTextContent();
+        let text = escapeMarkdownText(child.getTextContent());
         const bold = child.hasFormat("bold");
         const italic = child.hasFormat("italic");
         if (bold && italic) text = `***${text}***`;
@@ -25,8 +26,6 @@ export function serializeEditorState(): string {
 
 // Restricted to exactly the subset we allow: ***bold+italic***, **bold**,
 // *italic*, and @sid`name` mentions. Anything else stays literal text.
-const TOKEN = /(\*\*\*(.+?)\*\*\*|\*\*(.+?)\*\*|\*(.+?)\*|@([\w:-]*)`([^`]+)`)/;
-
 export function deserializeToEditorState(text: string) {
   const root = $getRoot();
   root.clear();
@@ -36,18 +35,18 @@ export function deserializeToEditorState(text: string) {
     let remaining = lineText;
 
     while (remaining.length > 0) {
-      const match = TOKEN.exec(remaining);
-      if (!match) { paragraph.append($createTextNode(remaining)); break; }
-      if (match.index > 0) paragraph.append($createTextNode(remaining.slice(0, match.index)));
+      const match = EDITOR_TOKEN_REGEX.exec(remaining);
+      if (!match) { paragraph.append($createTextNode(unescapeMarkdownText(remaining))); break; }
+      if (match.index > 0) paragraph.append($createTextNode(unescapeMarkdownText(remaining.slice(0, match.index))));
 
       if (match[2] !== undefined) {
-        const t = $createTextNode(match[2]); t.toggleFormat("bold"); t.toggleFormat("italic");
+        const t = $createTextNode(unescapeMarkdownText(match[2])); t.toggleFormat("bold"); t.toggleFormat("italic");
         paragraph.append(t);
       } else if (match[3] !== undefined) {
-        const t = $createTextNode(match[3]); t.toggleFormat("bold");
+        const t = $createTextNode(unescapeMarkdownText(match[3])); t.toggleFormat("bold");
         paragraph.append(t);
       } else if (match[4] !== undefined) {
-        const t = $createTextNode(match[4]); t.toggleFormat("italic");
+        const t = $createTextNode(unescapeMarkdownText(match[4])); t.toggleFormat("italic");
         paragraph.append(t);
       } else if (match[6] !== undefined) {
         const sid = match[5], name = match[6];

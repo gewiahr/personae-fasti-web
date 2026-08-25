@@ -159,6 +159,7 @@ export const RecordFeed: React.FC<RecordFeedProps> = ({ records, editable = fals
                   accented={record.playerExt === playerExt}
                   editable={editable && ((record.playerExt === playerExt || game?.gmExt === playerExt) || (settings?.allowAllEditRecords))}
                   quest={showQuests ? quests.find((q) => q.ext === record.questExt) : undefined}
+                  suggestions={suggestions.entities}
                   onEdit={onRecordEdit}
                 />
               ))}
