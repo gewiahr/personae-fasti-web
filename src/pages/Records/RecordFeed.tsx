@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/store";
 import { convertSuggestionDataToRender } from "@/types/suggestion";
 import Divider from "@lib/Divider";
 import LoadingLabel from "@lib/LoadingLabel";
+import { LayoutGroup } from "motion/react";
 import { useMemo, useState } from "react";
 import type { Record } from '@/types/record'
 import type { Session } from '@/types/game'
@@ -99,8 +100,9 @@ export const RecordFeed: React.FC<RecordFeedProps> = ({ records, editable = fals
     </div> :
     // Some Records
     <>
-      {<div className="space-y-8">
-        {orderedRecords.map((group) => {
+      <LayoutGroup id="record-feed">
+        <div className="space-y-8">
+          {orderedRecords.map((group) => {
           const endTime = group.session?.endTime;
           const isZeroDate = endTime === "0001-01-01T00:00:00Z";
           const isCurrentSession = !endTime || isZeroDate;
@@ -161,8 +163,9 @@ export const RecordFeed: React.FC<RecordFeedProps> = ({ records, editable = fals
               ))}
             </div>
           );
-        })}
-      </div>}
+          })}
+        </div>
+      </LayoutGroup>
     </>   
   );
 };

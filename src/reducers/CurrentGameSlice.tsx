@@ -167,7 +167,7 @@ export const editRecord = createAsyncThunk(
 
       if (error) throw error;
       if (data) {
-        dispatch(loadCurrentGameRecords({ auth: params.auth }));
+        await dispatch(loadCurrentGameRecords({ auth: params.auth })).unwrap();
         dispatch(loadCurrentGameQuests({ auth: params.auth }));
         dispatch(loadCurrentGameSuggestions({ auth: params.auth }));
 
