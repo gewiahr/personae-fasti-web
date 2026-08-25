@@ -56,14 +56,20 @@ export interface EntityCreateUpdate {
   hidden: boolean;  
 }
 
+export type EntityType = 'char' | 'npc' | 'location';
+
 export type EntityMetaData = {
   EntityName: string;
   EntityNamePl: string;
   EntityNameAcc: string;
   EntityNameGender: 'm' | 'f' | 'n';
-  EntityType: string;
+  EntityType: EntityType;
   EntityTypePl: string;
   Icon: string;
+  MentionColor: {
+    TextClass: string;
+    ChipClass: string;
+  };
   RichInputFields: string[];
   Fields: EntityFieldMetaData[];
 }
@@ -76,18 +82,8 @@ export type EntityFieldMetaData = {
 }
 
 export const formSuggestionRef = (suggestion: SuggestionEntity) => {
-  var suggestionRef = '';
-  switch (suggestion.type) {
-    case 'char':
-      suggestionRef = `${CharMetaData.Icon} ${suggestion.name}`;
-      break;
-    case 'npc':
-      suggestionRef = `${NPCMetaData.Icon} ${suggestion.name}`;
-      break;
-    case 'location':
-      suggestionRef = `${LocationMetaData.Icon} ${suggestion.name}`;
-      break;
-  }
+  const metaData = getEntityMetaData(suggestion.type);
+  const suggestionRef = metaData ? `${metaData.Icon} ${suggestion.name}` : suggestion.name;
 
   return { ...suggestion, ref: suggestionRef } as SuggestionEntityRender
 }
@@ -108,6 +104,10 @@ export const CharMetaData: EntityMetaData = {
   EntityType: 'char',
   EntityTypePl: 'chars',
   Icon: "🎭",
+  MentionColor: {
+    TextClass: "text-blue-500",
+    ChipClass: "mention-chip-char",
+  },
   RichInputFields: ["description"],
   Fields: [
     {
@@ -147,6 +147,10 @@ export const NPCMetaData: EntityMetaData = {
   EntityType: 'npc',
   EntityTypePl: 'npcs',
   Icon: "🎎",
+  MentionColor: {
+    TextClass: "text-yellow-500",
+    ChipClass: "mention-chip-npc",
+  },
   RichInputFields: ["description"],
   Fields: [
     {
@@ -186,6 +190,10 @@ export const LocationMetaData: EntityMetaData = {
   EntityType: 'location',
   EntityTypePl: 'locations',
   Icon: "🏔️",
+  MentionColor: {
+    TextClass: "text-green-500",
+    ChipClass: "mention-chip-location",
+  },
   RichInputFields: ["description"],
   Fields: [
     {
@@ -209,8 +217,6 @@ export const LocationMetaData: EntityMetaData = {
   ]
 };
 
-export type EntityType = 'char' | 'npc' | 'location';
-
 export type EntityMetaDataType = keyof typeof entityConfig;
 
 export interface EntityMetaDataTypeMap {
@@ -230,3 +236,12 @@ export const entityToMetaData = {
   npc: { metaData: 'npcs' as EntityMetaDataType },
   location: { metaData: 'locations' as EntityMetaDataType },
 }
+
+const entityMetaDataByType: Record<EntityType, EntityMetaData> = {
+  char: CharMetaData,
+  npc: NPCMetaData,
+  location: LocationMetaData,
+};
+
+export const getEntityMetaData = (type: string): EntityMetaData | undefined =>
+  entityMetaDataByType[type as EntityType];

@@ -1,4 +1,4 @@
-import { entityToMetaData, type EntityType } from "@/types/entities";
+import { entityToMetaData, getEntityMetaData, type EntityType } from "@/types/entities";
 
 type HyperlinkProps = {
   ext: string,
@@ -7,18 +7,7 @@ type HyperlinkProps = {
 }
 
 const Hyperlink: React.FC<HyperlinkProps> = ({ ext, type, mentionText }) => {
-  let typeColor = "";
-  switch (type) {
-    case "char":
-      typeColor = "text-blue-500";
-      break;
-    case "npc":
-      typeColor = "text-yellow-500";
-      break;
-    case "location":
-      typeColor = "text-green-500";
-      break;
-  }
+  const typeColor = getEntityMetaData(type)?.MentionColor.TextClass ?? "";
 
   return (
     <a

@@ -4,7 +4,7 @@ import type { MentionContext } from "../../../types/mention";
 import type { SuggestionEntityRender } from "../../../types/suggestion";
 import type { TextInputProps } from "./InputProps";
 import FloatingLabel from "./FloatingLabel";
-import { CharMetaData, NPCMetaData, LocationMetaData } from "../../../types/entities";
+import { getEntityMetaData } from "../../../types/entities";
 
 type RichInputProps = TextInputProps & {
   suggestionData: SuggestionEntityRender[];
@@ -17,20 +17,14 @@ type RichInputProps = TextInputProps & {
 
 const MENTION_REGEX = /@([\w:-]*)`([^`]+)`/g;
 
-const MENTION_META: Record<string, { icon: string; colorClass: string }> = {
-  char: { icon: CharMetaData.Icon, colorClass: "mention-chip-char" },
-  npc: { icon: NPCMetaData.Icon, colorClass: "mention-chip-npc" },
-  location: { icon: LocationMetaData.Icon, colorClass: "mention-chip-location" },
-};
-
 function createMentionSpan(sid: string, name: string, type: string): HTMLSpanElement {
   const span = document.createElement("span");
-  const meta = MENTION_META[type];
-  span.className = `mention-chip ${meta?.colorClass ?? ""}`.trim();
+  const metaData = getEntityMetaData(type);
+  span.className = `mention-chip ${metaData?.MentionColor.ChipClass ?? ""}`.trim();
   span.contentEditable = "false"; // atomic by default — see edit-mode handling below
   span.dataset.sid = sid;
   span.dataset.type = type;
-  span.dataset.icon = meta?.icon ?? "";
+  span.dataset.icon = metaData?.Icon ?? "";
   span.textContent = name;
   return span;
 }

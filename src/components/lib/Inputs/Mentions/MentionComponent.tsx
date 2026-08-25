@@ -1,16 +1,26 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { $getNodeByKey, CLICK_COMMAND, KEY_ENTER_COMMAND, COMMAND_PRIORITY_LOW, $isTextNode, $createTextNode } from "lexical";
+import {
+  $getNodeByKey,
+  $getRoot,
+  $getSelection,
+  $isElementNode,
+  $isNodeSelection,
+  $isRangeSelection,
+  $isTextNode,
+  BLUR_COMMAND,
+  CLICK_COMMAND,
+  COMMAND_PRIORITY_HIGH,
+  KEY_BACKSPACE_COMMAND,
+  KEY_DELETE_COMMAND,
+  KEY_DOWN_COMMAND,
+  KEY_ENTER_COMMAND,
+} from "lexical";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { useLexicalNodeSelection } from "@lexical/react/useLexicalNodeSelection";
 import { mergeRegister } from "@lexical/utils";
+import { getEntityMetaData } from "@/types/entities";
 import { $isMentionNode, pendingAutoEditKeys } from "./MentionNode";
-
-const MENTION_META: Record<string, { icon: string; colorClass: string }> = {
-  char: { icon: "🧑", colorClass: "mention-chip-char" },
-  npc: { icon: "🗡️", colorClass: "mention-chip-npc" },
-  location: { icon: "📍", colorClass: "mention-chip-location" },
-};
 
 let measureCanvas: HTMLCanvasElement | null = null;
 function measureTextWidth(text: string, font: string): number {
@@ -28,9 +38,11 @@ export function MentionComponent({
   const [editor] = useLexicalComposerContext();
   const [isSelected, setSelected, clearSelected] = useLexicalNodeSelection(nodeKey);
   const [isEditing, setIsEditing] = useState(false);
+  const [isPendingDelete, setIsPendingDelete] = useState(false);
   const [draftName, setDraftName] = useState(name);
   const inputRef = useRef<HTMLInputElement>(null);
-  const meta = MENTION_META[entityType];
+  const ignoreBlurRef = useRef(false);
+  const metaData = getEntityMetaData(entityType);
 
   useEffect(() => setDraftName(name), [name]);
 
@@ -69,60 +81,103 @@ export function MentionComponent({
     inputRef.current.style.width = `${Math.min(measured, maxWidth)}px`;
   }, [draftName, isEditing, editor]);
 
-  const commitRename = useCallback((value: string, moveCaretAfter?: boolean) => {
+  const focusEditorAtEnd = useCallback(() => {
+    editor.update(() => $getRoot().selectEnd());
+    requestAnimationFrame(() => {
+      ignoreBlurRef.current = false;
+      editor.getRootElement()?.focus();
+    });
+  }, [editor]);
+
+  const commitRename = useCallback((value: string, moveCaretToEnd = false) => {
     const finalName = value.trim() || name;
     setIsEditing(false);
 
     editor.update(() => {
       const node = $getNodeByKey(nodeKey);
-      if (!$isMentionNode(node)) return;
-      if (finalName !== name) node.setName(finalName);
-
-      if (!moveCaretAfter) return;
-
-      const next = node.getNextSibling();
-      if ($isTextNode(next) && next.getTextContent().length > 0) {
-        // Something real already follows — land one character into it.
-        next.select(1, 1);
-      } else if ($isTextNode(next)) {
-        // An empty placeholder text node exists (e.g. the trailing landing
-        // spot from deserialization) — give it the space itself.
-        next.setTextContent(" ");
-        next.select(1, 1);
-      } else {
-        // Truly nothing after the chip — insert a real space to land on.
-        const spaceNode = $createTextNode(" ");
-        node.insertAfter(spaceNode);
-        spaceNode.select(1, 1);
-      }
+      if ($isMentionNode(node) && finalName !== name) node.setName(finalName);
+      if (moveCaretToEnd) $getRoot().selectEnd();
     });
 
-    // The <input> is unmounting this same tick (isEditing just flipped to
-    // false) — without this, focus has nowhere to go and the caret we just
-    // positioned above won't visibly render anywhere.
-    requestAnimationFrame(() => editor.getRootElement()?.focus());
+    if (moveCaretToEnd) {
+      requestAnimationFrame(() => {
+        ignoreBlurRef.current = false;
+        editor.getRootElement()?.focus();
+      });
+    }
   }, [editor, nodeKey, name]);
 
-  useEffect(() => mergeRegister(
-    editor.registerCommand(
-      CLICK_COMMAND,
-      (event: MouseEvent) => {
-        const target = event.target as HTMLElement;
-        if (target.closest(`[data-mention-key="${nodeKey}"]`)) {
-          clearSelected();
-          setSelected(true);
-          return true;
-        }
-        return false;
-      },
-      COMMAND_PRIORITY_LOW
-    )
-  ), [editor, nodeKey, setSelected, clearSelected]);
+  const cancelRename = useCallback(() => {
+    setDraftName(name);
+    setIsEditing(false);
+    focusEditorAtEnd();
+  }, [focusEditorAtEnd, name]);
+
+  const isDeletionTarget = useCallback((backward: boolean) => {
+    const selection = $getSelection();
+    if ($isNodeSelection(selection)) return selection.has(nodeKey);
+    if (!$isRangeSelection(selection) || !selection.isCollapsed()) return false;
+
+    const anchor = selection.anchor;
+    const anchorNode = anchor.getNode();
+    let target = null;
+
+    if ($isTextNode(anchorNode)) {
+      const atBoundary = backward
+        ? anchor.offset === 0
+        : anchor.offset === anchorNode.getTextContentSize();
+      if (atBoundary) {
+        target = backward ? anchorNode.getPreviousSibling() : anchorNode.getNextSibling();
+      }
+    } else if ($isElementNode(anchorNode)) {
+      target = anchorNode.getChildAtIndex(backward ? anchor.offset - 1 : anchor.offset);
+    }
+
+    return target?.getKey() === nodeKey;
+  }, [nodeKey]);
+
+  const exitDeleteMode = useCallback((moveCaretAfter: boolean) => {
+    setIsPendingDelete(false);
+    if (!moveCaretAfter) return;
+
+    const node = $getNodeByKey(nodeKey);
+    if ($isMentionNode(node)) node.selectNext(0, 0);
+  }, [nodeKey]);
+
+  const handleDeleteKey = useCallback((event: KeyboardEvent, backward: boolean) => {
+    const targetsMention = isDeletionTarget(backward);
+    if (event.repeat) {
+      if (isPendingDelete || targetsMention) event.preventDefault();
+      return isPendingDelete || targetsMention;
+    }
+
+    if (isPendingDelete) {
+      event.preventDefault();
+      setIsPendingDelete(false);
+      const node = $getNodeByKey(nodeKey);
+      if ($isMentionNode(node)) node.remove();
+      return true;
+    }
+
+    if (!targetsMention) {
+      return false;
+    }
+
+    event.preventDefault();
+    setIsPendingDelete(true);
+    return true;
+  }, [isDeletionTarget, isPendingDelete, nodeKey]);
 
   useEffect(() => mergeRegister(
     editor.registerCommand(
       CLICK_COMMAND,
       (event: MouseEvent) => {
+        if (isPendingDelete) {
+          event.preventDefault();
+          exitDeleteMode(true);
+          return true;
+        }
+
         const target = event.target as HTMLElement;
         if (target.closest(`[data-mention-key="${nodeKey}"]`)) {
           clearSelected();
@@ -131,7 +186,27 @@ export function MentionComponent({
         }
         return false;
       },
-      COMMAND_PRIORITY_LOW
+      COMMAND_PRIORITY_HIGH
+    ),
+    editor.registerCommand(
+      KEY_DOWN_COMMAND,
+      (event) => {
+        if (!isPendingDelete || event.key === "Backspace" || event.key === "Delete") return false;
+        event.preventDefault();
+        exitDeleteMode(true);
+        return true;
+      },
+      COMMAND_PRIORITY_HIGH
+    ),
+    editor.registerCommand(
+      KEY_BACKSPACE_COMMAND,
+      (event) => handleDeleteKey(event, true),
+      COMMAND_PRIORITY_HIGH
+    ),
+    editor.registerCommand(
+      KEY_DELETE_COMMAND,
+      (event) => handleDeleteKey(event, false),
+      COMMAND_PRIORITY_HIGH
     ),
     editor.registerCommand(
       KEY_ENTER_COMMAND,
@@ -141,16 +216,33 @@ export function MentionComponent({
         setIsEditing(true);
         return true;
       },
-      COMMAND_PRIORITY_LOW
+      COMMAND_PRIORITY_HIGH
+    ),
+    editor.registerCommand(
+      BLUR_COMMAND,
+      () => {
+        if (isPendingDelete) exitDeleteMode(false);
+        return false;
+      },
+      COMMAND_PRIORITY_HIGH
     )
-  ), [editor, nodeKey, setSelected, clearSelected, isSelected]);
+  ), [
+    clearSelected,
+    editor,
+    exitDeleteMode,
+    handleDeleteKey,
+    isPendingDelete,
+    isSelected,
+    nodeKey,
+    setSelected,
+  ]);
 
   return (
     <span
       data-mention-key={nodeKey}
-      data-icon={meta?.icon ?? ""}
-      className={`mention-chip ${meta?.colorClass ?? ""} ${isSelected ? "mention-chip-selected" : ""}`}
-      onDoubleClick={(e) => { e.preventDefault(); setIsEditing(true); }}
+      data-icon={metaData?.Icon ?? ""}
+      className={`mention-chip ${metaData?.MentionColor.ChipClass ?? ""} ${isSelected ? "mention-chip-selected" : ""} ${isPendingDelete ? "mention-chip-pending-remove" : ""}`}
+      onDoubleClick={(e) => { e.preventDefault(); setIsPendingDelete(false); setIsEditing(true); }}
       // onMouseEnter={...} / onMouseLeave={...} — hook your future hover-info popover in here
     >
       {isEditing ? (
@@ -159,11 +251,25 @@ export function MentionComponent({
           className="mention-chip-rename-input"
           value={draftName}
           onChange={(e) => setDraftName(e.target.value)}
-          onBlur={() => commitRename(draftName)}
+          onBlur={() => {
+            if (ignoreBlurRef.current) {
+              ignoreBlurRef.current = false;
+              return;
+            }
+            commitRename(draftName);
+          }}
           onKeyDown={(e) => {
             e.stopPropagation();
-            if (e.key === "Enter") { e.preventDefault(); commitRename(draftName); }
-            if (e.key === "Escape") { e.preventDefault(); setIsEditing(false); setDraftName(name); }
+            if (e.key === "Enter") {
+              e.preventDefault();
+              ignoreBlurRef.current = true;
+              commitRename(draftName, true);
+            }
+            if (e.key === "Escape") {
+              e.preventDefault();
+              ignoreBlurRef.current = true;
+              cancelRename();
+            }
           }}
           style={{ width: `${Math.max(draftName.length, 2)}ch` }}
         />
