@@ -22,7 +22,7 @@ const RecordCard = ({ record, label="", accented=false, editable=false, quest, s
     <div>
       <div
         key={record.id}
-        className={`record-card-container ${accented ? 'record-card-container-accented' : 'record-card-container-dimmed'}`}
+        className={`record-card-container ${editContent ? 'record-card-container-edit' : accented ? 'record-card-container-accented' : 'record-card-container-dimmed'}`}
       >
         {editContent ?? <>
           <div className="flex justify-between items-start">

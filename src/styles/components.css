@@ -407,6 +407,11 @@ input[type="number"] {
   @apply p-4 rounded-lg border relative z-20
 }
 
+.record-card-container-edit {
+  background-color: var(--color-bg-primary);
+  border-color: var(--color-accent);
+}
+
 .record-card-container-accented {
   background-color: var(--color-bg-secondary);
   border-color: var(--color-accent);
