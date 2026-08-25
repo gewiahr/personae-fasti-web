@@ -8,7 +8,6 @@ import type { GameBrief } from '@/types/game';
 import type { SuggestionEntityRender } from '@/types/suggestion';
 import { RichInput } from '@lib/Inputs/RichInput';
 import { SelectInput } from '@lib/Inputs/SelectInput';
-import { Modal } from '@lib/Modal';
 import SubmitButton from '@lib/SubmitButton';
 import { ToggleSwitch } from '@lib/ToggleSwitch';
 import { type Record } from '@/types/record'
@@ -33,7 +32,10 @@ export const RecordEdit = ({
   const quests = useAppSelector(selectCurrentGameQuests);
 
   const [postHidden, setPostHidden] = useState<boolean>(record.hidden);
-  const [editedRecord, setEditedRecord] = useState<Record>(record);
+  const [editedRecord, setEditedRecord] = useState<Record>({
+    ...record,
+    text: simplifyMentionInput(record.text, suggestionData),
+  });
 
   const { addNotification } = useNotifications();
   
@@ -41,7 +43,16 @@ export const RecordEdit = ({
 
   useEffect(() => {
     dispatch(loadCurrentGameQuests({ auth }))
-  }, []);
+  }, [auth, dispatch]);
+
+  useEffect(() => {
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [onClose]);
 
   const onInputChange = (value: string) => {
     setEditedRecord({ ...editedRecord, text: value });
@@ -61,8 +72,11 @@ export const RecordEdit = ({
         onClose();
         addNotification('Запись сохранена', 'success');
       })
-      .catch((e: any) => {
-        addNotification(e?.message || 'Ошибка при сохранении', 'error');
+      .catch((error: unknown) => {
+        const message = error && typeof error === 'object' && 'message' in error
+          ? String(error.message)
+          : 'Ошибка при сохранении';
+        addNotification(message, 'error');
       });
   };
 
@@ -78,34 +92,40 @@ export const RecordEdit = ({
         onClose();
         addNotification('Запись удалена', 'info');
       })
-      .catch((e: any) => {
-        addNotification(e?.message || 'Ошибка при удалении', 'error');
+      .catch((error: unknown) => {
+        const message = error && typeof error === 'object' && 'message' in error
+          ? String(error.message)
+          : 'Ошибка при удалении';
+        addNotification(message, 'error');
       });
   };
 
-  const handleQuestExtChange = async (value: string) => {
+  const handleQuestExtChange = (value: string) => {
     setEditedRecord({ ...editedRecord, questExt: value });
   };
 
-  useEffect(() => {
-    if (suggestionData) {
-      setEditedRecord({ ...editedRecord, text: simplifyMentionInput(editedRecord.text, suggestionData) });
-    }
-  }, [suggestionData, editedRecord.text]);
-
   return (
-    <Modal
-      onClose={onClose}
-      title="Редактирование записи"
-    >
-      {suggestionData && <div className='py-4'>
+    <div>
+      <div className="flex items-start justify-between gap-4">
+        <h3 className="font-bold text-lg">Редактирование записи</h3>
+        <button
+          type="button"
+          aria-label="Закрыть редактирование"
+          className="text-2xl leading-none transition-colors hover:text-gray-600"
+          onClick={onClose}
+        >
+          ×
+        </button>
+      </div>
+
+      <div className='py-4'>
         <RichInput
           key={1000}
           label=""
           value={simplifyMentionInput(record.text, suggestionData)}
           entityEdit={{ handleFieldChange: onInputChange }}
           suggestionData={suggestionData} />
-      </div>}
+      </div>
 
       <h2 className='text-lg py-2'>Дополнительно</h2>
 
@@ -152,7 +172,7 @@ export const RecordEdit = ({
         </SubmitButton>
       </div>
 
-    </Modal>
+    </div>
   );
 };
 

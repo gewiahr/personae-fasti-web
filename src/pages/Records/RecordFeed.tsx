@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/store";
 import { convertSuggestionDataToRender } from "@/types/suggestion";
 import Divider from "@lib/Divider";
 import LoadingLabel from "@lib/LoadingLabel";
-import { useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import type { Record } from '@/types/record'
 import type { Session } from '@/types/game'
 import RecordCard from "./RecordCard";
@@ -32,29 +32,17 @@ export const RecordFeed: React.FC<RecordFeedProps> = ({ records, editable = fals
   const recordsLoading = useAppSelector(selectIsLoadingNew(loadCurrentGameRecords.typePrefix));
 
   const [ editing, setEditing ] = useState<Record | null>(null);
-  const [ orderedRecords, setOrderedRecords ] = useState<RecordSession[]>([]);
 
   const onRecordEdit = (record : Record) => {
     setEditing(record);
   };
 
-  const onModalClose = () => {
+  const onEditClose = () => {
     setEditing(null);
     dispatch(loadCurrentGameRecords({auth}));
   };
 
-  useEffect(() => {
-    if (records && records.length > 0) {
-      let or = orderRecords();
-      setOrderedRecords(or);
-    }; 
-  }, [records, sessions]);
-
-  // useEffect(() => {
-  //   setGameInfo(playerSettingsData?.currentGame || null);
-  // }, [playerSettingsData])
-
-  const orderRecords = () => {
+  const orderedRecords = useMemo<RecordSession[]>(() => {
     if (!records || records.length === 0) {
       return [];
     };
@@ -99,7 +87,7 @@ export const RecordFeed: React.FC<RecordFeedProps> = ({ records, editable = fals
     });
 
     return sessionGroups.reverse();
-  }
+  }, [records, sessions, showSessions]);
 
   return (orderedRecords.length <= 0 ? //|| suggestions == null ? //(records.length === 0 || suggestionData == null ?
     recordsLoading ?
@@ -161,22 +149,20 @@ export const RecordFeed: React.FC<RecordFeedProps> = ({ records, editable = fals
                   quest={showQuests ? quests.find((q) => q.ext === record.questExt) : undefined}
                   suggestions={suggestions.entities}
                   onEdit={onRecordEdit}
+                  editContent={editing?.id === record.id && game ? (
+                    <RecordEdit
+                      record={editing}
+                      currentGame={game}
+                      onClose={onEditClose}
+                      suggestionData={convertSuggestionDataToRender(suggestions)}
+                    />
+                  ) : undefined}
                 />
               ))}
             </div>
           );
         })}
       </div>}
-
-      {editing && playerExt && game && 
-        <RecordEdit 
-          key={`recordfeed_editmodal`} 
-          record={editing}
-          currentGame={game} 
-          onClose={onModalClose} 
-          suggestionData={convertSuggestionDataToRender(suggestions)}
-        />
-      }
     </>   
   );
 };

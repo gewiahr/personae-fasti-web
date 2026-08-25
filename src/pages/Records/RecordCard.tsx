@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '@/components/icons/Icon';
 import { type Record } from '@/types/record'
@@ -13,49 +14,51 @@ interface RecordCardProps {
   quest?: QuestBrief;
   suggestions: SuggestionEntity[];
   onEdit?: (record : Record) => void;
+  editContent?: ReactNode;
 };
 
-const RecordCard = ({ record, label="", accented=false, editable=false, quest, suggestions, onEdit } : RecordCardProps) => {
+const RecordCard = ({ record, label="", accented=false, editable=false, quest, suggestions, onEdit, editContent } : RecordCardProps) => {
   return (
     <div>
       <div
         key={record.id}
         className={`record-card-container ${accented ? 'record-card-container-accented' : 'record-card-container-dimmed'}`}
       >
-        <div className="flex justify-between items-start">
-          <div>
-            <MarkdownText key={`recordcard_richtext-${record.id}`} text={record.text} uid={`recordcard-${record.id}`} suggestions={suggestions} />
+        {editContent ?? <>
+          <div className="flex justify-between items-start">
+            <div>
+              <MarkdownText key={`recordcard_richtext-${record.id}`} text={record.text} uid={`recordcard-${record.id}`} suggestions={suggestions} />
+            </div>
           </div>
-        </div>
-        <div className="flex justify-between items-end pt-2">
-          
-          {/* <span className='datestamp-label'>Обновлено: {new Date(record.updated).toLocaleDateString()}</span> */}
-          <span className='datestamp-label'>{new Date(record.created).toLocaleDateString()}</span>
+          <div className="flex justify-between items-end pt-2">
+            {/* <span className='datestamp-label'>Обновлено: {new Date(record.updated).toLocaleDateString()}</span> */}
+            <span className='datestamp-label'>{new Date(record.created).toLocaleDateString()}</span>
 
-          <div className="flex items-center">
-            {record.hidden && <div className='pr-4'>
-              <Icon 
-                key={`icon_hidden_${record.id}`} 
-                name='hidden'
-                className='icon-status'
-              />
-            </div>}
-            {editable && onEdit && <button className='pr-4' onClick={() => onEdit(record)}>
-              <Icon 
-                key={`icon_edit_${record.id}`} 
-                name='edit'
-                className='icon-button-accented'/>
-            </button>}
-            {label !== "" && <span
-              className={`card-label-container ${accented ? 'card-label-container-accented' : 'card-label-container-dimmed'}`}
-            >
-              {label}
-            </span>}
+            <div className="flex items-center">
+              {record.hidden && <div className='pr-4'>
+                <Icon
+                  key={`icon_hidden_${record.id}`}
+                  name='hidden'
+                  className='icon-status'
+                />
+              </div>}
+              {editable && onEdit && <button className='pr-4' onClick={() => onEdit(record)}>
+                <Icon
+                  key={`icon_edit_${record.id}`}
+                  name='edit'
+                  className='icon-button-accented'/>
+              </button>}
+              {label !== "" && <span
+                className={`card-label-container ${accented ? 'card-label-container-accented' : 'card-label-container-dimmed'}`}
+              >
+                {label}
+              </span>}
+            </div>
           </div>
-        </div>
+        </>}
       </div>
 
-      {quest && 
+      {quest && !editContent &&
         <Link to={`/quests/${record.questExt}`} >
           <div className={`record-card-quest-container ${accented ? 'record-card-quest-container-accented' : 'record-card-quest-container-dimmed'}`} >
             Квест: {quest.name}  
