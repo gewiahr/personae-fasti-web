@@ -1,52 +1,65 @@
-name: "Release"
+name: Release
 
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
+
+concurrency:
+  group: storyshard-web-production
+  cancel-in-progress: false
 
 jobs:
   deploy:
-    name: "📦 Build and Deploy"
+    name: Build and deploy web
     runs-on: ubuntu-latest
-    
     steps:
-      - name: Checkout code
+      - name: Check out source
         uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 25
-          cache: 'npm'
+          node-version: 22
+          cache: npm
 
       - name: Install dependencies
         run: npm ci
 
       - name: Build production app
+        env:
+          VITE_API_URL: https://api.storyshard.ru
         run: npm run build
 
       - name: Verify build output
-        run: |
-         ls -la dist/
-          [ -f dist/index.html ] || exit 1
+        run: test -f dist/index.html
 
-      - name: Clean up tabula-web directory
-        uses: appleboy/ssh-action@v1.2.5
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
-          script: rm -rf /apps/fasti-web/*
-      
-      - name: Copy dist
+      - name: Stage web image context on server
         uses: appleboy/scp-action@v1.0.0
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          source: "dist/"
-          target: /apps/fasti-web
-          strip_components: 1
+          source: "dist,deploy"
+          target: "/tmp/storyshard-web-${{ github.sha }}"
+
+      - name: Build and replace web container
+        uses: appleboy/ssh-action@v1.2.5
+        env:
+          RELEASE: ${{ github.sha }}
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          envs: RELEASE
+          script_stop: true
+          script: |
+            stage="/tmp/storyshard-web-${RELEASE}"
+            image="storyshard-web:${RELEASE}"
+            test -f /opt/storyshard/docker-compose.yml
+            docker build --file "${stage}/deploy/Dockerfile" --tag "${image}" --tag storyshard-web:latest "${stage}"
+            cd /opt/storyshard
+            WEB_IMAGE="${image}" docker compose up -d web
+            rm -rf "${stage}"
