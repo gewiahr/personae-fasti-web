@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { RichInput } from "../components/lib/Inputs/RichInput";
+import { MarkdownInput } from "../components/lib/Inputs/MarkdownInput";
 import SubmitButton from "../components/lib/SubmitButton";
 import { api } from "../utils/api";
 import { selectAuthorization } from "../reducers/PlayerSlice";
@@ -30,7 +30,7 @@ const FeedbackContent: React.FC<FeedbackContent> = ({ closeContent }) => {
   return (
     <div className="flex flex-col gap-2">
       <p>Введите пожелания и/или предложения по улучшению сервиса:</p>
-      <RichInput
+      <MarkdownInput
         suggestionData={[]}
         value={feedbackText}
         entityEdit={{ handleFieldChange: setFeedbackText }}

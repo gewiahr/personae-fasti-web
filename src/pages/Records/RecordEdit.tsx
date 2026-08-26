@@ -3,7 +3,6 @@ import { useNotifications } from '@/context/NotificationContext';
 import { selectCurrentGameQuests, loadCurrentGameQuests, editRecord, deleteRecord } from '@/reducers/CurrentGameSlice';
 import { selectAuthorization, selectPlayerExt } from '@/reducers/PlayerSlice';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { enrichMentionInput, simplifyMentionInput } from '@/types/mention';
 import type { GameBrief } from '@/types/game';
 import type { SuggestionEntityRender } from '@/types/suggestion';
 import { SelectInput } from '@lib/Inputs/SelectInput';
@@ -32,10 +31,7 @@ export const RecordEdit = ({
   const quests = useAppSelector(selectCurrentGameQuests);
 
   const [postHidden, setPostHidden] = useState<boolean>(record.hidden);
-  const [editedRecord, setEditedRecord] = useState<Record>({
-    ...record,
-    text: simplifyMentionInput(record.text, suggestionData),
-  });
+  const [editedRecord, setEditedRecord] = useState<Record>(record);
 
   const { addNotification } = useNotifications();
   
@@ -61,11 +57,9 @@ export const RecordEdit = ({
   const handleSave = () => {
     if (!editedRecord) return;
 
-    const enrichedText = enrichMentionInput(editedRecord.text, suggestionData);
-
     dispatch(editRecord({
       auth,
-      record: { ...editedRecord, text: enrichedText, hidden: postHidden }
+      record: { ...editedRecord, hidden: postHidden }
     }))
       .unwrap()
       .then(() => {

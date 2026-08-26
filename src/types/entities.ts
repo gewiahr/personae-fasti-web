@@ -70,7 +70,6 @@ export type EntityMetaData = {
     TextClass: string;
     ChipClass: string;
   };
-  RichInputFields: string[];
   Fields: EntityFieldMetaData[];
 }
 
@@ -78,7 +77,7 @@ export type EntityFieldMetaData = {
   FieldName: string;
   FieldLabel: string;
   Type: 'label' | 'richText';
-  EditType: 'input' | 'richInput' | null;
+  EditType: 'input' | 'markdownInput' | null;
 }
 
 export const formSuggestionRef = (suggestion: SuggestionEntity) => {
@@ -108,7 +107,6 @@ export const CharMetaData: EntityMetaData = {
     TextClass: "text-blue-500",
     ChipClass: "mention-chip-char",
   },
-  RichInputFields: ["description"],
   Fields: [
     {
       FieldName: 'name',
@@ -126,7 +124,7 @@ export const CharMetaData: EntityMetaData = {
       FieldName: 'description',
       FieldLabel: 'Описание',
       Type: 'richText',
-      EditType: 'richInput',
+      EditType: 'markdownInput',
     }
   ]
 };
@@ -151,7 +149,6 @@ export const NPCMetaData: EntityMetaData = {
     TextClass: "text-yellow-500",
     ChipClass: "mention-chip-npc",
   },
-  RichInputFields: ["description"],
   Fields: [
     {
       FieldName: 'name',
@@ -169,7 +166,7 @@ export const NPCMetaData: EntityMetaData = {
       FieldName: 'description',
       FieldLabel: 'Описание',
       Type: 'richText',
-      EditType: 'richInput',
+      EditType: 'markdownInput',
     }
   ]
 };
@@ -194,7 +191,6 @@ export const LocationMetaData: EntityMetaData = {
     TextClass: "text-green-500",
     ChipClass: "mention-chip-location",
   },
-  RichInputFields: ["description"],
   Fields: [
     {
       FieldName: 'name',
@@ -212,7 +208,7 @@ export const LocationMetaData: EntityMetaData = {
       FieldName: 'description',
       FieldLabel: 'Описание',
       Type: 'richText',
-      EditType: 'richInput',
+      EditType: 'markdownInput',
     }
   ]
 };

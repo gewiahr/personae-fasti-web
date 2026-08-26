@@ -20,7 +20,7 @@ export type MentionMenuState = {
 } | null;
 
 // Renders nothing itself — just reports the current menu state up via
-// onStateChange so RichInput can render the real SuggestionsTab in its
+// onStateChange lets MarkdownInput render the shared SuggestionsTab in its
 // original spot, unchanged.
 function MenuStateSync({
   options, selectedIndex, selectOptionAndCleanUp, onStateChange,

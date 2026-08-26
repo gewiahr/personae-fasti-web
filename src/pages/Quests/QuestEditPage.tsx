@@ -4,7 +4,6 @@ import { useApi } from "@/hooks/useApi";
 import { selectCurrentGameSuggestions } from "@/reducers/CurrentGameSlice";
 import { selectAuthorization } from "@/reducers/PlayerSlice";
 import { useAppSelector } from "@/store";
-import { simplerQuestFieldsMentions, simplerQuestTaskFieldsMentions, enrichQuestFieldsMentions, enrichQuestTaskFieldsMentions } from "@/types/mention";
 import { type Quest, type QuestTask, type QuestPageData, NewQuestTask } from "@/types/quest";
 import { convertSuggestionDataToRender } from "@/types/suggestion";
 import { api } from "@/utils/api";
@@ -12,7 +11,7 @@ import ConfirmButton from "@lib/ConfirmButton";
 import Divider from "@lib/Divider";
 import { InputField } from "@lib/Inputs/InputField";
 import { NumericInputInline } from "@lib/Inputs/NumericInputInline";
-import { RichInput } from "@lib/Inputs/RichInput";
+import { MarkdownInput } from "@lib/Inputs/MarkdownInput";
 import { SelectInput } from "@lib/Inputs/SelectInput";
 import LoadingLabel from "@lib/LoadingLabel";
 import SubmitButton from "@lib/SubmitButton";
@@ -38,13 +37,13 @@ const QuestEditPage = () => {
     if (!questData || !questData.quest) return;
     if (!suggestions) return;
 
-    setQuest(simplerQuestFieldsMentions(questData.quest, suggestions));
-    setTasks(simplerQuestTaskFieldsMentions(questData.tasks.sort((a, b) => a.id - b.id), suggestions));
+    setQuest(questData.quest);
+    setTasks([...questData.tasks].sort((a, b) => a.id - b.id));
   }, [questData, suggestions]);
 
-  const handleFieldChange = (value: any, field?: string) => {
+  const handleFieldChange = (value: unknown, field?: string) => {
     if (!field) return;
-    setQuest(prev => prev ? { ...prev, [field]: value } : null);
+    setQuest(prev => prev ? { ...prev, [field]: value } as Quest : null);
   };
 
   const addTask = () => {
@@ -57,12 +56,12 @@ const QuestEditPage = () => {
     setTasks(prev => prev.filter((_, i) => i !== removeIndex));
   };
 
-  const handleTasksChange = (value: any, field?: string, index?: number) => {
+  const handleTasksChange = (value: unknown, field?: string, index?: number) => {
     if (!field || !tasks) return;
     setTasks(prev =>
       prev ? prev.map((task, i) =>
         i === index
-          ? { ...task, [field]: value }
+          ? { ...task, [field]: value } as QuestTask
           : task
       ) : []
     );
@@ -71,12 +70,9 @@ const QuestEditPage = () => {
   const saveEdited = async (editedQuest: Quest | null, editedTasks: QuestTask[]) => {
     if (!quest || !suggestions) return;
 
-    const enrichedQuest = enrichQuestFieldsMentions(editedQuest, convertSuggestionDataToRender(suggestions));
-    const enrichedTasks = enrichQuestTaskFieldsMentions(editedTasks, convertSuggestionDataToRender(suggestions));
-
     const endpoint = '/quest';
     const method = newQuest ? api.post : api.put;
-    const { data, error } = await method<QuestPageData>(endpoint, auth, { quest: enrichedQuest, tasks: enrichedTasks });
+    const { data, error } = await method<QuestPageData>(endpoint, auth, { quest: editedQuest, tasks: editedTasks });
 
     if (error) {
       addNotification(`Ошибка: ${error.message}`, 'error');
@@ -94,7 +90,7 @@ const QuestEditPage = () => {
       //setTasks(data);
       navigate(0);
     } else {
-      var errorMessage = error ? `Ошибка: ${error.message}` : `Неизвестная ошибка (код ${status})`
+      const errorMessage = error ? `Ошибка: ${error.message}` : `Неизвестная ошибка (код ${status})`
       addNotification(errorMessage, 'error');
     }
   };
@@ -133,7 +129,7 @@ const QuestEditPage = () => {
           value={quest?.title}
           entityEdit={{ fieldName: 'title', handleFieldChange }}
         />
-        <RichInput
+        <MarkdownInput
           label='Описание'
           value={quest?.description}
           entityEdit={{ fieldName: 'description', handleFieldChange }}
@@ -156,7 +152,7 @@ const QuestEditPage = () => {
             return (
               <div key={`questpage_task-${task.id ?? 0}-${i}_edit`} className='flex flex-col items-left gap-2 mb-4'>
                 <InputField label='Название задачи' className='text-md my-2 w-full' value={task.name} entityEdit={{ fieldName: 'name', arrayIndex: i, handleFieldChange: handleTasksChange }} />
-                <RichInput label='Доп. информация' value={task.description} entityEdit={{ fieldName: 'description', arrayIndex: i, handleFieldChange: handleTasksChange }} suggestionData={convertSuggestionDataToRender(suggestions)} />
+                <MarkdownInput label='Доп. информация' value={task.description} entityEdit={{ fieldName: 'description', arrayIndex: i, handleFieldChange: handleTasksChange }} suggestionData={convertSuggestionDataToRender(suggestions)} />
                 <div className='flex justify-between gap-8'>
                   <SelectInput className='w-[40%]' options={[{ key: 0, value: "Выполнение" }, { key: 1, value: "Количество" }]} setKey={task.type} entityEdit={{ fieldName: 'type', arrayIndex: i, handleFieldChange: handleTasksChange }} />
                   <div className='flex gap-8'>

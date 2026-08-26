@@ -101,6 +101,7 @@ function deserializeContent(text: string, suggestions: SuggestionEntityRender[])
 
 // ============================================================================
 
+/** @deprecated Use MarkdownInput instead. */
 export const RichInput: React.FC<RichInputProps> = ({
   label,
   labelBGColor = 'bg-(--color-bg-primary)',

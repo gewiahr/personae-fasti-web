@@ -4,13 +4,12 @@ import { useApi } from '@/hooks/useApi';
 import { selectCurrentGameSuggestions, selectCurrentGameInfo } from '@/reducers/CurrentGameSlice';
 import { selectAuthorization, selectPlayerExt } from '@/reducers/PlayerSlice';
 import { useAppSelector } from '@/store';
-import { simplerEntityFieldsMentions, enrichEntityFieldsMentions } from '@/types/mention';
 import { convertSuggestionDataToRender } from '@/types/suggestion';
 import { api } from '@/utils/api';
 import FoldableCategory from '@lib/FoldableCategory';
 import ImageUpload from '@lib/ImageUpload';
 import { InputField } from '@lib/Inputs/InputField';
-import { RichInput } from '@lib/Inputs/RichInput';
+import { MarkdownInput } from '@lib/Inputs/MarkdownInput';
 import { SelectInput } from '@lib/Inputs/SelectInput';
 import LoadingLabel from '@lib/LoadingLabel';
 import SubmitButton from '@lib/SubmitButton';
@@ -48,7 +47,7 @@ const EntityEditPage = () => {
   // Sync data to state
   useEffect(() => {
     if (pageData && pageData[metaData.EntityType] && suggestionData) {
-      setEntity(simplerEntityFieldsMentions(pageData[metaData.EntityType], metaData, suggestionData));
+      setEntity(pageData[metaData.EntityType]);
       setHidden(pageData[metaData.EntityType].hidden)
     }
   }, [pageData, suggestionData, metaData]);
@@ -85,13 +84,12 @@ const EntityEditPage = () => {
       return;
     }
 
-    const enrichedEntity = enrichEntityFieldsMentions(normalizedEntity, metaData, convertSuggestionDataToRender(suggestionData));
-    enrichedEntity.hidden = hidden 
+    normalizedEntity.hidden = hidden
 
     const endpoint = `/${metaData.EntityType}`;
     const method = newEntity ? api.post : api.put;
 
-    const { data, error: saveError } = await method<Record<string, EntityModel>>(endpoint, auth, enrichedEntity);
+    const { data, error: saveError } = await method<Record<string, EntityModel>>(endpoint, auth, normalizedEntity);
     if (saveError?.data?.fields) {
       setValidationErrors(saveError.data.fields);
       addNotification(saveError.data.fields.description ?? 'Исправьте ошибки в форме', 'error');
@@ -122,12 +120,14 @@ const EntityEditPage = () => {
                         maxLength={field.FieldName === 'name' ? ENTITY_FIELD_LIMITS.name : ENTITY_FIELD_LIMITS.title}
                         error={validationErrors[field.FieldName]}
                       />);
-          } else if (field.EditType == 'richInput') {
-              return (<RichInput 
+          } else if (field.EditType == 'markdownInput') {
+              return (<MarkdownInput
+                        key={`entityedit-${field.FieldName}`}
                         label='Описание' 
                         value={entity[field.FieldName as keyof typeof entity] as string} 
                         entityEdit={{ fieldName: field.FieldName, handleFieldChange }} 
                         suggestionData={convertSuggestionDataToRender(suggestionData)}
+                        error={validationErrors[field.FieldName]}
                       />);
           }
         })}

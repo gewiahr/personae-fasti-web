@@ -3,12 +3,11 @@ import { selectCurrentGameSuggestions } from "@/reducers/CurrentGameSlice";
 import { selectAuthorization } from "@/reducers/PlayerSlice";
 import { useAppSelector } from "@/store";
 import type { Char } from "@/types/entities";
-import { simplerCharFieldsMentions, enrichCharFieldsMentions } from "@/types/mention";
 import type { CharPageData } from "@/types/request";
 import { convertSuggestionDataToRender } from "@/types/suggestion";
 import { api } from "@/utils/api";
 import { InputField } from "@lib/Inputs/InputField";
-import { RichInput } from "@lib/Inputs/RichInput";
+import { MarkdownInput } from "@lib/Inputs/MarkdownInput";
 import LoadingLabel from "@lib/LoadingLabel";
 import SubmitButton from "@lib/SubmitButton";
 import { useState, useEffect } from "react";
@@ -28,7 +27,7 @@ const CharEditPage = () => {
 
   useEffect(() => {
     if (apiData?.char && suggestionData) {
-      setChar(simplerCharFieldsMentions(apiData.char, suggestionData));
+      setChar(apiData.char);
     }
   }, [apiData, suggestionData]);
 
@@ -40,12 +39,10 @@ const CharEditPage = () => {
   const saveEdited = async (editedChar: Char | null) => {
     if (!editedChar || !suggestionData) return;
 
-    const enrichedChar = enrichCharFieldsMentions(editedChar, convertSuggestionDataToRender(suggestionData));
-    
     const endpoint = '/char'; //newChar ? '/chars' : `/chars/${id}`;
     const method = newChar ? api.post : api.put;
 
-    const { data, error } = await method<Char>(endpoint, auth, enrichedChar);
+    const { data, error } = await method<Char>(endpoint, auth, editedChar);
     if (!error) {
       navigate(data?.ext ? `/chars/${data.ext}` : '/chars');
     }
@@ -74,7 +71,7 @@ const CharEditPage = () => {
           value={char?.title} 
           entityEdit={{ fieldName: 'title', handleFieldChange }}
         />
-        <RichInput 
+        <MarkdownInput
           label='Описание' 
           value={char?.description} 
           entityEdit={{ fieldName: 'description', handleFieldChange }} 

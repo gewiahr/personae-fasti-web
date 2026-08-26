@@ -3,18 +3,13 @@ import { LuChevronDown } from 'react-icons/lu';
 import { selectCurrentGame, postNewRecord } from '@/reducers/CurrentGameSlice';
 import { selectAuthorization, selectPlayerExt } from '@/reducers/PlayerSlice';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { enrichMentionInput } from '@/types/mention';
 import { convertSuggestionDataToRender } from '@/types/suggestion';
 import { SelectInput } from '@lib/Inputs/SelectInput';
 import SubmitButton from '@lib/SubmitButton';
 import { ToggleSwitch } from '@lib/ToggleSwitch';
 import { MarkdownInput } from '@lib/Inputs/MarkdownInput';
 
-type RecordInputProps = {
-
-};
-
-export const RecordInput: React.FC<RecordInputProps> = () => {
+export const RecordInput = () => {
   const [input, setInput] = useState<string>('');
   const [questExt, setQuestExt] = useState<string>('');
   
@@ -40,10 +35,9 @@ export const RecordInput: React.FC<RecordInputProps> = () => {
 
     setIsSubmitting(true);
 
-    const enrichedText = enrichMentionInput(input, convertSuggestionDataToRender(suggestions));
     dispatch(postNewRecord({
       auth,
-      content: enrichedText,
+      content: input,
       hidden: postHidden,
       questExt
     }));
@@ -63,13 +57,6 @@ export const RecordInput: React.FC<RecordInputProps> = () => {
   return (
     <div className="mb-6">
       <div className="flex flex-col space-y-2">
-        {/* <RichInput 
-          key={`recordinput_richinput_${inputKey}`} 
-          label='Что нового?'
-          value={input} 
-          entityEdit={{ handleFieldChange }} 
-          suggestionData={suggestions && convertSuggestionDataToRender(suggestions)}
-        /> */}
         <MarkdownInput
           key={`recordinput_richinput_${inputKey}`} 
           label='Что нового?'

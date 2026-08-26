@@ -33,10 +33,6 @@ export interface Quest {
   finished: boolean;
 };
 
-export const QuestMetaData = {
-  RichInputFields: ["description"]
-}
-
 export interface QuestTask {
   id: number;
   name: string;
@@ -46,10 +42,6 @@ export interface QuestTask {
   current: number;
   hidden: boolean;
   finished: boolean;
-}
-
-export const QuestTaskMetaData = {
-  RichInputFields: ["description"]
 }
 
 export const NewQuestTask = () : QuestTask => ({
