@@ -9,6 +9,7 @@ import { api } from '@/utils/api';
 import type { SuggestionData } from '@/types/suggestion';
 import { addLoading, removeLoading } from './LoadingSlice';
 import dayjs from 'dayjs';
+import type { GameImageQuota } from '@/types/image';
 
 export type CurrentGameData = {
   game: GameBrief | null;
@@ -19,6 +20,7 @@ export type CurrentGameData = {
   players: PlayerBrief[];
   quests: QuestBrief[];
   suggestions: SuggestionData;
+  imageQuota: GameImageQuota | null;
 };
 
 const initialState: CurrentGameData = {
@@ -29,8 +31,19 @@ const initialState: CurrentGameData = {
   sessions: [],
   players: [],
   quests: [],
-  suggestions: { entities: [] }
+  suggestions: { entities: [] },
+  imageQuota: null,
 };
+
+export const loadCurrentGameImageQuota = createAsyncThunk(
+  'loadCurrentGameImageQuota',
+  async (params: { auth: string }, appThunk) => {
+    const { data, error } = await api.get<GameImageQuota>('/game/storage/quota', params.auth);
+    if (error) throw error;
+    appThunk.dispatch(setCurrentGameImageQuota(data ?? null));
+    return data ?? null;
+  },
+);
 
 export const loadCurrentGame = createAsyncThunk(
   'loadCurrentGame',
@@ -45,6 +58,8 @@ export const loadCurrentGame = createAsyncThunk(
 
       appThunk.dispatch(loadCurrentGameQuests({ auth: params.auth }));
       appThunk.dispatch(loadCurrentGameSuggestions({ auth: params.auth }));
+      if (data) appThunk.dispatch(loadCurrentGameImageQuota({ auth: params.auth }));
+      else appThunk.dispatch(setCurrentGameImageQuota(null));
     } catch (e) {
       throw e
     } finally {
@@ -60,6 +75,8 @@ export const changeCurrentGame = createAsyncThunk(
       const { data, error } = await api.put<GameFull>(`/player/currentGame/${params.gameExt}`, params.auth, null);
       if (error) throw error
       appThunk.dispatch(setCurrentGame(data || null));
+      appThunk.dispatch(setCurrentGameImageQuota(null));
+      appThunk.dispatch(loadCurrentGameImageQuota({ auth: params.auth }));
     } catch (e) {
       throw e
     }
@@ -280,6 +297,9 @@ const currentGameSlice = createSlice({
     setCurrentGameLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
+    setCurrentGameImageQuota: (state, action: PayloadAction<GameImageQuota | null>) => {
+      state.imageQuota = action.payload;
+    },
     resetCurrentGame: () => initialState
   },
 });
@@ -294,6 +314,7 @@ export const {
   setCurrentGamePlayers,
   setCurrentGameQuests,
   setCurrentGameSuggestions,
+  setCurrentGameImageQuota,
   setCurrentGameLoading,
   resetCurrentGame
 } = currentGameSlice.actions;
@@ -307,5 +328,6 @@ export const selectCurrentGameRecords = (state: RootState) => state.currentGame.
 export const selectCurrentGameSessions = (state: RootState) => state.currentGame.sessions || [];
 export const selectCurrentGameQuests = (state: RootState) => state.currentGame.quests || [];
 export const selectCurrentGameSuggestions = (state: RootState) => state.currentGame.suggestions;
+export const selectCurrentGameImageQuota = (state: RootState) => state.currentGame.imageQuota;
 
 export default currentGameSlice;

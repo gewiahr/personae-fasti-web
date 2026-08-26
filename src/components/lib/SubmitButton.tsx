@@ -10,6 +10,8 @@ type SubmitButtonProps = {
 const SubmitButton: React.FC<SubmitButtonProps> = ({ children, onClick, className = "", danger = false, disabled = false, ref }) => {
   return (<button
     ref={ref}
+    type="button"
+    disabled={disabled}
     className={`submit-button-container ${disabled ? `submit-button-container-disabled` : danger ? `submit-button-container-danger` : `submit-button-container-regular`} ${className}`}
     onClick={onClick}
   >

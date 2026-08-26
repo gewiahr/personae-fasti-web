@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 
 type FoldableCategoryProps = {
   title: string;
@@ -7,8 +7,6 @@ type FoldableCategoryProps = {
 
 const FoldableCategory = ({ title, children }: FoldableCategoryProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const headerRef = useRef<HTMLDivElement>(null);
 
   const toggleOpen = () => {
     setIsOpen(!isOpen);
@@ -17,9 +15,10 @@ const FoldableCategory = ({ title, children }: FoldableCategoryProps) => {
   return (
     <div className=''>
       {/* Header with animated lines */}
-      <div 
-        ref={headerRef}
-        className={`transition-all duration-300`}
+      <button
+        type="button"
+        aria-expanded={isOpen}
+        className="w-full transition-all duration-300"
         onClick={toggleOpen}
       >
         <div className='relative flex items-center justify-center p-4 cursor-pointer group'>
@@ -42,21 +41,19 @@ const FoldableCategory = ({ title, children }: FoldableCategoryProps) => {
             style={{ transform: 'translateY(-50%)' }}
           />
         </div>        
-      </div>
+      </button>
 
       {/* Content with smooth height transition */}
       <div
-        ref={contentRef}
-        className={`transition-all duration-300 ease-in-out overflow-hidden ${
-          isOpen ? 'max-h-250 opacity-100' : 'max-h-0 opacity-80'
+        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
+          isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-80'
         }`}
-        style={{
-          transitionProperty: 'max-height, opacity'
-        }}
       >
-        {/* <div className="p-4 pt-2 border-t border-gray-100"> */}
-          {children}
-        {/* </div> */}
+        <div className="min-h-0 overflow-hidden">
+          <div className="px-px py-2">
+            {children}
+          </div>
+        </div>
       </div>
 
       {<div 

@@ -3,6 +3,7 @@ import { useApi } from './useApi';
 import type { ApiError } from '../types/api';
 import { useAppSelector } from '../store';
 import { selectAuthorization } from '../reducers/PlayerSlice';
+import type { EntityImageList } from '@/types/image';
 
 interface Image {
   url: string;
@@ -11,10 +12,10 @@ interface Image {
 
 interface UseImageProps {
   entityType: string;
-  entityID: string;
+  entityExt: string;
 };
 
-const useImage = ({ entityType, entityID }: UseImageProps) => {
+const useImage = ({ entityType, entityExt }: UseImageProps) => {
   const [image, setImage] = useState<Image | null>(null);
   const [ratio, setRatio] = useState<number>(0);
   const [dimensions, setDimensions] = useState<{ width: number; height: number } | null>(null);
@@ -23,20 +24,26 @@ const useImage = ({ entityType, entityID }: UseImageProps) => {
 
   const auth = useAppSelector(selectAuthorization);
 
-  const { data, error: apiError } = useApi.get(`/image/${entityType}/${entityID}`, auth);
+  const { data, error: apiError } = useApi.get<EntityImageList>(
+    `/entities/${entityType}/${entityExt}/images`,
+    auth,
+    [entityType, entityExt],
+    !entityExt,
+  );
 
   useEffect(() => {
     if (!data) return;
 
     const fetchImageDetails = async () => {
       try {
-        if (apiError === null && data !== "") {
+        const mainImage = data.images.find((candidate) => candidate.isMain) ?? data.images[0];
+        if (!apiError && mainImage?.url) {
           const img = new Image();
-          img.src = data;
+          img.src = mainImage.url;
           
           img.onload = () => {
             setImage({
-              url: data,
+              url: mainImage.url,
               altText: `${entityType} image`
             });
             setRatio(img.naturalWidth / img.naturalHeight);
@@ -66,7 +73,7 @@ const useImage = ({ entityType, entityID }: UseImageProps) => {
     };
 
     fetchImageDetails();
-  }, [data, entityType]);
+  }, [data, apiError, entityType]);
 
   useEffect(() => {
     if (apiError) {
@@ -81,7 +88,7 @@ const useImage = ({ entityType, entityID }: UseImageProps) => {
     dimensions,
     loading,
     error,
-    status: data?.status || null
+    status: null
   };
 };
 

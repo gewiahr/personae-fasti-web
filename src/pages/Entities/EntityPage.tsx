@@ -21,7 +21,7 @@ export const EntityPage = () => {
 
   type EntityModel = EntityMetaDataTypeMap[typeof entityType]['page'];
 
-  const { image, ratio } = useImage({ entityType: metaData.EntityType, entityID: ext || "" });
+  const { image, ratio } = useImage({ entityType: metaData.EntityType, entityExt: ext || "" });
 
   const [entity, setEntity] = useState<EntityModel>({} as EntityModel);
   const isLocation = (e: EntityModel): e is Location => 'parentExt' in e;
@@ -60,7 +60,7 @@ export const EntityPage = () => {
         <ErrorPage error={error || null} entityMeta={metaData} />
       ) : (<>
         {image && <div className='relative pb-4 rounded-lg'>
-          <img className='w-full rounded-lg border border-gray-700 bg-gray-800 object-cover' src={image?.url}></img>
+          <img className='w-full rounded-lg border border-gray-700 bg-gray-800 object-cover' src={image.url} alt={entity.name}></img>
           {image && ratio <= 1 && <div className="absolute bottom-2 left-0 right-0 bg-slate-900/60 px-4 py-2 pb-4">
             <h1 className="text-xl font-bold">{entity.name}</h1>
             <h3 className="text-sm text-gray-400 italic">{entity?.title}</h3>
