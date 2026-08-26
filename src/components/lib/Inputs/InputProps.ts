@@ -12,6 +12,7 @@ export type TextInputProps = InputProps & {
   value?: string;
   min?: string;
   max?: string;
+  maxLength?: number;
 }
 
 export type NumericInputProps = InputProps & {

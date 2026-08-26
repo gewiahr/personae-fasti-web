@@ -13,7 +13,10 @@ export type ApiResponse<T> = {
 
 export type ApiError = {
   message: string;
-  //code: 'GameAccess' | 'PlayerVisibility'
   status?: number;
-  data?: any;
+  data?: {
+    error?: string;
+    fields?: Record<string, string>;
+    [key: string]: unknown;
+  };
 };

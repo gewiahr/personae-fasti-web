@@ -163,6 +163,15 @@
   border-color: var(--color-accent)
 } 
 
+.rich-input-textarea-border-error {
+  border-color: var(--color-text-danger);
+}
+
+.rich-input-textarea-border-error:focus {
+  outline: var(--color-text-danger);
+  border-color: var(--color-text-danger);
+}
+
 /* .rich-input-textarea {
   min-height: 2.5rem;
   padding: 0.5rem 0.75rem;

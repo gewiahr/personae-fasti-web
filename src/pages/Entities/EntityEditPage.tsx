@@ -17,6 +17,8 @@ import SubmitButton from '@lib/SubmitButton';
 import { ToggleSwitch } from '@lib/ToggleSwitch';
 import { useEntityContext } from './EntityLayout';
 import type { EntityMetaDataTypeMap } from '@/types/entities';
+import { useNotifications } from '@/context/NotificationContext';
+import { ENTITY_FIELD_LIMITS, validateEntityFields, type ValidationErrors } from '@/utils/validation';
 
 const EntityEditPage = () => {
   const { ext } = useParams();
@@ -30,10 +32,12 @@ const EntityEditPage = () => {
   const suggestionData = useAppSelector(selectCurrentGameSuggestions);
   const playerExt = useAppSelector(selectPlayerExt);
   const game = useAppSelector(selectCurrentGameInfo);
+  const { addNotification } = useNotifications();
   
   const [entity, setEntity] = useState<EntityModel | null>(newEntity ? {} as EntityModel : null);
   const { data: pageData, loading, error } = useApi.get(`/${metaData.EntityType}/${ext}`, auth, [], newEntity);
   const [hidden, setHidden] = useState<boolean>(entity && entity?.hidden || false);
+  const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
 
   const parentLocationOptions = suggestionData.entities
     .filter((suggestion) => suggestion.type === 'location' && !suggestion.secret)
@@ -47,24 +51,54 @@ const EntityEditPage = () => {
       setEntity(simplerEntityFieldsMentions(pageData[metaData.EntityType], metaData, suggestionData));
       setHidden(pageData[metaData.EntityType].hidden)
     }
-  }, [pageData, suggestionData]);
+  }, [pageData, suggestionData, metaData]);
 
   const handleFieldChange = (value: string, field?: string) => {
     if (!field) return
-    setEntity(prev => prev ? { ...prev, [field]: value } : null);
+    const nextEntity = entity ? { ...entity, [field]: value } : null;
+    setEntity(nextEntity);
+
+    if (validationErrors[field] && nextEntity) {
+      const nextError = validateEntityFields(nextEntity)[field];
+      setValidationErrors((previous) => {
+        const next = { ...previous };
+        if (nextError) next[field] = nextError;
+        else delete next[field];
+        return next;
+      });
+    }
   };
 
   const saveEdited = async (editedEntity: EntityModel | null) => {
     if (!editedEntity || !suggestionData) return;
 
-    var enrichedEntity = enrichEntityFieldsMentions(editedEntity, metaData, convertSuggestionDataToRender(suggestionData));
+    const normalizedEntity = {
+      ...editedEntity,
+      name: editedEntity.name?.trim() ?? '',
+      title: editedEntity.title?.trim() ?? '',
+    };
+    const errors = validateEntityFields(normalizedEntity);
+    if (Object.keys(errors).length > 0) {
+      setEntity(normalizedEntity);
+      setValidationErrors(errors);
+      addNotification(errors.description ?? 'Исправьте ошибки в форме', 'error');
+      return;
+    }
+
+    const enrichedEntity = enrichEntityFieldsMentions(normalizedEntity, metaData, convertSuggestionDataToRender(suggestionData));
     enrichedEntity.hidden = hidden 
 
     const endpoint = `/${metaData.EntityType}`;
     const method = newEntity ? api.post : api.put;
 
-    const { data, error } = await method<Record<string, EntityModel>>(endpoint, auth, enrichedEntity);
-    if (!error) {
+    const { data, error: saveError } = await method<Record<string, EntityModel>>(endpoint, auth, enrichedEntity);
+    if (saveError?.data?.fields) {
+      setValidationErrors(saveError.data.fields);
+      addNotification(saveError.data.fields.description ?? 'Исправьте ошибки в форме', 'error');
+    } else if (saveError) {
+      addNotification(saveError.message, 'error');
+    } else {
+      setValidationErrors({});
       const savedEntity = data?.[metaData.EntityType];
       navigate(savedEntity?.ext ? `/${metaData.EntityTypePl}/${savedEntity.ext}` : `/${metaData.EntityTypePl}`);
     }
@@ -80,10 +114,13 @@ const EntityEditPage = () => {
         { entity && metaData.Fields.map((field) => {
           if (field.EditType == 'input') {
               return (<InputField 
+                        key={`entityedit-${field.FieldName}`}
                         className="mb-4" 
                         label={field.FieldLabel} 
                         value={entity[field.FieldName as keyof typeof entity] as string} 
                         entityEdit={{ fieldName: field.FieldName, handleFieldChange }}
+                        maxLength={field.FieldName === 'name' ? ENTITY_FIELD_LIMITS.name : ENTITY_FIELD_LIMITS.title}
+                        error={validationErrors[field.FieldName]}
                       />);
           } else if (field.EditType == 'richInput') {
               return (<RichInput 
@@ -96,7 +133,7 @@ const EntityEditPage = () => {
         })}
 
         {/* Entity specific fields */}
-        {metaData.EntityType == 'location' && parentLocationOptions.length > 0 && <>
+        {entityType == 'locations' && parentLocationOptions.length > 0 && <>
           <div className='my-4'>
             <SelectInput  
               key={"locationedit_parentselect"}
@@ -104,6 +141,7 @@ const EntityEditPage = () => {
               label='Находится в' 
               setKey={entity && 'parentExt' in entity ? entity.parentExt : ''}
               entityEdit={{ fieldName: 'parentExt', handleFieldChange }}
+              error={validationErrors.parentExt}
               nullable={true}/>
           </div>
         </>}
