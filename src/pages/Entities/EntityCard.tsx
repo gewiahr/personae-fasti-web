@@ -16,10 +16,10 @@ const EntityCard = ({ entity, metaData, labelText }: EntityCardProps) => {
   };
 
   return (
-    <div>
+    <div className="h-full min-w-0 w-full">
       <Link
         to={`/${metaData.EntityTypePl}/${entity.ext}`}
-        className="entity-card-link-container"
+        className="entity-card-link-container h-full min-w-0 w-full"
       >
         <div className="flex flex-col h-full p-4">
           <div className=''>
@@ -64,9 +64,7 @@ const EntityCard = ({ entity, metaData, labelText }: EntityCardProps) => {
           )*/}
 
           {labelText && <>
-            <div className='grow mt-3'></div>
-
-            <div className="flex justify-between items-end">
+            <div className="flex justify-between items-end mt-auto pt-3">
               <span className='datestamp-label'>Обновлено: {new Date().toLocaleDateString()}</span>
               <div className="flex items-center">
                 {entity.hidden && <div className='pr-4'>

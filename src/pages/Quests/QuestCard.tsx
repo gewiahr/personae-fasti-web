@@ -30,7 +30,7 @@ export const QuestCard = ({ quest, labelText = null }: QuestCardProps) => {
         </div>
 
         {labelText && <>
-          <div className="flex justify-end items-end text-xs text-gray-400">
+          <div className="flex justify-end items-end text-xs text-gray-400 mt-auto pt-2">
             <span className={`card-label-container ${accented ? 'card-label-container-accented' : 'card-label-container-dimmed'}`}>
               {labelText}
             </span>
