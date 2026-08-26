@@ -6,11 +6,11 @@ import { useAppDispatch, useAppSelector } from '@/store';
 import { enrichMentionInput, simplifyMentionInput } from '@/types/mention';
 import type { GameBrief } from '@/types/game';
 import type { SuggestionEntityRender } from '@/types/suggestion';
-import { RichInput } from '@lib/Inputs/RichInput';
 import { SelectInput } from '@lib/Inputs/SelectInput';
 import SubmitButton from '@lib/SubmitButton';
 import { ToggleSwitch } from '@lib/ToggleSwitch';
 import { type Record } from '@/types/record'
+import { MarkdownInput } from '@lib/Inputs/MarkdownInput';
 
 
 interface RecordEditProps {
@@ -119,10 +119,10 @@ export const RecordEdit = ({
       </div>
 
       <div className='py-4'>
-        <RichInput
+        <MarkdownInput
           key={1000}
           label=""
-          value={simplifyMentionInput(record.text, suggestionData)}
+          value={record.text}
           entityEdit={{ handleFieldChange: onInputChange }}
           suggestionData={suggestionData} />
       </div>

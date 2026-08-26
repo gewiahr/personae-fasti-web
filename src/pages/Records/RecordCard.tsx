@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react';
+import { type ReactNode, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import Icon from '@/components/icons/Icon';
@@ -21,6 +21,8 @@ interface RecordCardProps {
 const RecordCard = ({ record, label="", accented=false, editable=false, quest, suggestions, onEdit, editContent } : RecordCardProps) => {
   const reduceMotion = useReducedMotion();
   const isEditing = Boolean(editContent);
+  const [keepEditLayout, setKeepEditLayout] = useState(false);
+  const animateEditLayout = isEditing || keepEditLayout;
   const layoutTransition = reduceMotion
     ? { duration: 0 }
     : { type: 'spring' as const, stiffness: 420, damping: 38 };
@@ -37,11 +39,14 @@ const RecordCard = ({ record, label="", accented=false, editable=false, quest, s
   return (
     <motion.div
       layout="position"
-      className="relative"
+      className={`relative ${isEditing ? 'z-30' : 'z-0'}`}
       transition={{ layout: layoutTransition }}
     >
       <motion.div
-        layout
+        layout={animateEditLayout ? 'size' : false}
+        onLayoutAnimationComplete={() => {
+          if (!isEditing) setKeepEditLayout(false);
+        }}
         style={{ borderRadius: 8 }}
         animate={{
           backgroundColor: isEditing ? 'var(--color-bg-primary)' : 'var(--color-bg-secondary)',
@@ -57,7 +62,6 @@ const RecordCard = ({ record, label="", accented=false, editable=false, quest, s
       >
         <AnimatePresence initial={false} mode="popLayout">
           <motion.div
-            layout="position"
             key={isEditing ? 'edit' : 'view'}
             initial={reduceMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1, transition: contentEnterTransition }}
@@ -84,7 +88,10 @@ const RecordCard = ({ record, label="", accented=false, editable=false, quest, s
                       className='icon-status'
                     />
                   </div>}
-                  {editable && onEdit && <button className='pr-4' onClick={() => onEdit(record)}>
+                  {editable && onEdit && <button className='pr-4' onClick={() => {
+                    setKeepEditLayout(true);
+                    onEdit(record);
+                  }}>
                     <Icon
                       key={`icon_edit_${record.id}`}
                       name='edit'
