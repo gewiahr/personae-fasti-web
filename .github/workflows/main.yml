@@ -54,8 +54,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           envs: RELEASE
-          script_stop: true
           script: |
+            set -eu
             stage="/tmp/storyshard-web-${RELEASE}"
             image="storyshard-web:${RELEASE}"
             test -f /opt/storyshard/docker-compose.yml
