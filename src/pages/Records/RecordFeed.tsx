@@ -27,7 +27,6 @@ type RecordSession = {
 export const RecordFeed: React.FC<RecordFeedProps> = ({ records, editable = false, showQuests = false, showSessions = false }) => {
   const dispatch = useAppDispatch();
   const { game, settings, players, sessions, quests, suggestions } = useAppSelector(selectCurrentGame);
-  // const sessions = useAppSelector(selectCurrentGameSessions);
   const auth = useAppSelector(selectAuthorization);
   const playerExt = useAppSelector(selectPlayerExt);
   const recordsLoading = useAppSelector(selectIsLoadingNew(loadCurrentGameRecords.typePrefix));
@@ -90,7 +89,7 @@ export const RecordFeed: React.FC<RecordFeedProps> = ({ records, editable = fals
     return sessionGroups.reverse();
   }, [records, sessions, showSessions]);
 
-  return (orderedRecords.length <= 0 ? //|| suggestions == null ? //(records.length === 0 || suggestionData == null ?
+  return (orderedRecords.length <= 0 ?
     recordsLoading ?
     // Loading Records
     <LoadingLabel /> :
@@ -127,11 +126,6 @@ export const RecordFeed: React.FC<RecordFeedProps> = ({ records, editable = fals
                         `Сессия #${sessionNumber}`
                       )}
                       
-                      {endTime && (
-                        <span className="text-xs text-gray-500">
-                          {/* {new Date(endTime).toLocaleDateString()} */}
-                        </span>
-                      )}
                     </span>
                   </Divider>
                   <div className='text-md record-feed-session-title'>

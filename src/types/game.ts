@@ -24,7 +24,6 @@ export type GameBrief = {
 };
 
 export type Session = {
-  //id: number;
   number: number;
   name: string;
   endTime: string;

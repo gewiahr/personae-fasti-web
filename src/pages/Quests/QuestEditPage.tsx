@@ -87,7 +87,6 @@ const QuestEditPage = () => {
     const { error, status } = await api.patch(`/quest/${ext}/reset`, auth, null);
     if (status === 200) {
       addNotification("Выполнение квеста отменено", 'success');
-      //setTasks(data);
       navigate(0);
     } else {
       const errorMessage = error ? `Ошибка: ${error.message}` : `Неизвестная ошибка (код ${status})`
@@ -107,10 +106,6 @@ const QuestEditPage = () => {
       navigate('/quests');
     };
   };
-
-  // if (!newQuest && !quest || !suggestions) {
-  //   return <div>Loading...</div>;
-  // };
 
   return (
     <div className='layout-page'>

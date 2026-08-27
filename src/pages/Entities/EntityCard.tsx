@@ -42,27 +42,6 @@ const EntityCard = ({ entity, metaData, labelText }: EntityCardProps) => {
             )}
           </div>
 
-          {/* Special fields for characters */}
-          {/*'stats' in entity && entity?.stats && (
-            <div className="flex flex-wrap gap-2 mb-3">
-              {Object.entries(entity.stats).map(([key, value]) => (
-                <span 
-                  key={key} 
-                  className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded"
-                >
-                  {key}: {value}
-                </span>
-              ))}
-            </div>
-          )*/}
-
-          {/* Special fields for places */}
-          {/*'map' in entity && entity.map && (
-            <div className="text-xs text-blue-400 mb-2">
-              Map: {entity.map}
-            </div>
-          )*/}
-
           {labelText && <>
             <div className="flex justify-between items-end mt-auto pt-3">
               <span className='datestamp-label'>Обновлено: {new Date().toLocaleDateString()}</span>

@@ -14,10 +14,6 @@ const Hyperlink: React.FC<HyperlinkProps> = ({ ext, type, mentionText }) => {
       key={`hyperlink-${type}-${ext}`}
       href={`/${entityToMetaData[type].metaData}/${ext}`}
       className={`${typeColor} text-sans mention-link hover:underline`}
-      // onClick={(e) => {
-      //   e.preventDefault();
-      //   window.location.href = `/${entityConfig[type].EntityTypePl}/${id}`;
-      // }}
     >
       {mentionText}
     </a>

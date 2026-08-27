@@ -11,9 +11,6 @@ const AttributionsContent = () => {
         <a className='ref-text' href="https://lucide.dev/icons/">https://lucide.dev/icons/</a>
         <a className='ref-text' href="https://react-icons.github.io/react-icons/">https://react-icons.github.io/react-icons/</a>
       </div>
-      {/* <div className="flex flex-col text-left">
-        <p>В проекте использованы материалы из следующих источников: </p>
-      </div>             */}
       <p className="mt-4 italic">
         {`Все права сохранены. Если вы считаете что ваши материалы были использованы незаконно, 
         напишите мне на почту `}

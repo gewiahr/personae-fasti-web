@@ -17,18 +17,6 @@ export const RecordPage = () => {
     dispatch(loadCurrentGameSuggestions({ auth }));
   }, []);
 
-  // if (loading && currentGameRecords.length === 0) {
-  //   return <div className="text-center py-8">Загрузка событий...</div>;
-  // }
-
-  // if (error) {
-  //   return (
-  //     <div className="text-center py-8 text-red-500">
-  //       Ошибка загрузки данных: {error.message}
-  //     </div>
-  //   );
-  // }
-
   return (
     <div className="layout-page">
       {game && <>

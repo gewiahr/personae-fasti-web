@@ -95,7 +95,7 @@ export const EntityPage = () => {
           </div>
         </>}
 
-        {/* ++ Change to universal feed ++ */}
+        {/* TODO: Change to universal feed. */}
         {data.records && data.records.length > 0 && <div className=''>
           <h2 className='text-right text-xl text-bold pt-8 pb-2'>Упоминания</h2>
           <RecordFeed key={`enitypage_recordfeed`} records={data.records} />

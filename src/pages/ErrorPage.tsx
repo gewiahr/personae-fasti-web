@@ -12,14 +12,14 @@ export const ErrorPage = ({ error, entityMeta }: ErrorPageProps) => {
 
   if (error) {
     if (error.status === 403) {
-      // ** Сделать базу строк вывода ** //
+      // TODO: Move displayed errors to a shared message catalog.
       title = `${entityMeta.EntityName} скрыт`;
       if (entityMeta.EntityNameGender === 'f') {
         title += "a"
       } else if (entityMeta.EntityNameGender === 'n') {
         title += "o"
       };
-      // ** Сделать базу строк вывода ** //
+      // TODO: Move displayed errors to a shared message catalog.
       message = `Данные скрыты игроком, который создал ${entityMeta.EntityNameAcc.toLowerCase()}`;
     } else if (error.status === 422) {
       message = "Похоже что запрашиваемые данные относятся к другой игре";

@@ -104,13 +104,6 @@ const LoginComponent = () => {
         Введи логин чтобы войти или зарегистрироваться
       </p>
 
-      {/* Всё что нужно это подписаться на мой канал.
-          </p>
-          <a href='https://t.me/dierolled' className='italic text-center text-blue-300'>Ссылка на мой канал</a>
-          <p className="italic">
-            На канале я рассказываю о геймдизайне и о других своих интересных проектах.
-            А после подписки ты сможешь войти и зарегистрироваться одной кнопкой внизу.
-          </p> */}
       <div className='flex flex-col gap-4 min-w-85 w-[25%]'>
 
         <div className="flex flex-1 gap-2 w-full">

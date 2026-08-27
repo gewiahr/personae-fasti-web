@@ -1,32 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import { /* useAppDispatch ,*/ useAppSelector } from '../store';
-import { /* selectAuthorization ,*/ selectPlayerUsername } from '../reducers/PlayerSlice';
+import React, { useState } from 'react'
+import { useAppSelector } from '../store';
+import { selectPlayerUsername } from '../reducers/PlayerSlice';
 import GameCreateEditPage from '@/pages/Games/GameCreateEditPage';
 import CopyText from '@lib/CopyText';
 import SubmitButton from '@lib/SubmitButton';
 
-type AuthGateNoGameProps = {
-
-};
-
-const AuthGateNoGame: React.FC<AuthGateNoGameProps> = ({ }) => {
-  // const dispatch = useAppDispatch();
-  // const auth = useAppSelector(selectAuthorization);
+const AuthGateNoGame: React.FC = () => {
   const playerUsername = useAppSelector(selectPlayerUsername);
 
   const [newGameSwitch, switchNewGame] = useState<boolean>(false);
 
-  useEffect(() => {
-    //setGameInfo(playerSettingsData?.currentGame || null)
-  }, []);
-
   return (
-    // <div className="flex flex-col gap-3 items-center justify-center h-screen bg-gray-800 text-gray-100">
-    //   <div className='flex flex-col gap-6 min-w-sm'>
-       
-    //   </div>
-    // </div>
-
     <>
       {newGameSwitch ?
         <div className='layout-main w-full'>
@@ -52,7 +36,6 @@ const AuthGateNoGame: React.FC<AuthGateNoGameProps> = ({ }) => {
           </div>
         </div>
       }
-      {/* <EntityEditPage metaData={CharMetaData} />  */}
     </> 
   )
 }

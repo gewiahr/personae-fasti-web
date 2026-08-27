@@ -121,13 +121,6 @@ export const signup = createAsyncThunk(
   }
 );
 
-// export const setPlayerLoading = createAsyncThunk(
-//   'setPlayerLoading',
-//   async (loading: boolean, appThunk) => {
-//     appThunk.dispatch(setPlayerLoading(loading));
-//   }
-// );
-
 export const loadPlayerGames = createAsyncThunk(
   'loadPlayerGames',
   async (params: { auth: string }, appThunk) => {

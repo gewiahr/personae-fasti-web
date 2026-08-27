@@ -125,10 +125,7 @@ export const loadCurrentGameRecords = createAsyncThunk(
     appThunk.dispatch(addLoading(loadCurrentGameRecords.typePrefix));
     try {
       const response = await api.get<{records: Record[]}>('/records', params.auth);
-      //appThunk.dispatch(setCurrentGame(response.data?.currentGame || null));
       appThunk.dispatch(setCurrentGameRecords(response.data?.records || []));
-      // appThunk.dispatch(setCurrentGameSessions(response.data?.sessions === null ? [] : response.data?.sessions || []));
-      // appThunk.dispatch(setCurrentGamePlayers(response.data?.players || []));
     } catch (e) {
 
     } finally {
@@ -157,10 +154,6 @@ export const postNewRecord = createAsyncThunk(
         dispatch(loadCurrentGameRecords({ auth: params.auth }));
         dispatch(loadCurrentGameQuests({ auth: params.auth }));
         dispatch(loadCurrentGameSuggestions({ auth: params.auth }));
-        //dispatch(setCurrentGame(data?.currentGame || null));
-        // dispatch(setCurrentGameRecords(data?.records || []));
-        // dispatch(setCurrentGameSessions(data?.sessions || []));
-        // dispatch(setCurrentGamePlayers(data?.players || []));
       }
     } catch (err) {
       throw err;
@@ -188,10 +181,6 @@ export const editRecord = createAsyncThunk(
         dispatch(loadCurrentGameQuests({ auth: params.auth }));
         dispatch(loadCurrentGameSuggestions({ auth: params.auth }));
 
-        //dispatch(setCurrentGame(data?.currentGame || null));
-        // dispatch(setCurrentGameRecords(data?.records || []));
-        // dispatch(setCurrentGameSessions(data?.sessions || []));
-        // dispatch(setCurrentGamePlayers(data?.players || []));
       }
     } catch (err) {
       throw err;
@@ -260,14 +249,6 @@ export const revokeInvite = createAsyncThunk(
     }
   }
 );
-
-// export const resetCurrentGame = createAsyncThunk(
-//   'resetCurrentGame',
-//   async (_, appThunk) => {
-//     const state = appThunk.getState() as RootState;
-//     state.currentGame = initialState;
-//   }
-// )
 
 const currentGameSlice = createSlice({
   name: 'currentGame',

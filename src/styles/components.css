@@ -44,7 +44,6 @@
 }
 
 .submit-button-container-regular {
-  /* @apply bg-blue-600 hover:bg-blue-700 text-white; */
   color: var(--color-white);
   background-color: var(--color-button-primary);
 }
@@ -54,13 +53,11 @@
 }
 
 .submit-button-container-danger {
-  /* @apply bg-red-600 hover:bg-red-700 text-white; */
   color: var(--color-white);
   background-color: var(--color-button-danger);
 }
 
 .submit-button-container-danger:hover {
-  /* @apply bg-red-600 hover:bg-red-700 text-white; */
   background-color: var(--color-button-danger-hover);
 }
 
@@ -172,25 +169,6 @@
   border-color: var(--color-text-danger);
 }
 
-/* .rich-input-textarea {
-  min-height: 2.5rem;
-  padding: 0.5rem 0.75rem;
-  outline: none;
-  white-space: pre-wrap;
-  word-break: break-word;
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-
-.rich-input-textarea-border {
-  border: 1px solid var(--color-border, #d1d5db);
-  border-radius: 6px;
-  transition: border-color 0.15s ease;
-}
-.rich-input-textarea-border:focus-within {
-  border-color: var(--color-primary, #3b82f6);
-} */
-
 .rich-input-bold { font-weight: 600; }
 .rich-input-italic { font-style: italic; }
 
@@ -239,33 +217,6 @@
 .mention-chip-npc { color: #eab308; background: rgb(234 179 8 / 0.15); }
 .mention-chip-location { color: #22c55e; background: rgb(34 197 94 / 0.15); }
 
-/* Suggestions dropdown */
-.mention-suggestions-menu {
-  position: absolute;
-  z-index: 50;
-  min-width: 160px;
-  max-height: 220px;
-  overflow-y: auto;
-  margin: 4px 0 0;
-  padding: 4px;
-  list-style: none;
-  background: var(--color-bg-primary, #fff);
-  border: 1px solid var(--color-border, #e5e7eb);
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-}
-.mention-suggestions-menu li {
-  padding: 6px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-.mention-suggestions-menu li.selected,
-.mention-suggestions-menu li:hover {
-  background: var(--color-bg-hover, #f1f5f9);
-}
-
-
   /* Select Input */
 
 .select-input-container {
@@ -279,7 +230,6 @@
 }
 
 .select-input-container-border-error {
-  /* @apply focus:ring-red-200; */
   border-color: var(--color-text-danger);
   color: var(--color-text-danger)
 
@@ -296,13 +246,8 @@
 }
 
 .select-input-dropdown-option:hover {
-  /* background-color: var(--color-blue-700); */
   background-color: var(--color-button-primary-hover);
 }
-
-/* .select-input-dropdown-option-selected {
-  background-color: var(--color-blue-800);
-} */
 
   /* Floating Label */
 
@@ -320,7 +265,6 @@
 }
 
 .floating-label-container-placeholder-error {
-  /* @apply text-red-600 */
   color: var(--color-text-danger)
 }
 
@@ -399,13 +343,11 @@ input[type="number"] {
 }
 
 .card-label-container-accented {
-  /* @apply bg-blue-900 text-blue-200; */
   background-color: var(--color-accent); /* с лейблами надо что-то подумать -- в двухцветной они будут оттеняться от фона, так как цвет другой, а в одноцветной тяжко */
   color: var(--color-white);
 }
 
 .card-label-container-dimmed {
-  /* @apply bg-gray-700 text-gray-300; */
   background-color: var(--color-bg-dimmed);
   color: var(--color-white);
 }
@@ -440,13 +382,11 @@ input[type="number"] {
 }
 
 .record-card-quest-container-accented {
-  /* @apply border-blue-500 bg-gray-800; */
   background-color: var(--color-bg-secondary);
   border-color: var(--color-accent);
 }
 
 .record-card-quest-container-dimmed {
-  /* @apply border-gray-700 bg-gray-800; */
   background-color: var(--color-bg-secondary);
   border-color: var(--color-dimmed);
 }
@@ -460,28 +400,7 @@ input[type="number"] {
 }
 
 .entity-card-link-container:hover {
-  /* @apply hover:border-blue-500 hover:bg-gray-750; */
   border-color: var(--color-accent);
-}
-
-.entity-card-footer-container {
-  @apply relative -top-4 -mb-4 z-10 px-4 pt-6 pb-2 rounded-lg border text-xs cursor-pointer;
-}
-
-.entity-card-footer-container:hover {
-  color: var(--color-text-accent);
-}
-
-.entity-card-footer-container-accented {
-  /* @apply border-blue-500 bg-gray-800; */
-  background-color: var(--color-bg-secondary);
-  border-color: var(--color-accent);
-}
-
-.entity-card-footer-container-dimmed {
-  /* @apply border-gray-700 bg-gray-800; */
-  background-color: var(--color-bg-secondary);
-  border-color: var(--color-dimmed);
 }
 
   /* Modal */
@@ -495,10 +414,6 @@ input[type="number"] {
   border-color: var(--color-accent);
   background-color: var(--color-bg-primary);
 }
-
-/* .modal-content {
-  @apply relative p-5 rounded-lg bg-[rgb(22,22,48)] 
-} */
 
 .modal-close {
   @apply absolute top-2.5 right-4 bg-none border-none text-2xl cursor-pointer

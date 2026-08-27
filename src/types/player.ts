@@ -15,7 +15,6 @@ export type PlayerFull = {
 
 export type PlayerSettings = {
   couldChangeUsername: boolean;
-  //colorTheme: 'blue' | 'green'
 };
 
 export type PlayerBrief = {

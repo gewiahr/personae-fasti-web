@@ -1,14 +1,12 @@
 import React from 'react';
 import Hyperlink from './Hyperlink';
 import type { EntityType } from '@/types/entities';
-//import { SuggestionData } from "../types/suggestion";
 
 type RichTextProps = {
   text: string;
   uid: string;
   fullWidth?: boolean;
   className?: string;
-  //suggestionData?: SuggestionData; // Made optional
 };
 
 const RichText = ({ text, uid, fullWidth = false, className='' }: RichTextProps) => {
@@ -43,7 +41,6 @@ const RichText = ({ text, uid, fullWidth = false, className='' }: RichTextProps)
 
   return (
     <>
-      {/* suggestionData ? formMentionRichText(text) : text */}
       <div className={`text-m ${fullWidth ? 'text-justify' : ''} ${className} whitespace-pre-line`}>
         {formMentionRichText(text)}
       </div>     

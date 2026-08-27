@@ -60,7 +60,7 @@ const GameCreateEditPage: React.FC = () => {
   const saveEdited = async (editedGame: GameFull) => {
     if (!editedGame || editedGame.title == "") return;
 
-    // ** Join in one endpoint call ** //
+    // TODO: Save game and its settings in one endpoint call.
     setLoading(true);
     
     const method = newGame ? api.post : api.put;
@@ -74,11 +74,8 @@ const GameCreateEditPage: React.FC = () => {
     }
 
     if (game) dispatch(updateGameSettings({ auth, gameExt: game.ext, settings: game.settings }))
-      // .catch((e) => addNotification(e.message, 'error'))
-      // .then(() =>  addNotification("Настройки сохранены", 'success'));
     
     setLoading(false);
-    // ** Join in one endpoint call ** //
   };
 
   const handleInvite = async (username: string) => {
@@ -167,17 +164,10 @@ const GameCreateEditPage: React.FC = () => {
     return false
   };
 
-  // const toLocaleStringDate = (date?: string, short: boolean) => {
-  //   const dateOptions = short ? { day: '2-digit', month: '2-digit', year: '2-digit' } : { day: '2-digit', month: '2-digit', year: 'numeric',  } 
-  //   return new Date(date || "").toLocaleDateString(undefined, { day: '2-digit', month: '2-digit', year: '2-digit',  })
-  // }
-
   const toDateTimeLocal = (isoString?: string) => {
     if (!isoString) return '';
     return dayjs.utc(isoString).local().format('YYYY-MM-DDTHH:mm');
   };
-
-  console.log(game)
 
   return (
     <div className='layout-page'>
@@ -211,13 +201,7 @@ const GameCreateEditPage: React.FC = () => {
               <FoldableCategory key="sessions_settings" title={`Сессии: ${game.sessions.filter((s) => s.number > 0).length}`}>
                 <div className='flex gap-2'>
                   <ConfirmButton className='w-full mb-6' children={"Новая сессия"} onClickConfirm={() => handleNewSession()} />
-                  {/* <SubmitButton className='w-full mb-6' onClick={() => {}} >
-                    {"Новая сессия"}
-                  </SubmitButton> */}
                   <ConfirmButton className='w-full mb-6' children={"Удалить"} onClickConfirm={() => handleDeleteSession()} />
-                  {/* <SubmitButton className='w-full mb-6' onClick={() => {}} danger >
-                    {"Удалить"}
-                  </SubmitButton> */}
                 </div>
                 {game.sessions.length <= 0 ? <div className='flex flex-col gap-4 justify-center items-center text-center'>
                   <p className='italic'>В игре пока нет ни одной сессии</p>
@@ -232,7 +216,6 @@ const GameCreateEditPage: React.FC = () => {
                           label={session.number > 0 ? `Сессия ${session.number}` : `Предыстория`} 
                         />
                         <div className='flex gap-2 justify-between items-center'>
-                          {/* <DateTimePicker /> */}
                           {i !== game.sessions.length - 1 ? <InputField 
                             key={`gamecreateeditpage_sessionedit_inputfield_startdate`}
                             htmlType='datetime-local'
@@ -245,8 +228,6 @@ const GameCreateEditPage: React.FC = () => {
                           <div className='flex gap-4'>
                             <LuCheck className='icon-button-accented' size={24} onClick={async () => { if (await handleEditSession(i)) { setSessionEditItem(null) } else setSessionEditItem({...sessionEditItem!, error: 'Неверная дата' }) }} />
                             <LuUndo2 className='icon-button-accented' size={24} onClick={() => setSessionEditItem(null)} />                   
-                            {/* <Icon name='submit' size={24} />
-                            <Icon name='arrowUp' size={24} onClick={() => setSessionEditItem(null)} /> */}
                           </div>                       
                         </div>
                       </div> : <div className='flex flex-1 gap-6 justify-between items-center'>

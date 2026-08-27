@@ -62,9 +62,7 @@ async function makeRequest<T>(
   imageBody: boolean = false, 
 ): Promise<ApiResponse<T>> {
   try {
-    //const applicationType = imageBody ? 'multipart/form-data' : 'application/json';
     const headers: Record<string, string> = {
-      //'Content-Type': applicationType,
       'Authorization': authorization,   
     };
     const response = await fetch(`${config.apiBaseUrl}${endpoint}`, {

@@ -65,7 +65,6 @@ export const QuestPage = () => {
     const { error, status } = await api.patch(`/quest/${ext}/${successful ? 'complete' : 'fail'}`, auth, null);
     if (status === 200) {
       addNotification("Квест завершён", 'success');
-      //setTasks(data);
       navigate(0);
     } else {
       var errorMessage = error ? `Ошибка: ${error.message}` : `Неизвестная ошибка (код ${status})`
@@ -168,7 +167,6 @@ export const QuestPage = () => {
             })}
           </div>}
 
-          {/* ++ Change to universal feed ++ */}
           {data && data.records.length > 0 && <div className=''>
             <h2 className='text-right text-xl text-bold pt-4 pb-2'>Упоминания</h2>
             <RecordFeed key={`questpage_recordfeed`} records={data.records} />

@@ -149,7 +149,7 @@ const EntityEditPage = () => {
         {/* Image */}
         {ext && <FoldableCategory title='Изображение' children={<ImageUpload entityType={metaData.EntityType} entityExt={ext} />} />}
         
-        {/* // ** Change game proof by request instead of local storage ** // */}
+        {/* TODO: Verify game ownership from request data instead of local storage. */}
         {playerExt === game?.gmExt && <div className='py-2'>
           <ToggleSwitch 
             key={`toggle_sectert_post_${playerExt}`}

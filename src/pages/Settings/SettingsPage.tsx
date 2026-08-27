@@ -74,8 +74,6 @@ const SettingsPage = () => {
   return (
     <div className='layout-page'>
       <div className='flex flex-col gap-y-6'>
-        {/* <h2 className='text-xl'>{player?.username}</h2> */}
-
         <FoldableCategory key="game_invites" title={`Приглашений: ${playerInvites.length}`}>
           {playerInvites.length <= 0 ? <div className='flex flex-col gap-4 justify-center items-center text-center'>
             <p className='italic'>Вы не приглашены ни в одну игру. Поделитесь своим именем пользователя чтобы мастер игры мог вас пригласить</p>
@@ -85,8 +83,6 @@ const SettingsPage = () => {
               <p>{invite.gameTitle}</p>
               <div className='flex gap-6 items-center'>
                 <LuCheck size={24} className='icon-button-accented' onClick={() => handleInviteAccept(invite)} />
-                {/* <Icon name='submit' className='icon-button-accented' onClick={() => handleInviteAccept(invite)} /> */}
-                {/* <Icon name='trash' className='icon-button-danger' onClick={() => handleInviteRefuse(invite)} /> */}
                 <LuTrash2 size={20} className='icon-button-danger' onClick={() => handleInviteRefuse(invite)} />
               </div>
             </div>)}  
@@ -120,16 +116,6 @@ const SettingsPage = () => {
         </div>
 
         {game?.gmExt == playerExt && <ConfirmButton className='w-full mt-2' children={"Начать новую сессию"} onClickConfirm={() => handleNewSession()} />}
-
-        {/* <SelectItems
-          items={[
-            { key: 1, value: 'red', content: <div className="w-16 h-8 bg-red-500 border-2 border-white rounded" /> },
-            { key: 2, value: 'blue', content: <div className="w-16 h-8 bg-blue-500 border-2 border-white rounded" /> },
-            { key: 3, value: 'green', content: <div className="w-16 h-8 bg-green-500 border-2 border-white rounded" /> },
-          ]}
-          borderWidth={4}
-          animationDuration={200}
-        /> */}
       </div>
     </div>
   )

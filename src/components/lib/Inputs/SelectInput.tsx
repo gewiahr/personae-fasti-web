@@ -67,18 +67,12 @@ export const SelectInput: React.FC<SelectInputProps> = (
         >
           {value || '\u00A0'}
         </div>
-        {/* <div className='relative'
-            onClick={(e) => { e.stopPropagation(); handleClearSelect(); }}
-          >
-            X
-          </div> */}
         {nullable && value && <button onClick={(e) => { e.stopPropagation(); handleClearSelect(); setIsFocused(false); }} >
           <Icon
             name='trash'
             className='icon-button-danger' />
         </button>}
       </div>
-
 
       {/* Floating label */}
       <FloatingLabel
