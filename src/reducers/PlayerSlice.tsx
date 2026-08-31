@@ -4,7 +4,7 @@ import type { GameBrief, GameInvites } from '@/types/game';
 import type { LoginInfo, PlayerFull, PlayerSettings } from '@/types/player';
 import { type RootState } from '@/store';
 import { api } from '@/utils/api';
-import { loadCurrentGame, setCurrentGame } from './CurrentGameSlice';
+import { loadCurrentGame, setCurrentGame, setCurrentGameLoading } from './CurrentGameSlice';
 
 type UITheme = {
   color: 'blue' | 'mint' | 'olive' | 'tomato' | 'purple';
@@ -47,7 +47,11 @@ export const loginToken = createAsyncThunk(
         appThunk.dispatch(setAuthorizationToken(data.authorization));
         window.localStorage.setItem('auth', data.authorization);
 
-        if (data.player.gameExt) appThunk.dispatch(loadCurrentGame({ auth: data.authorization }));
+        if (data.player.gameExt) {
+          appThunk.dispatch(loadCurrentGame({ auth: data.authorization }));
+        } else {
+          appThunk.dispatch(setCurrentGameLoading(false));
+        }
       }
     } catch (e: any) {
       throw e;
@@ -69,7 +73,11 @@ export const loginWeb = createAsyncThunk(
         appThunk.dispatch(setAuthorizationToken(data.authorization));
         window.localStorage.setItem('auth', data.authorization);
 
-        if (data.player.gameExt) appThunk.dispatch(loadCurrentGame({ auth: data.authorization }));
+        if (data.player.gameExt) {
+          appThunk.dispatch(loadCurrentGame({ auth: data.authorization }));
+        } else {
+          appThunk.dispatch(setCurrentGameLoading(false));
+        }
       }
     } catch (e: any) {
       throw e;
@@ -90,7 +98,11 @@ export const loginTG = createAsyncThunk(
         appThunk.dispatch(setAuthorizationToken(data.authorization));
         window.localStorage.setItem('auth', data.authorization);
 
-        if (data.player.gameExt) appThunk.dispatch(loadCurrentGame({ auth: data.authorization }));
+        if (data.player.gameExt) {
+          appThunk.dispatch(loadCurrentGame({ auth: data.authorization }));
+        } else {
+          appThunk.dispatch(setCurrentGameLoading(false));
+        }
       }
     } catch (e: any) {
       throw e;
@@ -111,7 +123,11 @@ export const signup = createAsyncThunk(
         appThunk.dispatch(setAuthorizationToken(data.authorization));
         window.localStorage.setItem('auth', data.authorization);
 
-        if (data.player) appThunk.dispatch(loadCurrentGame({ auth: data.authorization }));
+        if (data.player) {
+          appThunk.dispatch(loadCurrentGame({ auth: data.authorization }));
+        } else {
+          appThunk.dispatch(setCurrentGameLoading(false));
+        }
       }
     } catch (e: any) {
       throw e;

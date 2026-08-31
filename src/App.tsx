@@ -8,6 +8,8 @@ import { useEffect } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import { NotificationProvider } from './context/NotificationContext';
+import NotificationPopup from '@lib/NotificationPopup';
 
 
 export const App = () => {
@@ -23,11 +25,14 @@ export const App = () => {
 
   return (
     <Router>
-      <AuthGate>
-        <Layout>
-          <AppRouter />
-        </Layout>
-      </AuthGate>
+      <NotificationProvider>
+        <AuthGate>
+          <Layout>
+            <AppRouter />
+          </Layout>
+          <NotificationPopup />
+        </AuthGate>
+      </NotificationProvider>  
     </Router>
   );
 };

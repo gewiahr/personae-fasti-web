@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import type { TextInputProps } from './InputProps';
 import { LuTrash } from 'react-icons/lu';
 import Divider from '../Divider';
+import { useNotifications } from '@/context/NotificationContext';
 
 type ListInputProps = TextInputProps & {
   //listID?: string // for unique keys with multiple inputs
@@ -44,6 +45,8 @@ export const ListInput: React.FC<ListInputProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const { addNotification } = useNotifications();
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
@@ -80,6 +83,10 @@ export const ListInput: React.FC<ListInputProps> = ({
   // }, [setOptions]);
 
   const handleAdd = async () => {
+    if (!addValue) {
+      addNotification("Введите имя пользователя", 'warning');
+      return
+    }
     const newKey = listItems.at(-1);
     setListItems([...listItems, { key: newKey, value: addValue, status: onAddStatus } ]);
     setState('view');
@@ -106,7 +113,7 @@ export const ListInput: React.FC<ListInputProps> = ({
       >
         <div className='list-input-item-list'>
 
-          {listItems.map((item) => <div key={`listinput_mapitems_item${item.key}`}>
+          {listItems.map((item) => <div key={`listinput_mapitems_item${item.value}`}>
             <div className='list-input-item'>
               <p className={`${removingItem?.key == item.key ? 'text-to-remove' : ''}`}>{item.value}</p> 
               <div className='flex gap-4'>

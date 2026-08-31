@@ -1,20 +1,31 @@
 import React, { useState } from 'react'
-import { useAppSelector } from '../store';
-import { selectPlayerUsername } from '../reducers/PlayerSlice';
+import { useAppDispatch, useAppSelector } from '../store';
+import { resetPlayer, selectPlayerUsername } from '../reducers/PlayerSlice';
 import GameCreateEditPage from '@/pages/Games/GameCreateEditPage';
 import CopyText from '@lib/CopyText';
 import SubmitButton from '@lib/SubmitButton';
+import { resetCurrentGame } from '@/reducers/CurrentGameSlice';
 
 const AuthGateNoGame: React.FC = () => {
+  const dispatch = useAppDispatch();
   const playerUsername = useAppSelector(selectPlayerUsername);
-
   const [newGameSwitch, switchNewGame] = useState<boolean>(false);
+
+  const logout = async () => {
+    dispatch(resetPlayer());
+    dispatch(resetCurrentGame());
+
+    localStorage.clear();
+    window.location.href = '/';
+  }
 
   return (
     <>
       {newGameSwitch ?
         <div className='layout-main w-full'>
-          <GameCreateEditPage />
+          <div className='grow p-2 content-center transition-all duration-200'>
+            <GameCreateEditPage />
+          </div>     
         </div> : 
         // === Disclaimer === //
         <div className='auth-gate-page'>
@@ -34,6 +45,14 @@ const AuthGateNoGame: React.FC = () => {
               <CopyText text={playerUsername} />
             </div>
           </div>
+
+          <SubmitButton 
+            
+            key='authgate_nogame_logout'
+            danger
+            children={'Сменить аккаунт'}
+            onClick={logout}
+          />
         </div>
       }
     </> 

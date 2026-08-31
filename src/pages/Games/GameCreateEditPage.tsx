@@ -201,7 +201,7 @@ const GameCreateEditPage: React.FC = () => {
               <FoldableCategory key="sessions_settings" title={`Сессии: ${game.sessions.filter((s) => s.number > 0).length}`}>
                 <div className='flex gap-2'>
                   <ConfirmButton className='w-full mb-6' children={"Новая сессия"} onClickConfirm={() => handleNewSession()} />
-                  <ConfirmButton className='w-full mb-6' children={"Удалить"} onClickConfirm={() => handleDeleteSession()} />
+                  {(game.sessions.filter((s) => s.number > 0).length > 0) ? <ConfirmButton className='w-full mb-6' children={"Удалить"} onClickConfirm={() => handleDeleteSession()} /> : undefined}
                 </div>
                 {game.sessions.length <= 0 ? <div className='flex flex-col gap-4 justify-center items-center text-center'>
                   <p className='italic'>В игре пока нет ни одной сессии</p>

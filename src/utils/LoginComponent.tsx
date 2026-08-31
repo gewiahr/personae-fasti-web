@@ -53,6 +53,10 @@ const LoginComponent = () => {
   }, [login, password]);
 
   const handleContinueButton = useCallback(async () => {
+    if (!login) {
+      setError("Имя не может быть пустым");
+      return;
+    }
     setError("");
     const { data, error } = await api.get<{ available: boolean, checkUsername: string }>(`/login/${login}`, auth);
     if (error) setError(error.message);
@@ -90,7 +94,7 @@ const LoginComponent = () => {
 
   return (
     <div className="auth-gate-page">
-      <h2 className="text-xl font-bold">Приветствую в Personae App!</h2>
+      <h2 className="text-xl font-bold">Приветствую в приложении Storyshard!</h2>
       <div>
         <p className="italic">
           Это приложение для ведения летописи твоей настольной ролевой игры.
