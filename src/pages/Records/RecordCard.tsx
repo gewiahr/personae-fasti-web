@@ -57,7 +57,7 @@ const RecordCard = ({ record, label="", accented=false, editable=false, quest, s
           backgroundColor: colorTransition,
           borderColor: colorTransition,
         }}
-        key={record.id}
+        key={record.ext}
         className={`record-card-container ${isEditing ? 'record-card-container-edit' : accented ? 'record-card-container-accented' : 'record-card-container-dimmed'}`}
       >
         <AnimatePresence initial={false} mode="popLayout">
@@ -73,7 +73,7 @@ const RecordCard = ({ record, label="", accented=false, editable=false, quest, s
             {editContent ?? <>
               <div className="flex justify-between items-start">
                 <div>
-                  <MarkdownText key={`recordcard_richtext-${record.id}`} text={record.text} uid={`recordcard-${record.id}`} suggestions={suggestions} />
+                  <MarkdownText key={`recordcard_richtext-${record.ext}`} text={record.text} uid={`recordcard-${record.ext}`} suggestions={suggestions} />
                 </div>
               </div>
               <div className="flex justify-between items-end pt-2">
@@ -82,7 +82,7 @@ const RecordCard = ({ record, label="", accented=false, editable=false, quest, s
                 <div className="flex items-center">
                   {record.hidden && <div className='pr-4'>
                     <Icon
-                      key={`icon_hidden_${record.id}`}
+                      key={`icon_hidden_${record.ext}`}
                       name='hidden'
                       className='icon-status'
                     />
@@ -92,7 +92,7 @@ const RecordCard = ({ record, label="", accented=false, editable=false, quest, s
                     onEdit(record);
                   }}>
                     <Icon
-                      key={`icon_edit_${record.id}`}
+                      key={`icon_edit_${record.ext}`}
                       name='edit'
                       className='icon-button-accented'/>
                   </button>}

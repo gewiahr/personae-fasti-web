@@ -137,7 +137,7 @@ export const RecordFeed: React.FC<RecordFeedProps> = ({ records, editable = fals
               {/* Records in session */}
               {group.records.map(record => (
                 <RecordCard 
-                  key={record.id}
+                  key={record.ext}
                   record={record}
                   label={players.find(p => p.ext === record.playerExt)?.username}
                   accented={record.playerExt === playerExt}
@@ -145,7 +145,7 @@ export const RecordFeed: React.FC<RecordFeedProps> = ({ records, editable = fals
                   quest={showQuests ? quests.find((q) => q.ext === record.questExt) : undefined}
                   suggestions={suggestions.entities}
                   onEdit={onRecordEdit}
-                  editContent={editing?.id === record.id && game ? (
+                  editContent={editing?.ext === record.ext && game ? (
                     <RecordEdit
                       record={editing}
                       currentGame={game}

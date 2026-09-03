@@ -169,7 +169,7 @@ export const editRecord = createAsyncThunk(
 
     try {
       const { data, error } = await api.put<GameRecords>('/record', params.auth, {
-        id: params.record.id,
+        ext: params.record.ext,
         text: params.record.text,
         questExt: params.record.questExt,
         hidden: params.record.hidden
@@ -190,12 +190,12 @@ export const editRecord = createAsyncThunk(
 
 export const deleteRecord = createAsyncThunk(
   'deleteRecord',
-  async (params: { auth: string, recordID: number }, { getState }) => {
+  async (params: { auth: string, recordExt: string }, { getState }) => {
     const game = selectCurrentGameInfo(getState() as RootState);
     if (!game) return;
 
     try {
-      const { error } = await api.delete<GameRecords>(`/record/${params.recordID}`, params.auth);
+      const { error } = await api.delete<GameRecords>(`/record/${params.recordExt}`, params.auth);
       if (error) throw error;
     } catch (err) {
       throw err;

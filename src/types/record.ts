@@ -1,5 +1,5 @@
 export type Record = {
-  id: number;
+  ext: string;
   text: string;
   playerExt: string;
   gameExt: string;
@@ -16,7 +16,7 @@ export type NewRecord = {
 };
 
 export type EditRecord = {
-  id: number;
+  ext: string;
   text: string;
   questExt: string;
   hidden: boolean;

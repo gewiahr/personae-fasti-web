@@ -79,7 +79,7 @@ export const RecordEdit = ({
 
     dispatch(deleteRecord({
       auth,
-      recordID: record.id
+      recordExt: record.ext
     }))
       .unwrap()
       .then(() => {
@@ -121,7 +121,7 @@ export const RecordEdit = ({
           suggestionData={suggestionData} />
       </div>
 
-      <h2 className='text-lg py-2'>Дополнительно</h2>
+      {(quests && quests.length > 0 || playerExt == currentGame.gmExt) && <h2 className='text-lg py-2'>Дополнительно</h2>}
 
       {quests && quests.length > 0 && <div className='py-2'>
         <SelectInput
