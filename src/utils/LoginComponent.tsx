@@ -64,7 +64,7 @@ const LoginComponent = () => {
       if (!data.available) setLoginStatus(true); //setError("Имя недоступно");
       else setRegisterStatus(true);
     };
-  }, [login]);
+  }, [login, auth]);
 
   useEffect(() => {
     if (mayRegister) signupRef.current?.focus();

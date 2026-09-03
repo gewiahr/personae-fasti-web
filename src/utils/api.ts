@@ -62,9 +62,10 @@ async function makeRequest<T>(
   imageBody: boolean = false, 
 ): Promise<ApiResponse<T>> {
   try {
-    const headers: Record<string, string> = {
-      'Authorization': authorization,   
-    };
+    const headers: Record<string, string> = {};
+    if (authorization) {
+      headers.Authorization = authorization;
+    }
     const response = await fetch(`${config.apiBaseUrl}${endpoint}`, {
       method,
       headers,
