@@ -252,7 +252,8 @@
   /* Floating Label */
 
 .floating-label-container {
-  @apply absolute left-4 px-1 transition-all duration-200 ease-in-out pointer-events-none peer-focus:-top-2 peer-focus:text-xs
+  @apply absolute left-4 px-1 transition-all duration-200 ease-in-out pointer-events-none peer-focus:-top-2 peer-focus:text-xs;
+  pointer-events: none;
 }
 
 .floating-label-container-position-placeholder {
