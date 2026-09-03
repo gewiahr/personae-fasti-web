@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
-import { useAppDispatch, useAppSelector } from '../store';
-import { resetPlayer, selectPlayerUsername } from '../reducers/PlayerSlice';
+import { useAppDispatch } from '../store';
+import { resetPlayer } from '../reducers/PlayerSlice';
 import GameCreateEditPage from '@/pages/Games/GameCreateEditPage';
-import CopyText from '@lib/CopyText';
 import SubmitButton from '@lib/SubmitButton';
 import { resetCurrentGame } from '@/reducers/CurrentGameSlice';
+import GameInvitesBlock from '@/components/GameInvitesBlock';
 
 const AuthGateNoGame: React.FC = () => {
   const dispatch = useAppDispatch();
-  const playerUsername = useAppSelector(selectPlayerUsername);
   const [newGameSwitch, switchNewGame] = useState<boolean>(false);
 
   const logout = async () => {
@@ -40,14 +39,10 @@ const AuthGateNoGame: React.FC = () => {
               <p>или</p>
               <div className={`h-px bg-gray-300 w-[40%]`} />
             </div>
-            <div>
-              <p className='mb-3'>Поделитесь своим ником чтобы вас могли пригласить</p>
-              <CopyText text={playerUsername} />
-            </div>
+            <GameInvitesBlock />
           </div>
 
           <SubmitButton 
-            
             key='authgate_nogame_logout'
             danger
             children={'Сменить аккаунт'}

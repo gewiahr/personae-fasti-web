@@ -40,6 +40,7 @@ export type GameInvites = {
   playerExt: string;
   gameExt: string;
   gameTitle: string;
+  invitedBy: PlayerBrief;
   inviteCode: string;
 };
 
