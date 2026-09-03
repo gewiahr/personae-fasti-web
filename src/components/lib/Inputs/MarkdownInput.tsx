@@ -76,7 +76,7 @@ export function MarkdownInput({
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
-      <div className="relative w-full">
+      <div className="relative w-full text-start">
         <RichTextPlugin
           contentEditable={<ContentEditable className={`rich-input-textarea peer scroll-thin ${error ? 'rich-input-textarea-border-error' : 'rich-input-textarea-border'}`} />}
           placeholder={null}
