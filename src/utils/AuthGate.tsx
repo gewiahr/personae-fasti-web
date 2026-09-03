@@ -6,6 +6,7 @@ import { loginTG, loginToken, selectAuthorization, selectPlayerExt, selectPlayer
 import { selectCurrentGameInfo, selectCurrentGameLoading } from '../reducers/CurrentGameSlice';
 import LoadingLabel from '../components/lib/LoadingLabel';
 import LoginComponent from './LoginComponent';
+import useOnlineStatus from '../hooks/useOnlineStatus';
 
 export const AuthGate = ({ children }: { children: ReactNode }) => {
   const { TMA, initDataRaw } = useTelegram();
@@ -18,18 +19,27 @@ export const AuthGate = ({ children }: { children: ReactNode }) => {
   const isAuthenticated = !!playerExt;
   const playerIsLoading = useAppSelector(selectPlayerLoading);
   const gameIsLoading = useAppSelector(selectCurrentGameLoading);
+  const isOnline = useOnlineStatus();
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      if (TMA) {
-        dispatch(loginTG({ rawData: initDataRaw })).unwrap();
-      } else if (auth) { 
-        dispatch(loginToken({ token: auth }));
-      } else { 
-        dispatch(setPlayerLoading(false));
-      }
+    if (!isOnline || isAuthenticated) return;
+
+    if (TMA) {
+      dispatch(loginTG({ rawData: initDataRaw })).unwrap().catch(() => undefined);
+    } else if (auth) {
+      dispatch(loginToken({ token: auth })).unwrap().catch(() => undefined);
+    } else {
+      dispatch(setPlayerLoading(false));
     }
-  }, []);
+  }, [auth, dispatch, initDataRaw, isAuthenticated, isOnline, TMA]);
+
+  if (!isOnline && !isAuthenticated) return (
+    <div className="auth-gate-page gap-4 text-center">
+      <img className="size-24" src="/icons/pwa-192.png" alt="StoryShard" />
+      <p className="text-2xl">Нет подключения</p>
+      <p className="text-(--color-text-gray)">Для загрузки игровых данных требуется интернет</p>
+    </div>
+  );
 
   if (playerIsLoading) return (  
     <div className="auth-gate-page">

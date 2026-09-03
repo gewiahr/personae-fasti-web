@@ -10,6 +10,7 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import { NotificationProvider } from './context/NotificationContext';
 import NotificationPopup from '@lib/NotificationPopup';
+import PWAStatus from './components/PWAStatus';
 
 
 export const App = () => {
@@ -26,6 +27,7 @@ export const App = () => {
   return (
     <Router>
       <NotificationProvider>
+        <PWAStatus />
         <AuthGate>
           <Layout>
             <AppRouter />
