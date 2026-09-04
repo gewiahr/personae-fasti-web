@@ -22,10 +22,25 @@ const PWAStatus = () => {
   useEffect(() => {
     if (!registration) return;
 
-    const checkForUpdate = () => registration.update();
-    window.addEventListener('focus', checkForUpdate);
+    const checkForUpdate = () => {
+      void registration.update().catch((error) => {
+        console.error('Service worker update check failed:', error);
+      });
+    };
+    const checkWhenVisible = () => {
+      if (document.visibilityState === 'visible') checkForUpdate();
+    };
 
-    return () => window.removeEventListener('focus', checkForUpdate);
+    checkForUpdate();
+    window.addEventListener('focus', checkForUpdate);
+    window.addEventListener('pageshow', checkForUpdate);
+    document.addEventListener('visibilitychange', checkWhenVisible);
+
+    return () => {
+      window.removeEventListener('focus', checkForUpdate);
+      window.removeEventListener('pageshow', checkForUpdate);
+      document.removeEventListener('visibilitychange', checkWhenVisible);
+    };
   }, [registration]);
 
   if (isOnline && !needRefresh) return null;
