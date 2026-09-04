@@ -31,7 +31,7 @@ const Header: React.FC<HeaderProps> = ({ isMenuOpen, switchMenuOpen, closeMenu }
     window.location.href = '/';
   }
 
-  return (<header className='layout-header'>
+  return (<header className={`layout-header ${TMA ? '' : 'layout-header-web'}`}>
     {TMA ?
       <HeaderTMA
         menuButton={<MenuButton isMenuOpen={isMenuOpen} buttonClick={switchMenuOpen} />}
