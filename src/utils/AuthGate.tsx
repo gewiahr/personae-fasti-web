@@ -37,7 +37,7 @@ export const AuthGate = ({ children }: { children: ReactNode }) => {
     <div className="auth-gate-page gap-4 text-center">
       <img className="size-24" src="/icons/pwa-192.png" alt="StoryShard" />
       <p className="text-2xl">Нет подключения</p>
-      <p className="text-(--color-text-gray)">Для загрузки игровых данных требуется интернет</p>
+      <p className="text-white">Для загрузки игровых данных требуется интернет</p>
     </div>
   );
 

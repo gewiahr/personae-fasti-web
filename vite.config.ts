@@ -16,6 +16,7 @@ export default defineConfig({
     tailwindcss(),
     mkcert(),
     VitePWA({
+      selfDestroying: true,
       registerType: 'prompt',
       includeAssets: [
         'icons/favicon-32.png',

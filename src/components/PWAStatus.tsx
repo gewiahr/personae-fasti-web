@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { LuRefreshCw, LuX } from 'react-icons/lu';
 import { useRegisterSW } from 'virtual:pwa-register/react';
 
@@ -6,47 +5,19 @@ import useOnlineStatus from '@/hooks/useOnlineStatus';
 
 const PWAStatus = () => {
   const isOnline = useOnlineStatus();
-  const [registration, setRegistration] = useState<ServiceWorkerRegistration>();
   const {
     needRefresh: [needRefresh, setNeedRefresh],
     updateServiceWorker,
   } = useRegisterSW({
-    onRegisteredSW: (_serviceWorkerUrl, serviceWorkerRegistration) => {
-      setRegistration(serviceWorkerRegistration);
-    },
     onRegisterError: (error) => {
       console.error('Service worker registration failed:', error);
     },
   });
 
-  useEffect(() => {
-    if (!registration) return;
-
-    const checkForUpdate = () => {
-      void registration.update().catch((error) => {
-        console.error('Service worker update check failed:', error);
-      });
-    };
-    const checkWhenVisible = () => {
-      if (document.visibilityState === 'visible') checkForUpdate();
-    };
-
-    checkForUpdate();
-    window.addEventListener('focus', checkForUpdate);
-    window.addEventListener('pageshow', checkForUpdate);
-    document.addEventListener('visibilitychange', checkWhenVisible);
-
-    return () => {
-      window.removeEventListener('focus', checkForUpdate);
-      window.removeEventListener('pageshow', checkForUpdate);
-      document.removeEventListener('visibilitychange', checkWhenVisible);
-    };
-  }, [registration]);
-
   if (isOnline && !needRefresh) return null;
 
   return (
-    <div className="fixed bottom-4 left-1/2 z-70 flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 flex-col gap-3 rounded-lg border border-(--color-dimmed) bg-(--color-bg-secondary) p-4 shadow-xl">
+    <div className="fixed bottom-4 left-1/2 z-70 flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 flex-col gap-3 rounded-lg border border-(--color-dimmed) bg-(--color-bg-secondary) text-white p-4 shadow-xl">
       {!isOnline && (
         <p className="text-center text-sm">Нет подключения к сети</p>
       )}
@@ -64,7 +35,7 @@ const PWAStatus = () => {
           </button>
           <button
             type="button"
-            className="cursor-pointer text-(--color-text-gray) hover:text-(--color-text-regular)"
+            className="cursor-pointer hover:text-(--color-text-regular)"
             aria-label="Отложить обновление"
             onClick={() => setNeedRefresh(false)}
           >
