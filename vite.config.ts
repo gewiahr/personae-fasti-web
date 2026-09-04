@@ -17,6 +17,7 @@ export default defineConfig({
     mkcert(),
     VitePWA({
       selfDestroying: true,
+      injectRegister: false,
       registerType: 'prompt',
       includeAssets: [
         'icons/favicon-32.png',
